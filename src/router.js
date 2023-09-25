@@ -14,6 +14,10 @@ const router = new Router({
             path: "/",
             redirect: "/login",
         },
+        {
+            path: "/test",
+            component: () => import("./components/auth/TestB.vue"),
+        },
 
     ],
 });
