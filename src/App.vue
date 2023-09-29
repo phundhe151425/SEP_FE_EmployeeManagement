@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-      <SideBar />
+<!--      <Navbar />-->
+      <SidebarVue />
       <div class="container-fluid" style="margin-top: 100px">
           <router-view/>
       </div>
@@ -8,24 +9,47 @@
 </template>
 
 <script>
-import SideBar from "@/components/sidebar/SideBar.vue";
-// import {sidebarWidth} from '@/components/sidebar/state'
-// import {collapsed, toggleSidebar} from '@/components/sidebar/state'
+// import Navbar from "@/components/sidebar/NavBar.vue";
+import SidebarVue from "@/components/sidebar/SidebarVue.vue";
+import {sidebarWidth} from '@/components/sidebar/state.js'
+import {collapsed, toggleSidebar} from '@/components/sidebar/state.js'
 
 export default {
-    components: {SideBar},
-    // setup() {
-    //     return {sidebarWidth, collapsed, toggleSidebar}
-    // },
+    // components: {Navbar},
+    components: {SidebarVue},
+    setup() {
+        return {sidebarWidth, collapsed, toggleSidebar}
+    },
 }
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-  /*margin-top: 60px;*/
+    /*min-height: 100%;*/
+    /*width: 100%;*/
+    /*padding-top: 80px;*/
+    /*!*padding-bottom: 80px;*!*/
+    /*background-image: url("@/assets/background3.jpg") ;*/
+    /*background-position: center; !* Center the image *!*/
+    /*background-repeat: no-repeat; !* Do not repeat the image *!*/
+    /*background-size: cover; !**/
+    font-size: 16px;
+    font-family: 'Montserrat', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #2c3e50;
+}
+
+#nav {
+    padding: 30px;
+}
+
+#nav a {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+#nav a.router-link-exact-active {
+    color: #42b983;
 }
 </style>

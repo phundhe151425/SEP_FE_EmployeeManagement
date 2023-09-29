@@ -1,5 +1,106 @@
 <template>
-
+    <html lang="en">
+    <body>
+    <section class="side">
+        <img src="../../../public/authen.jpg" alt=""/>
+    </section>
+    <section class="main">
+        <div class="login-container">
+            <img
+                src="../../../public/mixi_logo.png"
+                style="width: 185px"
+                alt="logo"
+            />
+            <div class="separator"></div>
+            <p class="welcome-message">Nhập thông tin đăng nhập</p>
+            <form name="form" >
+                <div class="form-outline mb-4">
+                    <input
+                        placeholder="Nhập email"
+                        v-validate="'required'"
+                        type="text"
+                        class="form-control"
+                        name="username"
+                    />
+                    <small v-if="messageEmail !== null" style="color: red">
+                        {{ messageEmail }}
+                    </small>
+                </div>
+                <div class="form-group">
+                    <input
+                        placeholder="Nhập mật khẩu"
+                        v-validate="'required'"
+                        type="password"
+                        class="form-control"
+                        name="password"
+                    />
+                    <small v-if="messagePass !== null" style="color: red">
+                        {{ messagePass }}
+                    </small>
+                </div>
+                <div class="text-center pt-1 mb-5 pb-1">
+                    <button :disabled="loading" class="submit">Login</button>
+                    <br/>
+                    <a
+                        style="margin-top: 20px; color: #33acff"
+                        href="https://localhost:8000/forgotPassword"
+                    >Quên mât khẩu</a
+                    >
+                    <br/>
+                    <small v-if="messageForm" style="color: red">{{
+                            messageForm
+                        }}</small>
+                    <br/>
+                    <small style="color: red" v-if="message">{{ message }}</small>
+                </div>
+            </form>
+            <!--            <form name="form" @submit.prevent="handleLogin">-->
+            <!--                <div class="form-outline mb-4">-->
+            <!--                    <input-->
+            <!--                        placeholder="Nhập email"-->
+            <!--                        v-model="user.username"-->
+            <!--                        v-validate="'required'"-->
+            <!--                        type="text"-->
+            <!--                        class="form-control"-->
+            <!--                        name="username"-->
+            <!--                    />-->
+            <!--                    <small v-if="messageEmail !== null" style="color: red">-->
+            <!--                        {{ messageEmail }}-->
+            <!--                    </small>-->
+            <!--                </div>-->
+            <!--                <div class="form-group">-->
+            <!--                    <input-->
+            <!--                        placeholder="Nhập mật khẩu"-->
+            <!--                        v-model="user.password"-->
+            <!--                        v-validate="'required'"-->
+            <!--                        type="password"-->
+            <!--                        class="form-control"-->
+            <!--                        name="password"-->
+            <!--                    />-->
+            <!--                    <small v-if="messagePass !== null" style="color: red">-->
+            <!--                        {{ messagePass }}-->
+            <!--                    </small>-->
+            <!--                </div>-->
+            <!--                <div class="text-center pt-1 mb-5 pb-1">-->
+            <!--                    <button :disabled="loading" class="submit">Login</button>-->
+            <!--                    <br/>-->
+            <!--                    <a-->
+            <!--                        style="margin-top: 20px; color: #33acff"-->
+            <!--                        href="https://localhost:8000/forgotPassword"-->
+            <!--                    >Quên mât khẩu</a-->
+            <!--                    >-->
+            <!--                    <br/>-->
+            <!--                    <small v-if="messageForm" style="color: red">{{-->
+            <!--                            messageForm-->
+            <!--                        }}</small>-->
+            <!--                    <br/>-->
+            <!--                    <small style="color: red" v-if="message">{{ message }}</small>-->
+            <!--                </div>-->
+            <!--            </form>-->
+        </div>
+    </section>
+    </body>
+    </html>
 </template>
 
 <script>
