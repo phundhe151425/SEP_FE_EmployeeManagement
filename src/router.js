@@ -18,6 +18,10 @@ const router = new Router({
             path: "/test",
             component: () => import("./components/auth/TestB.vue"),
         },
+        {
+            path: "/manageUser",
+            component: () => import("./components/manageUser/ManageUser.vue"),
+        },
 
     ],
 });

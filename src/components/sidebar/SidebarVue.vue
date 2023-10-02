@@ -115,9 +115,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="/profile">
-                                <router-link to="/test" class="nav-link sel">
+                                <router-link to="/manageUser" class="nav-link sel">
                                     <font-awesome-icon icon="home"/>
-                                    Trang chủ
+                                    Quản lý nhân viên
                                 </router-link>
                             </a>
                         </li>
