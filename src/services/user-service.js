@@ -10,6 +10,10 @@ class UserService {
         return httpCommon.get( "/user/data?page="+page+"&size="+size+"&departmentId="+departId+"&search="+search+"&status="+status );
     }
 
+    getData1(data) {
+        return httpCommon.get( "/user/data" , {data} );
+    }
+
 
 }
 

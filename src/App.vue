@@ -3,6 +3,7 @@
 <!--      <Navbar />-->
       <SidebarVue />
       <div class="container-fluid" style="margin-top: 100px">
+        <DialogCreateUser></DialogCreateUser>
           <router-view/>
       </div>
   </div>
@@ -13,10 +14,10 @@
 import SidebarVue from "@/components/sidebar/SidebarVue.vue";
 import {sidebarWidth} from '@/components/sidebar/state.js'
 import {collapsed, toggleSidebar} from '@/components/sidebar/state.js'
-
+import DialogCreateUser from "@/components/manageUser/DialogCreateUser.vue";
 export default {
     // components: {Navbar},
-    components: {SidebarVue},
+    components: {SidebarVue, DialogCreateUser},
     setup() {
         return {sidebarWidth, collapsed, toggleSidebar}
     },
