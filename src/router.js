@@ -14,6 +14,10 @@ const router = new Router({
             path: "/",
             redirect: "/login",
         },
+        {
+            path: "/profile",
+            component: () => import("./components/manageUser/Profile.vue"),
+        },
 
     ],
 });
