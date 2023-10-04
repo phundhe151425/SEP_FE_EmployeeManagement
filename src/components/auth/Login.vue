@@ -13,12 +13,13 @@
             />
             <div class="separator"></div>
             <p class="welcome-message">Nhập thông tin đăng nhập</p>
-            <form name="form" >
+            <form name="form" @submit.prevent="handleLogin">
                 <div class="form-outline mb-4">
                     <input
                         placeholder="Nhập email"
                         v-validate="'required'"
                         type="text"
+                        v-model="user.username"
                         class="form-control"
                         name="username"
                     />
@@ -30,6 +31,7 @@
                     <input
                         placeholder="Nhập mật khẩu"
                         v-validate="'required'"
+                        v-model="user.password"
                         type="password"
                         class="form-control"
                         name="password"
@@ -54,49 +56,49 @@
                     <small style="color: red" v-if="message">{{ message }}</small>
                 </div>
             </form>
-            <!--            <form name="form" @submit.prevent="handleLogin">-->
-            <!--                <div class="form-outline mb-4">-->
-            <!--                    <input-->
-            <!--                        placeholder="Nhập email"-->
-            <!--                        v-model="user.username"-->
-            <!--                        v-validate="'required'"-->
-            <!--                        type="text"-->
-            <!--                        class="form-control"-->
-            <!--                        name="username"-->
-            <!--                    />-->
-            <!--                    <small v-if="messageEmail !== null" style="color: red">-->
-            <!--                        {{ messageEmail }}-->
-            <!--                    </small>-->
-            <!--                </div>-->
-            <!--                <div class="form-group">-->
-            <!--                    <input-->
-            <!--                        placeholder="Nhập mật khẩu"-->
-            <!--                        v-model="user.password"-->
-            <!--                        v-validate="'required'"-->
-            <!--                        type="password"-->
-            <!--                        class="form-control"-->
-            <!--                        name="password"-->
-            <!--                    />-->
-            <!--                    <small v-if="messagePass !== null" style="color: red">-->
-            <!--                        {{ messagePass }}-->
-            <!--                    </small>-->
-            <!--                </div>-->
-            <!--                <div class="text-center pt-1 mb-5 pb-1">-->
-            <!--                    <button :disabled="loading" class="submit">Login</button>-->
-            <!--                    <br/>-->
-            <!--                    <a-->
-            <!--                        style="margin-top: 20px; color: #33acff"-->
-            <!--                        href="https://localhost:8000/forgotPassword"-->
-            <!--                    >Quên mât khẩu</a-->
-            <!--                    >-->
-            <!--                    <br/>-->
-            <!--                    <small v-if="messageForm" style="color: red">{{-->
-            <!--                            messageForm-->
-            <!--                        }}</small>-->
-            <!--                    <br/>-->
-            <!--                    <small style="color: red" v-if="message">{{ message }}</small>-->
-            <!--                </div>-->
-            <!--            </form>-->
+<!--                        <form name="form" @submit.prevent="handleLogin">-->
+<!--                            <div class="form-outline mb-4">-->
+<!--                                <input-->
+<!--                                    placeholder="Nhập email"-->
+<!--                                    v-model="user.username"-->
+<!--                                    v-validate="'required'"-->
+<!--                                    type="text"-->
+<!--                                    class="form-control"-->
+<!--                                    name="username"-->
+<!--                                />-->
+<!--                                <small v-if="messageEmail !== null" style="color: red">-->
+<!--                                    {{ messageEmail }}-->
+<!--                                </small>-->
+<!--                            </div>-->
+<!--                            <div class="form-group">-->
+<!--                                <input-->
+<!--                                    placeholder="Nhập mật khẩu"-->
+<!--                                    v-model="user.password"-->
+<!--                                    v-validate="'required'"-->
+<!--                                    type="password"-->
+<!--                                    class="form-control"-->
+<!--                                    name="password"-->
+<!--                                />-->
+<!--                                <small v-if="messagePass !== null" style="color: red">-->
+<!--                                    {{ messagePass }}-->
+<!--                                </small>-->
+<!--                            </div>-->
+<!--                            <div class="text-center pt-1 mb-5 pb-1">-->
+<!--                                <button :disabled="loading" class="submit">Login</button>-->
+<!--                                <br/>-->
+<!--                                <a-->
+<!--                                    style="margin-top: 20px; color: #33acff"-->
+<!--                                    href="https://localhost:8000/forgotPassword"-->
+<!--                                >Quên mât khẩu</a-->
+<!--                                >-->
+<!--                                <br/>-->
+<!--                                <small v-if="messageForm" style="color: red">{{-->
+<!--                                        messageForm-->
+<!--                                    }}</small>-->
+<!--                                <br/>-->
+<!--                                <small style="color: red" v-if="message">{{ message }}</small>-->
+<!--                            </div>-->
+<!--                        </form>-->
         </div>
     </section>
     </body>
@@ -105,6 +107,7 @@
 
 <script>
 import User from "../../models/User"
+
 export default {
     name: "LoginVue",
     data() {
@@ -133,7 +136,9 @@ export default {
     created() {
         this.$router.push("/login");
         if (this.loggedIn) {
-            this.$router.push("/profile");
+            console.log(this.$store.state.auth.user)
+            // this.$store.dispatch("auth/logout");
+            this.$router.push("/manageUser");
         }
     },
     methods: {
@@ -143,64 +148,84 @@ export default {
             return re.test(email);
         },
         handleLogin() {
-            if (!this.user.username && !this.user.password) {
-                this.messageForm = "Vui lòng nhập thông tin tài khoản";
-                this.messageEmail = "";
-                this.messagePass = "";
-                this.message = "";
-                this.check = false;
-            } else {
-                this.messageForm = "";
-            }
+            console.log(this.user.username+" "+this.user.password)
 
-            if (!this.user.username && this.user.password) {
-                this.messageEmail = "Vui lòng nhập email";
-                this.messageForm = "";
-                this.message = "";
-                this.check = false;
-            } else {
-                this.messageEmail = "";
-            }
-            if (!this.user.password && this.user.username) {
-                this.messagePass = "Vui lòng nhập mật khẩu";
-                this.messageForm = "";
-                this.message = "";
-                this.check = false;
-            } else {
-                this.messagePass = "";
-            }
-            if (this.user.username && this.user.password) {
-                this.check = true;
-            }
-            if (this.check === true) {
-                this.loading = true;
-                this.$validator.validateAll().then((isValid) => {
-                    if (!isValid) {
-                        this.loading = false;
-                        return;
+            this.$store.dispatch("auth/login", this.user).then(
+                () => {
+                    this.$router.push("/manageUser");
+                },
+                (error) => {
+                    this.loading = false;
+                    this.a = error.response && error.response.data;
+                    if (
+                        error.response.data.message ==
+                        "Account have been lock by admin"
+                    ) {
+                        this.message =
+                            "Tài khoản của bạn bị khóa hiện tại chưa thể đăng nhập";
+                    } else {
+                        this.message = "Email hoặc mật khẩu không chính xác";
                     }
-                    if (this.user.username && this.user.password) {
-                        this.$store.dispatch("auth/login", this.user).then(
-                            () => {
-                                this.$router.push("/calender");
-                            },
-                            (error) => {
-                                this.loading = false;
-                                this.a = error.response && error.response.data;
-                                if (
-                                    error.response.data.message ==
-                                    "Account have been lock by admin"
-                                ) {
-                                    this.message =
-                                        "Tài khoản của bạn bị khóa hiện tại chưa thể đăng nhập";
-                                } else {
-                                    this.message = "Email hoặc mật khẩu không chính xác";
-                                }
-                            }
-                        );
-                    }
-                });
-            }
+                }
+            );
+            // if (!this.user.username && !this.user.password) {
+            //     this.messageForm = "Vui lòng nhập thông tin tài khoản";
+            //     this.messageEmail = "";
+            //     this.messagePass = "";
+            //     this.message = "";
+            //     this.check = false;
+            // } else {
+            //     this.messageForm = "";
+            // }
+            //
+            // if (!this.user.username && this.user.password) {
+            //     this.messageEmail = "Vui lòng nhập email";
+            //     this.messageForm = "";
+            //     this.message = "";
+            //     this.check = false;
+            // } else {
+            //     this.messageEmail = "";
+            // }
+            // if (!this.user.password && this.user.username) {
+            //     this.messagePass = "Vui lòng nhập mật khẩu";
+            //     this.messageForm = "";
+            //     this.message = "";
+            //     this.check = false;
+            // } else {
+            //     this.messagePass = "";
+            // }
+            // if (this.user.username && this.user.password) {
+            //     this.check = true;
+            // }
+            // if (this.check === true) {
+            //     this.loading = true;
+            //     this.$validator.validateAll().then((isValid) => {
+            //         if (!isValid) {
+            //             this.loading = false;
+            //             return;
+            //         }
+            //         if (this.user.username && this.user.password) {
+            //             this.$store.dispatch("/login", this.user).then(
+            //                 () => {
+            //                     this.$router.push("/calender");
+            //                 },
+            //                 (error) => {
+            //                     this.loading = false;
+            //                     this.a = error.response && error.response.data;
+            //                     if (
+            //                         error.response.data.message ==
+            //                         "Account have been lock by admin"
+            //                     ) {
+            //                         this.message =
+            //                             "Tài khoản của bạn bị khóa hiện tại chưa thể đăng nhập";
+            //                     } else {
+            //                         this.message = "Email hoặc mật khẩu không chính xác";
+            //                     }
+            //                 }
+            //             );
+            //         }
+            //     });
+            // }
         },
     },
 }

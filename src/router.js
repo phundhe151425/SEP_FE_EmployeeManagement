@@ -12,7 +12,7 @@ const router = new Router({
         },
         {
             path: "/",
-            component: () => import("./components/auth/Login.vue"),
+            redirect: "/login",
         },
         {
             path: "/test",
