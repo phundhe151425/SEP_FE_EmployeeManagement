@@ -30,6 +30,10 @@ const router = new Router({
             path: "/editprofile",
             component: () => import("./components/manageUser/EditProfile.vue"),
         },
+        {
+            path: "/forgotPassword",
+            component: () => import("./components/manageUser/ForgotPassword.vue"),
+        },
 
     ],
 });

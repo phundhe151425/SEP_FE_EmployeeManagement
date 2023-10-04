@@ -19,7 +19,7 @@
             <el-form-item label="Nhập số điện thoại" prop="phone">
               <el-input v-model="ruleForm.phone"></el-input>
             </el-form-item>
-            <div class="img">
+            <!-- <div class="img">
               <p style="color: #606266; font-size: 14px">Nhập ảnh</p>
               <label>
                 <img style="width: 200px; height: 200px" :src="imageUrl" />
@@ -34,7 +34,7 @@
                   style="display: none"
                 />
               </label>
-            </div>
+            </div> -->
           </div>
         </div>
         <div class="col-md-6 right">
