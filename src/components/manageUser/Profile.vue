@@ -61,6 +61,7 @@ export default {
   name: "user-profile",
   data() {
     return {
+      id:"",
       file:"",
       dateFormat: "",
         currentUser: null,
@@ -90,8 +91,12 @@ export default {
   },
   computed:{
   },  
+  beforeMount(){
+    this.id = this.$store.state.auth.user.id;
+  },
   mounted() {
-    this.getUser(1);
+    // setTimeout(() => {this.getUser(this.id)},90)
+    this.getUser(this.id)
     // this.retrieveTutorials();
     // this.message = '';
     

@@ -43,11 +43,15 @@
                 <div class="text-center pt-1 mb-5 pb-1">
                     <button :disabled="loading" class="submit">Login</button>
                     <br/>
-                    <a
+                    <!-- <a
                         style="margin-top: 20px; color: #33acff"
-                        href="https://localhost:8000/forgotPassword"
+                        href="http://localhost:2001/forgotPassword"
                     >Quên mât khẩu</a
-                    >
+                    
+                    > -->
+                     <router-link to="/forgotPassword"  style="margin-top: 20px; color: #33acff" class="nav-link link"
+              >Quên mật khẩu?</router-link
+            >
                     <br/>
                     <small v-if="messageForm" style="color: red">{{
                             messageForm

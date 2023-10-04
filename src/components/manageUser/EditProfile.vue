@@ -152,6 +152,7 @@ export default {
     };
 
     return {
+      id:"",
       dateFormat: "",
       currentUser: null,
       ruleForm: {
@@ -273,18 +274,17 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         this.dateFormat = this.ruleForm.birthDay.toLocaleDateString();
-       console.log(this.dateFormat);
         this.ruleForm.birthDay = moment(String(this.dateFormat)).format("yyyy-MM-DD");
         if (valid) {
-           console.log(this.ruleForm);
           DataService.updateProfile(this.currentUser.id, this.ruleForm)
             .then((response) => {
-              console.log("hello")
+
               console.log(response.data);
             })
             .catch((e) => {
               console.log(e);
             });
+           
           this.$router.push("/profile");
         } else {
           console.log("error submit!!");
@@ -293,9 +293,15 @@ export default {
       });
     },
   },
-  computed: {},
+  computed: {
+
+  },
+   beforeMount(){
+    this.id = this.$store.state.auth.user.id;
+  },
   mounted() {
-    this.getUser(1);
+  
+    this.getUser(this.id);
     // this.retrieveTutorials();
     // this.message = '';
   },
