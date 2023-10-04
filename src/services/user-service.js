@@ -14,6 +14,18 @@ class UserService {
         return httpCommon.get( "/user/data" , {data} );
     }
 
+    getProfile(id) {
+        return httpCommon.get(`/user/profile/${id}`);
+    }
+
+    updateProfile(id, data) {
+        return axios.patch(BASE_URL + `/user/profile/${id}`,data);
+    }
+
+    forgotPass(data){
+        return axios.post(BASE_URL + `/forgot-password`, data);
+    }
+
 
 }
 

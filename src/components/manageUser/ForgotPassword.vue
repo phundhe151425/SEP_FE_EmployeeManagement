@@ -32,15 +32,16 @@
           </div>
           <div v-else class="main">
             <h4 style="text-align: center">QUÊN MẬT KHẨU?</h4>
-            <p style=" text-align: center">
+            <p style="text-align: center">
               Hệ thống đã gửi mật khẩu về email của bạn
             </p>
             <p style="margin-bottom: 35%; text-align: center">
               Kiểm tra email và sử dụng mật khẩu mới để đăng nhập
             </p>
 
-             <router-link  to="/login" class="nav-link link">Đi đến trang đăng nhập</router-link>
-  
+            <router-link to="/login" class="nav-link link"
+              >Đi đến trang đăng nhập</router-link
+            >
           </div>
         </div>
       </div>
@@ -49,6 +50,7 @@
 </template>
 
 <script>
+import DataService from "../../services/user-service";
 export default {
   name: "forget-pass",
   data() {
@@ -63,6 +65,9 @@ export default {
     };
     return {
       continue: false,
+      request:{
+        email:""
+      },
       ruleForm: {
         continue: false,
         email: "",
@@ -87,9 +92,17 @@ export default {
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
-        console.log(valid);
+
         if (valid) {
-          alert("submit!");
+          this.request.email = this.ruleForm.email;
+          console.log(this.request)
+          DataService.forgotPass(this.request)
+            .then((response) => {
+              console.log(response.data);
+            })
+            .catch((e) => {
+              console.log(e);
+            });
           this.ruleForm.continue = true;
         } else {
           console.log(valid);
@@ -154,9 +167,9 @@ export default {
   margin-top: 5%;
 }
 
-.link{
-    color: #75c4c0;
-    margin-left: 55%;
-    font-size: 20px;
+.link {
+  color: #75c4c0;
+  margin-left: 55%;
+  font-size: 20px;
 }
 </style>

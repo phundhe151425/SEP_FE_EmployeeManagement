@@ -6,25 +6,25 @@
     <div class="container">
   <div class="row">
     <div class="col-md-5 ">
-      <img class="img" src="https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2023/02/Hinh-anh-avatar-Facebook.jpg?ssl=1"/>
+      <img class="img" :src="file" />
     </div>
     <div class="col-md-7">
-        <div class="detail">
+        <div class="detail" v-if="currentUser!=null">
             <div class="item">
                 <label>Họ và tên nhân viên</label>
-                <p>Nguyễn Đức Thịnh</p>
+                <p>{{ currentUser.fullName }}</p>
             </div>
              <div class="item">
                 <label>Mã nhân viên</label>
-                <p>HE150050</p>
+                <p>{{ currentUser.userCode }}</p>
             </div>
              <div class="item">
                 <label>Bộ phận</label>
-                <p>Kinh doanh</p>
+                <p>{{ currentUser.department.name }}</p>
             </div>
              <div class="item">
                 <label>Email</label>
-                <p>thinih@gmail.com</p>
+                <p>{{ currentUser.email }}</p>
             </div>
              <div class="item">
                 <label>Loại tài khoản</label>
@@ -32,17 +32,18 @@
             </div>
              <div class="item">
                 <label>Ngày sinh</label>
-                <p> 09/07/2001</p>
+                <p> {{dateFormat}}</p>
             </div>
              <div class="item">
                 <label>Giới tính</label>
-                <p> Nam</p>
+                <p v-if="currentUser.gender == 1"> Nam</p>
+                <p v-else> Nữ</p>
             </div> <div class="item">
                 <label>Địa chỉ</label>
-                <p> Hưng Yên</p>
+                <p> {{currentUser.address}}</p>
             </div> <div class="item">
                 <label>Số điện thoại</label>
-                <p> 076755323</p>
+                <p> {{currentUser.phone}}</p>
             </div>
       </div>
       <button type="button" class="btn" @click="edit()">Chỉnh sửa</button>
@@ -54,29 +55,35 @@
 
 <script>
 
-//  import DataService from "../services/DataService";
-
+  import DataService from "../../services/user-service";
+  import moment from "moment";
 export default {
   name: "user-profile",
   data() {
     return {
+      file:"",
+      dateFormat: "",
         currentUser: null,
     };
   },
   methods: {
-    // getUser(id) {
-    //   DataService.get(id)
-    //     .then(response => {
-    //         this.currentUser = response.data;
-    //     //   this.value = this.currentTutorial.brandId;
-    //     //   this.oldFile = this.currentTutorial.image;
-    //     //   this.fileSrc = require('@/assets'+ this.currentTutorial.image);
-    //     //   console.log(response.data);
-    //     })
-    //     .catch(e => {
-    //       console.log(e);
-    //     });
-    // },
+    getUser(id) {
+      DataService.getProfile(id)
+        .then(response => {
+            this.currentUser = response.data;
+            this.dateFormat = moment(String(this.currentUser.birthDay)).format("DD/MM/yyyy");
+            console.log(typeof(this.dateFormat))
+            this.file = require('@/assets/images/'+ this.currentUser.userImage)
+            console.log(response.data)
+        //   this.value = this.currentTutorial.brandId;
+        //   this.oldFile = this.currentTutorial.image;
+        //   this.fileSrc = require('@/assets'+ this.currentTutorial.image);
+        //   console.log(response.data);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    },
     edit: function(){
         this.$router.push('/editprofile');
     }
@@ -84,7 +91,7 @@ export default {
   computed:{
   },  
   mounted() {
-    // this.getUser(this.$route.params.id);
+    this.getUser(1);
     // this.retrieveTutorials();
     // this.message = '';
     
@@ -116,7 +123,7 @@ h4{
     margin-left: 35%;
     margin-top: 5%;
     height: 75%;
-    width: 65%;
+    width: 60%;
 }
 .detail{
      margin-top: 5%;

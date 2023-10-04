@@ -12,12 +12,19 @@
       <div class="row">
         <div class="col-md-6">
           <div class="left">
-            <el-form-item label="Nhập họ tên nhân viên" prop="name">
-              <el-input v-model="ruleForm.name"></el-input>
+            <el-form-item label="Nhập họ tên nhân viên" prop="fullName">
+              <el-input v-model="ruleForm.fullName"></el-input>
             </el-form-item>
 
             <el-form-item label="Nhập số điện thoại" prop="phone">
               <el-input v-model="ruleForm.phone"></el-input>
+            </el-form-item>
+
+            <el-form-item label="Giới tính" prop="gender">
+              <el-radio-group v-model="ruleForm.gender">
+                <el-radio :label="1">Nam</el-radio>
+                <el-radio :label="2">Nũ</el-radio>
+              </el-radio-group>
             </el-form-item>
             <!-- <div class="img">
               <p style="color: #606266; font-size: 14px">Nhập ảnh</p>
@@ -39,33 +46,27 @@
         </div>
         <div class="col-md-6 right">
           <div class="right">
-          <el-form-item label="Nhập địa chỉ" prop="address">
-            <el-input v-model="ruleForm.address"></el-input>
-          </el-form-item>
-          <el-form-item label="Ngày sinh" required>
-            <el-form-item prop="date">
-              <el-date-picker
-                type="date"
-                placeholder="Pick a date"
-                v-model="ruleForm.date"
-                style="width: 100%"
-              ></el-date-picker>
+            <el-form-item label="Nhập địa chỉ" prop="address">
+              <el-input v-model="ruleForm.address"></el-input>
             </el-form-item>
-          </el-form-item>
-          <el-form-item label="Giới tính" prop="sex">
-            <el-radio-group v-model="ruleForm.sex">
-              <el-radio :label="1">Nam</el-radio>
-              <el-radio :label="2">Nũ</el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item>
-            <el-button
-             class="btn"
-              type="primary"
-              @click="submitForm('ruleForm')"
-              >Lưu</el-button
-            >
-          </el-form-item>
+            <el-form-item label="Ngày sinh" required>
+              <el-form-item prop="birthDay">
+                <el-date-picker
+                  type="date"
+                  placeholder="Pick a date"
+                  v-model="ruleForm.birthDay"
+                  style="width: 100%"
+                ></el-date-picker>
+              </el-form-item>
+            </el-form-item>
+            <el-form-item>
+              <el-button
+                class="btn"
+                type="primary"
+                @click="submitForm('ruleForm')"
+                >Lưu</el-button
+              >
+            </el-form-item>
           </div>
         </div>
       </div>
@@ -118,7 +119,8 @@
 
 <script>
 // import DataService from "../services/DataService";
-
+import DataService from "../../services/user-service";
+ import moment from "moment";
 export default {
   name: "edit-profile",
   data() {
@@ -127,16 +129,16 @@ export default {
         /^[\sa-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s\\W|_]+$/;
       if (re.test(value) == false) {
         callback(new Error("Vui lòng nhập đúng định dạng tên"));
-      }else{
-        callback()
+      } else {
+        callback();
       }
     };
     var checkPhone = (rule, value, callback) => {
       var re = /^[0-9]+$/;
       if (re.test(value) == false) {
-         callback(new Error("Vui lòng chỉ nhập số"));
-      }else{
-        callback()
+        callback(new Error("Vui lòng chỉ nhập số"));
+      } else {
+        callback();
       }
     };
     var checkAddress = (rule, value, callback) => {
@@ -144,21 +146,24 @@ export default {
         /^[\sa-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s\\W|_]+$/;
       if (re.test(value) == false) {
         callback(new Error("Vui lòng nhập đúng định dạng địa chỉ"));
-      }else{
-        callback()
+      } else {
+        callback();
       }
     };
+
     return {
+      dateFormat: "",
+      currentUser: null,
       ruleForm: {
-        name: "",
+        fullName: "",
         phone: "",
         address: "",
-        date: "",
-        sex: 1,
+        birthDay: "",
+        gender: 0,
       },
       imageUrl: "",
       rules: {
-        name: [
+        fullName: [
           {
             required: true,
             message: "Vui lòng nhập họ tên!",
@@ -196,7 +201,7 @@ export default {
             trigger: "blur",
           },
         ],
-        date: [
+        birthDay: [
           {
             type: "date",
             required: true,
@@ -239,33 +244,61 @@ export default {
     };
   },
   methods: {
-    getImage(event) {
-      const file = event.target.files[0];
+    // getImage(event) {
+    //   const file = event.target.files[0];
 
-      const theReader = new FileReader();
-      theReader.onloadend = () => {
-        this.imageUrl = theReader.result;
-      };
-      theReader.readAsDataURL(file);
+    //   const theReader = new FileReader();
+    //   theReader.onloadend = () => {
+    //     this.imageUrl = theReader.result;
+    //   };
+    //   theReader.readAsDataURL(file);
+    // },
+    getUser(id) {
+      DataService.getProfile(id)
+
+        .then((response) => {
+          this.currentUser = response.data;
+          this.ruleForm.fullName = this.currentUser.fullName;
+          this.ruleForm.phone = this.currentUser.phone;
+          this.ruleForm.address = this.currentUser.address;
+          this.ruleForm.gender = this.currentUser.gender;
+          const date = new Date(this.currentUser.birthDay);
+          this.ruleForm.birthDay = date;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
 
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
-        console.log(valid)
+        this.dateFormat = this.ruleForm.birthDay.toLocaleDateString();
+       console.log(this.dateFormat);
+        this.ruleForm.birthDay = moment(String(this.dateFormat)).format("yyyy-MM-DD");
         if (valid) {
-          
+           console.log(this.ruleForm);
+          DataService.updateProfile(this.currentUser.id, this.ruleForm)
+            .then((response) => {
+              console.log("hello")
+              console.log(response.data);
+            })
+            .catch((e) => {
+              console.log(e);
+            });
           this.$router.push("/profile");
-          alert("submit!");
         } else {
-          console.log(valid)
           console.log("error submit!!");
           return false;
         }
       });
     },
- 
   },
   computed: {},
+  mounted() {
+    this.getUser(1);
+    // this.retrieveTutorials();
+    // this.message = '';
+  },
 };
 </script>
 
@@ -297,7 +330,9 @@ export default {
 .left .el-input {
   margin-left: 22%;
 }
-
+.el-radio-group {
+  margin-left: 22%;
+}
 .left .el-form-item__error {
   margin-left: 22%;
 }
