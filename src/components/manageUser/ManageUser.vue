@@ -155,7 +155,7 @@
 <!--                                    src="../../../avatar/default.png"-->
 <!--                                    :fit="fit"-->
 <!--                            ></el-image>-->
-                            <img src="../../../avatar/default.png" height="127" width="127"/>
+                            <!-- <img src="../../../avatar/default.png" height="127" width="127"/> -->
                         </el-table-column>
                         <el-table-column
                                 prop="position.positionName"

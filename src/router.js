@@ -26,6 +26,10 @@ const router = new Router({
             path: "/profile",
             component: () => import("./components/manageUser/Profile.vue"),
         },
+        {
+            path: "/editprofile",
+            component: () => import("./components/manageUser/EditProfile.vue"),
+        },
 
     ],
 });
