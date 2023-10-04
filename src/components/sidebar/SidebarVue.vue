@@ -1,6 +1,6 @@
 <template>
     <nav class="navbar fixed-top container-fluid" style="padding: 14px 0">
-        <div class="user-detail nav-item dropdown ">
+        <div class="user-detail nav-item dropdown " style="margin-right: 40px">
             <a
                     class="nav-link dropdown-toggle"
                     href="#"
@@ -8,10 +8,10 @@
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
             >
-                <b-avatar class="mr-3"></b-avatar>
-<!--                <b-avatar v-if="currentUser.user.cover != null" class="mr-3"-->
-<!--                          v-bind:src="`http://localhost:8100/` + currentUser.user.cover"></b-avatar>-->
-                Nguyễn Đình Phú
+<!--                <b-avatar class="mr-3"></b-avatar>-->
+<!--                <b-avatar v-if="currentUser.user.userImage != null" class="mr-3"-->
+<!--                          v-bind:src="`http://localhost:2000/` + currentUser.user.userImage"></b-avatar>-->
+               {{currentUser.username}}
             </a>
 
             <ul class="dropdown-menu" style="left: -90px">
@@ -136,7 +136,7 @@ export default {
     },
     props: {},
     created() {
-
+this.getUser()
     },
     computed: {
         currentUser() {
@@ -156,10 +156,12 @@ export default {
         },
     },
     methods: {
-
+        getUser() {
+            return this.$store.state.auth.user;
+        },
         logOut() {
             this.$store.dispatch("auth/logout");
-            window.location.replace("https://localhost:8000/login");
+            window.location.replace("http://localhost:2001/login");
         },
     },
 };
