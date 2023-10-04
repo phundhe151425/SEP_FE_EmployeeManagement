@@ -157,7 +157,6 @@ this.getUser()
     },
     methods: {
         getUser() {
-            console.log(this.$store.state.auth.user)
             return this.$store.state.auth.user;
         },
         logOut() {

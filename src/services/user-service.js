@@ -1,10 +1,11 @@
 import httpCommon from "@/http-common";
 import { BASE_URL } from "@/http-common";
 import axios from 'axios';
+import authHeader from "@/services/auth-header";
 
 class UserService {
     save(data) {
-        return axios.post(BASE_URL + "/user/create", data);
+        return axios.post(BASE_URL + "/user/create", data,{headers: authHeader()});
     }
     getData(page, size, departId, search, status) {
         return httpCommon.get( "/user/data?page="+page+"&size="+size+"&departmentId="+departId+"&search="+search+"&status="+status );

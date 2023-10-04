@@ -143,19 +143,19 @@
                                 align="center"
                                 width="210px"
                         >
-<!--                            <el-image-->
-<!--                                    style="width: 100px; height: 100px"-->
-<!--                                    v-if="data.row.userImage != null"-->
-<!--                                    v-bind:src="`http://localhost:2000/` + data.row.userImage"-->
-<!--                                    :fit="fit"-->
-<!--                            ></el-image>-->
-<!--                            <el-image-->
-<!--                                    style="width: 100px; height: 100px"-->
+                                                        <el-image
+                                                                style="width: 100px; height: 100px"
+                                                                v-if="data.row.userImage != null"
+                                                                v-bind:src="`http://localhost:2000/` + data.row.userImage"
+                                                                :fit="fit"
+                                                        ></el-image>
+                            <!--                            <el-image-->
+                            <!--                                    style="width: 100px; height: 100px"-->
 
-<!--                                    src="../../../avatar/default.png"-->
-<!--                                    :fit="fit"-->
-<!--                            ></el-image>-->
-                            <img src="../../../avatar/default.png" height="127" width="127"/>
+                            <!--                                    src="../../../avatar/default.png"-->
+                            <!--                                    :fit="fit"-->
+                            <!--                            ></el-image>-->
+                            <img  src="../../../avatar/default.png" height="127" width="127"/>
                         </el-table-column>
                         <el-table-column
                                 prop="position.positionName"
@@ -221,28 +221,108 @@
                 :visible.sync="createEmployeeDialogVisible"
                 width="50%"
                 title="Tạo mới Nhân viên"
-                center>
-            <div class="row">
-                <div class="col-lg-4 col-md-4">
-                    <span>Nhập họ tên nhân viên<span style="color: red"> *</span></span><br>
-                    <el-input v-model="user.username" autocomplete="off" maxlength="50"></el-input>
+                left>
+            <form id="formCreate">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <span>Nhập họ tên nhân viên<span style="color: red"> *</span></span><br>
+                        <el-input v-model="user.fullName" name="fullName" autocomplete="off" maxlength="50"
+                                  style="width: 90%"></el-input>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <span>Mã nhân viên<span style="color: red"> *</span></span><br>
+                        <el-input v-model="user.username" name="userCode" autocomplete="off" maxlength="8"
+                                  style="width: 90%"></el-input>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <span>Giới tính<span style="color: red"> *</span></span><br>
+                        <el-radio-group v-model="user.gender" name="gender" @change="changeGender()">
+                            <el-radio-button value="1" label="1">Nam</el-radio-button>
+                            <el-radio-button value="0" label="0">Nữ</el-radio-button>
+                        </el-radio-group>
+                    </div>
                 </div>
-                <div class="col-lg-4 col-md-4">
-                    <span>Mã nhân viên<span style="color: red"> *</span></span><br>
-                    <el-input v-model="user.username" autocomplete="off" maxlength="8"></el-input>
+                <div class="row" style="margin-top: 20px">
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <span>Nhập địa chỉ<span style="color: red"> *</span></span><br>
+                        <el-input v-model="user.address" name="address" autocomplete="off" maxlength="100"
+                                  style="width: 90%"></el-input>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <span>Nhập email nhân viên<span style="color: red"> *</span></span><br>
+                        <el-input v-model="user.email" name="email" autocomplete="off" maxlength="50" style="width: 90%"></el-input>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <span>Nhập số điện thoại<span style="color: red"> *</span></span><br>
+                        <el-input v-model="user.phone" name="phone" autocomplete="off" maxlength="11" @input="restrictToNumbers"
+                                  style="width: 90%"></el-input>
+                    </div>
                 </div>
-                <div class="col-lg-4 col-md-4">
-                    <span>Giới tính<span style="color: red"> *</span></span><br>
-                    <el-radio-group v-model="gender" @change="changeGender()">
-                        <el-radio-button value="1" label="1">Nam</el-radio-button>
-                        <el-radio-button value="0" label="0">Nữ</el-radio-button>
-                    </el-radio-group>
+                <div class="row" style="margin-top: 20px">
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <span>Nhập ngày sinh<span style="color: red"> *</span></span><br>
+                        <el-date-picker v-model="user.birthDay" name="birthDay" autocomplete="off"
+                                        format='dd/MM/yyyy'
+                                        value-format="dd/MM/yyyy"
+                                        placeholder="Chọn ngày" style="width: 90%"></el-date-picker>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <span>Vị trí<span style="color: red"> *</span></span><br>
+                        <el-select v-model="user.positionId" name="positionId" autocomplete="off" style="width: 90%"></el-select>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <span>Bộ phận<span style="color: red"> *</span></span><br>
+                        <el-select v-model="user.departmentId" name="departmentId" autocomplete="off" @input="restrictToNumbers"
+                                   style="width: 90%"></el-select>
+                    </div>
                 </div>
-            </div>
-            <span slot="footer" class="dialog-footer">
-              <el-button @click="createEmployeeDialogVisible = false">Cancel</el-button>
-              <el-button type="primary" @click="createEmployeeDialogVisible  = false">Confirm</el-button>
-              </span>
+
+                <div class="row" style="margin-top: 30px">
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <span>Nhập ảnh nhân viên<span style="color: red"> *</span></span><br>
+                        <input
+                                id="fileUser"
+                                type="file"
+                                name="userImage"
+                                class="form-control"
+                                placeholder="Title"
+                                @change="previewFiles($event)"
+                                style="width: 90%"
+                        />
+
+                        <img alt=""
+                             :src=" imageUrl ||'https://www.namepros.com/attachments/empty-png.89209/'"
+                             style="width: 90%"/>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+<!--                        <span>Nhập hồ sơ nhân viên<span style="color: red"> *</span></span><br>-->
+<!--                        &lt;!&ndash;                    <b-form-file multiple :file-name-formatter="formatNames" accept="pdf,doc,docx"></b-form-file>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                    <div style="border: dotted; width: 90%; height: 80px">&ndash;&gt;-->
+<!--                        &lt;!&ndash;                        <input type="file" multiple style="width: 90%; height: 80px;display: none">&ndash;&gt;-->
+<!--                        &lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--                        <input-->
+<!--                                type="file"-->
+<!--                                id="fileInput"-->
+<!--                                name="contractFile"-->
+<!--                                ref="fileInput"-->
+<!--                                style="display: none"-->
+<!--                                multiple-->
+<!--                                @change="handleContractFileInputChange"-->
+<!--                        />-->
+<!--                        &lt;!&ndash; Sử dụng button để kích hoạt việc chọn tệp &ndash;&gt;-->
+<!--                        <button @click="triggerFileInput" style="width: 90%; height: 80px">-->
+<!--                            Chọn tệp-->
+<!--                        </button>-->
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <div style="position: absolute;bottom: 40px;right: 40px">
+                            <!--                        <el-button  @click="createEmployeeDialogVisible = false">Huỷ</el-button>-->
+                            <button class="save" @click="sendForm">Thêm</button>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
         </el-dialog>
 
 
@@ -270,12 +350,22 @@ export default {
             totalItems: 0,
             fit: "fill",
             departments: [],
-            gender: 1,
             createEmployeeDialogVisible: false,
             user: {
-                username: ''
-            }
+                username: '',
+                fullName: '',
+                gender: 1,
+                address: '',
+                email: '',
+                phone: '',
+                birthDay: '',
+                positionId: 1,
+                departmentId: 1,
 
+            },
+
+            imageUrl: '',
+            contractFile: ''
         };
     },
     created() {
@@ -283,6 +373,182 @@ export default {
         this.getData()
     },
     methods: {
+        // triggerFileInput() {
+        //     // Khi button được nhấp, gọi sự kiện click của input type="file"
+        //     this.$refs.fileInput.click();
+        // },
+        async sendForm() {
+            this.createEmployeeDialogVisible = false;
+            let form = document.querySelector("#formCreate");
+            console.log(14, form.cover.value);
+            UserService.save(form).then(() => {
+                this.$notify.success({
+                    message: "Tạo tài khoản thành công",
+                    title: "Success",
+                    timer: 2000,
+                    timerProgressBar: true,
+                });
+                this.hideLoading();
+                this.getAll();
+            });
+            // this.user.role = [];
+            // this.user.role.push(this.roleData);
+            // let response = await UserService.getAllUser();
+            // this.users = response.data;
+            //
+            // if (!this.user.fullName) {
+            //     this.errName = "Vui lòng nhập ho và tên";
+            //     this.checkName = false;
+            // } else if (!this.validName(this.user.fullName)) {
+            //     this.errName = "Vui lòng nhập đúng định dạng ho và tên";
+            //     this.checkName = false;
+            // } else {
+            //     this.errName = "";
+            //     this.checkName = true;
+            // }
+            //
+            // for (let i = 0; i < this.users.length; i++) {
+            //     if (this.user.code == this.users[i].code) {
+            //         this.errId = "Mã nhân sự đã tồn tại";
+            //         this.checkId = false;
+            //         this.message = "";
+            //         break;
+            //     } else {
+            //         this.errId = "";
+            //         this.checkId = true;
+            //     }
+            // }
+            //
+            // if (!this.user.code) {
+            //     this.errId = "Vui lòng nhập mã nhân viên";
+            //     this.checkId = false;
+            // } else if (!this.validCode(this.user.code)) {
+            //     this.errId = "Mã nhân viên chỉ bao gồm 4 số";
+            //     this.checkId = false;
+            // } else if (
+            //     this.validCode(this.user.code) &&
+            //     this.user.code &&
+            //     this.checkId === true
+            // ) {
+            //     this.errId = "";
+            //     this.checkId = true;
+            // }
+            //
+            // for (let i = 0; i < this.users.length; i++) {
+            //     if (this.user.username === this.users[i].username) {
+            //         this.errEmail = "Email đã tồn tại";
+            //         this.checkEmail = false;
+            //         this.message = "";
+            //         break;
+            //     } else {
+            //         this.errEmail = "";
+            //         this.checkEmail = true;
+            //     }
+            // }
+            //
+            // if (!this.user.username) {
+            //     this.errEmail = "Vui lòng nhập email nhân viên";
+            //     this.checkEmail = false;
+            // } else if (!this.validEmail(this.user.username)) {
+            //     this.errEmail = "Vui lòng nhập đúng định dạng email";
+            //     this.checkEmail = false;
+            // } else if (
+            //     this.validEmail(this.user.username) &&
+            //     this.user.username &&
+            //     this.checkEmail === true
+            // ) {
+            //     this.errEmail = "";
+            //     this.checkEmail = true;
+            // }
+            //
+            // if (!this.user.department) {
+            //     this.errDepartment = "Hãy chon phòng ban";
+            //     this.checkDepartment = false;
+            // } else {
+            //     this.errDepartment = "";
+            //     this.checkDepartment = true;
+            // }
+            //
+            // console.log(20, this.user.gender);
+            //
+            // if (this.user.gender === "") {
+            //     this.errGender = "Hãy chọn giới tính";
+            //     this.checkGender = false;
+            // } else {
+            //     console.log(21);
+            //     this.errGender = "";
+            //     this.checkGender = true;
+            // }
+            //
+            // if (!this.user.position) {
+            //     this.errRole = "Hãy chọn vị trí";
+            //     this.checkRole = false;
+            // } else {
+            //     this.errRole = "";
+            //     this.checkRole = true;
+            // }
+            //
+            // if (!this.user.startWork) {
+            //     this.errStartWork = "Hãy chọn ngày bắt đầu làm việc";
+            //     this.checkStartWork = false;
+            // } else {
+            //     this.errStartWork = "";
+            //     this.checkStartWork = true;
+            // }
+            //
+            // console.log(11, this.checkId);
+            // console.log(12, this.checkEmail);
+            // console.log(13, this.checkGender);
+            // console.log(14, this.checkDepartment);
+            // if (
+            //     this.checkId === true &&
+            //     this.checkEmail === true &&
+            //     this.checkName === true &&
+            //     this.checkGender === true &&
+            //     this.checkDepartment === true &&
+            //     this.checkRole === true &&
+            //     this.checkStartWork === true
+            // ) {
+            //     this.showLoading();
+            //     this.createEmployeeDialogVisible = false;
+            //     setTimeout(() => {
+            //         this.submitted = true;
+            //         let form = document.querySelector("#formCreate");
+            //         console.log(14, form.cover.value);
+            //         UserService.save(form).then(() => {
+            //             this.$notify.success({
+            //                 message: "Tạo tài khoản thành công",
+            //                 title: "Success",
+            //                 timer: 2000,
+            //                 timerProgressBar: true,
+            //             });
+            //             this.hideLoading();
+            //             this.getAll();
+            //         });
+            //     }, 2000).catch(() => {
+            //         this.message = "";
+            //     });
+            // }
+        },
+        handleContractFileInputChange(event) {
+            const selectedFiles = event.target.files;
+
+            // Lặp qua danh sách các tệp và thực hiện các xử lý
+            for (let i = 0; i < selectedFiles.length; i++) {
+                const file = selectedFiles[i];
+                console.log(`Tên tệp: ${file.name}`);
+                console.log(`Kích thước: ${file.size} bytes`);
+                console.log(`Loại: ${file.type}`);
+
+                // Đọc nội dung của tệp (nếu cần)
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const fileContent = e.target.result;
+                    console.log(`Nội dung tệp: ${fileContent}`);
+                };
+                reader.readAsText(file);
+            }
+        },
         getAllDepartment() {
             DepartmentService.getAllDepartment().then((response) => {
                 this.departments = response.data
@@ -334,6 +600,19 @@ export default {
             }
             return "success-row";
         },
+        restrictToNumbers() {
+            // Xóa bất kỳ ký tự nào không phải số khỏi chuỗi
+            this.numberInput = this.numberInput.replace(/[^0-9]/g, "");
+        },
+        previewFiles(event) {
+            const file = event.target.files[0];
+
+            const theReader = new FileReader();
+            theReader.onloadend = async () => {
+                this.imageUrl = await theReader.result;
+            };
+            theReader.readAsDataURL(file);
+        },
     }
 }
 </script>
@@ -343,12 +622,38 @@ export default {
     font-size: 16px;
 }
 
+
+.avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+}
+
 .el-table .warning-row {
     background: #ededed;
 }
 
 .el-table .success-row {
     background: #f5f5f5;
+}
+
+
+.save {
+    cursor: default;
+    color: white;
+    background-color: #75c4c0;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 36px;
+}
+
+.save:hover {
+    cursor: pointer;
+    color: white;
+    background-color: #75c4c0;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 36px;
 }
 
 .el-table .tt1 {
