@@ -6,7 +6,10 @@
           <img class="img" src="../../../public/authen.jpg" alt="" />
         </div>
         <div class="col-md-6 content">
-          <div v-if="!ruleForm.continue" class="main">
+          <div v-if="!ruleForm.continue" class="cont">
+            <router-link style="margin-left:10%; margin-bottom:5%; color:#75c4c0" to="/login" class="nav-link"
+              >Trang đăng nhập</router-link
+            >
             <h4 style="text-align: center">QUÊN MẬT KHẨU?</h4>
             <p style="margin-bottom: 8%; text-align: center">
               Vui lòng nhập email để lấy lại mật khẩu
@@ -30,7 +33,7 @@
               </el-form>
             </div>
           </div>
-          <div v-else class="main">
+          <div v-else class="cont">
             <h4 style="text-align: center">QUÊN MẬT KHẨU?</h4>
             <p style="text-align: center">
               Hệ thống đã gửi mật khẩu về email của bạn
@@ -65,8 +68,8 @@ export default {
     };
     return {
       continue: false,
-      request:{
-        email:""
+      request: {
+        email: "",
       },
       ruleForm: {
         continue: false,
@@ -92,10 +95,9 @@ export default {
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
-
         if (valid) {
           this.request.email = this.ruleForm.email;
-          console.log(this.request)
+          console.log(this.request);
           DataService.forgotPass(this.request)
             .then((response) => {
               console.log(response.data);
@@ -115,7 +117,7 @@ export default {
 };
 </script>
 
-<style >
+<style>
 .img {
   width: 50%;
   margin-top: 15%;
@@ -154,7 +156,7 @@ export default {
   border: #75c4c0 solid 0.5px;
 }
 
-.main {
+.cont {
   width: 75%;
   border-radius: 15px;
   border: #75c4c0 solid 0.5px;

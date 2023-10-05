@@ -3,6 +3,10 @@
     <div class="infor">
         <h4 style="text-align: center">Thông tin nhân viên</h4>    
     </div>
+     <!-- <loading v-model:active="isLoading"
+                 :can-cancel="true"
+                 :on-cancel="onCancel"
+                 :is-full-page="fullPage"/> -->
     <div class="container">
   <div class="row">
     <div class="col-md-5 ">
@@ -96,7 +100,7 @@ export default {
     this.id = this.$store.state.auth.user.id;
   },
   mounted() {
-     setTimeout(() => {this.getUser(this.id)},20)
+     setTimeout(() => {this.getUser(this.id)},100)
     //this.getUser(this.id)
     // this.retrieveTutorials();
     // this.message = '';
