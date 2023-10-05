@@ -34,6 +34,10 @@ const router = new Router({
             path: "/forgotPassword",
             component: () => import("./components/manageUser/ForgotPassword.vue"),
         },
+        {
+            path: "/changepassword",
+            component: () => import("./components/manageUser/ChangePassword.vue"),
+        },
 
     ],
 });

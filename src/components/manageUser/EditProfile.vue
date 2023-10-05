@@ -300,8 +300,9 @@ export default {
     this.id = this.$store.state.auth.user.id;
   },
   mounted() {
-  
-    this.getUser(this.id);
+     this.getUser(this.id);
+
+   
     // this.retrieveTutorials();
     // this.message = '';
   },

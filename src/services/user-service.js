@@ -27,6 +27,10 @@ class UserService {
         return axios.post(BASE_URL + `/forgot-password`, data);
     }
 
+    changePass(data){
+        return axios.post(BASE_URL + `/change-password`, data);
+    }
+
 
 }
 

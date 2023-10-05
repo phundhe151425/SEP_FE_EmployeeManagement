@@ -71,11 +71,12 @@ export default {
     getUser(id) {
       DataService.getProfile(id)
         .then(response => {
+          console.log(response.data)
             this.currentUser = response.data;
             this.dateFormat = moment(String(this.currentUser.birthDay)).format("DD/MM/yyyy");
             console.log(typeof(this.dateFormat))
             this.file = require('@/assets/images/'+ this.currentUser.userImage)
-            console.log(response.data)
+            
         //   this.value = this.currentTutorial.brandId;
         //   this.oldFile = this.currentTutorial.image;
         //   this.fileSrc = require('@/assets'+ this.currentTutorial.image);
@@ -95,8 +96,8 @@ export default {
     this.id = this.$store.state.auth.user.id;
   },
   mounted() {
-    // setTimeout(() => {this.getUser(this.id)},90)
-    this.getUser(this.id)
+     setTimeout(() => {this.getUser(this.id)},20)
+    //this.getUser(this.id)
     // this.retrieveTutorials();
     // this.message = '';
     
@@ -147,7 +148,7 @@ h4{
    border-radius: 15px;
    color: white;
    width: 20%;
-   margin-top: 100px;
+   margin-top: 40px;
    margin-left: 55%;
    background-color: #75c4c0;
 }
