@@ -86,7 +86,7 @@ export default {
       }
     };
     return {
-      message:"",
+      message: "",
       ruleForm: {
         email: "",
         oldPassword: "",
@@ -131,9 +131,10 @@ export default {
           DataService.changePass(this.ruleForm)
             .then((response) => {
               console.log(response.data);
+               window.location.replace("http://localhost:2001/manageUser");
             })
             .catch((e) => {
-              this.message = "Mật khẩu cũ không đúng vui lòng nhập lại!"
+              this.message = "Mật khẩu cũ không đúng vui lòng nhập lại!";
               console.log(e);
             });
         } else {
