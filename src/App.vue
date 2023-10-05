@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-<!--      <Navbar />-->
       <SidebarVue />
       <div class="container-fluid" style="margin-top: 100px">
         <DialogCreateUser></DialogCreateUser>
@@ -10,7 +9,7 @@
 </template>
 
 <script>
-// import Navbar from "@/components/sidebar/NavBar.vue";
+
 import SidebarVue from "@/components/sidebar/SidebarVue.vue";
 import {sidebarWidth} from '@/components/sidebar/state.js'
 import {collapsed, toggleSidebar} from '@/components/sidebar/state.js'

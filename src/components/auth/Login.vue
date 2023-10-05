@@ -138,7 +138,8 @@ export default {
         },
     },
     created() {
-        this.$router.push("/login");
+        // this.$router.push("/login");
+        if (this.$route.path !== "/login") this.$router.push("/login")
         if (this.loggedIn) {
             console.log(this.$store.state.auth.user)
             // this.$store.dispatch("auth/logout");

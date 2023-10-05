@@ -15,10 +15,6 @@ const router = new Router({
             redirect: "/login",
         },
         {
-            path: "/test",
-            component: () => import("./components/auth/TestB.vue"),
-        },
-        {
             path: "/manageUser",
             component: () => import("./components/manageUser/ManageUser.vue"),
         },

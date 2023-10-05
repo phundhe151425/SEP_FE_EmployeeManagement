@@ -360,7 +360,7 @@ export default {
     return {
       users: [],
       page: 0,
-      pageSize: 10,
+      pageSize: 5,
       user_code: "",
       search: "",
       departmentId: "",
@@ -451,7 +451,7 @@ export default {
       // }
       UserService.getData(this.page, this.pageSize, this.departmentId, this.search, this.status).then((response) => {
         this.users = response.data.content;
-        console.log(this.users.at(0).userImage)
+        console.log("123"+this.users)
 
         this.page = response.data.pageable.pageNumber;
         this.totalItems = response.data.totalElements;
