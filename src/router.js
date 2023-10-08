@@ -22,6 +22,10 @@ const router = new Router({
             path: "/profile",
             component: () => import("./components/manageUser/Profile.vue"),
         },
+        {
+            path: "/calendar",
+            component: () => import("./components/calendar/calendarReport.vue"),
+        },
 
     ],
 });

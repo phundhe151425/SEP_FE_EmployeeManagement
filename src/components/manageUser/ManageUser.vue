@@ -226,12 +226,12 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Nhập họ tên nhân viên<span style="color: red"> *</span></span><br>
-                        <el-input v-model="user.fullName" name="fullName" autocomplete="off" maxlength="50"
+                        <el-input v-model="user.fullName"  name="fullName" autocomplete="off" maxlength="50"
                                   style="width: 90%"></el-input>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Mã nhân viên<span style="color: red"> *</span></span><br>
-                        <el-input v-model="user.username" name="userCode" autocomplete="off" maxlength="8"
+                        <el-input v-model="user.userCode" name="userCode" autocomplete="off" maxlength="8"
                                   style="width: 90%"></el-input>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
@@ -264,12 +264,13 @@
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Nhập ngày sinh<span style="color: red"> *</span></span><br>
                         <el-date-picker v-model="user.birthDay" name="birthDay" autocomplete="off"
-                                        format='dd/MM/yyyy'
-                                        value-format="dd/MM/yyyy"
+                                        format='yyyy-MM-dd'
+                                        value-format='yyyy-MM-dd'
                                         placeholder="Chọn ngày" style="width: 90%"></el-date-picker>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Vị trí<span style="color: red"> *</span></span><br>
+
                         <el-select v-model="user.positionId" name="positionId" autocomplete="off" style="width: 90%">
                             <!--                            <el-option v-for="item in positions" :key="item.position" :label="item.positionId" :value="item.id"></el-option>-->
                             <el-option
@@ -284,7 +285,6 @@
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Bộ phận<span style="color: red"> *</span></span><br>
                         <el-select v-model="user.departmentId" name="departmentId" autocomplete="off"
-                                   @change="this.changeGender"
                                    style="width: 90%">
                             <!--                          <el-option value=""  label="Tất cả các phòng ban"></el-option>-->
                             <el-option
@@ -312,8 +312,13 @@
                         />
 
                         <img alt=""
-                             :src=" imageUrl ||'https://www.namepros.com/attachments/empty-png.89209/'"
+                             :src=" user.imageUrl ||'https://www.namepros.com/attachments/empty-png.89209/'"
                              style="width: 90%"/>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <span>Tài khoản<span style="color: red"> *</span></span><br>
+                        <el-input v-model="user.username" name="username" autocomplete="off" maxlength="8"
+                                  style="width: 90%"></el-input>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <!--                        <span>Nhập hồ sơ nhân viên<span style="color: red"> *</span></span><br>-->
@@ -338,7 +343,8 @@
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div style="position: absolute;bottom: 40px;right: 40px">
                             <!--                        <el-button  @click="createEmployeeDialogVisible = false">Huỷ</el-button>-->
-                            <button class="save" @click="sendForm">Thêm</button>
+                            <button class="save" type="button" @click="sendForm">Thêm</button>
+                            <button class="save" type="button" @click="save">Thêm TEST</button>
                         </div>
 
                     </div>
@@ -378,19 +384,38 @@ export default {
             createEmployeeDialogVisible: false,
             user: {
                 username: '',
+                userCode: '',
+                email: '',
                 fullName: '',
                 gender: 1,
                 address: '',
-                email: '',
                 phone: '',
                 birthDay: '',
                 positionId: 1,
                 departmentId: 1,
-
+                imageUrl: '',
+                contractFile: ''
             },
 
-            imageUrl: '',
-            contractFile: ''
+            user1: {
+                username: 'dut',
+                userCode: 'he4532',
+                email: 'dut@gmail.com',
+                password: '123',
+                startWork: '2023-09-23',
+                endWork: '2023-09-23',
+                fullName: 'Nguyễn Văn Đụt',
+                gender: 1,
+                address: 'Hanoi',
+                phone: '094853348',
+                birthDay: '2001-07-05',
+                positionId: 1,
+                departmentId: 1,
+                imageUrl: '',
+                contractFile: ''
+            },
+
+
         };
     },
     created() {
@@ -400,25 +425,59 @@ export default {
         this.getAllPosition()
     },
     methods: {
-
-        // triggerFileInput() {
-        //     // Khi button được nhấp, gọi sự kiện click của input type="file"
-        //     this.$refs.fileInput.click();
-        // },
-        async sendForm() {
-            this.createEmployeeDialogVisible = false;
+        save(){
             let form = document.querySelector("#formCreate");
-            console.log(14, form.cover.value);
-            UserService.save(form).then(() => {
+            var formData = new FormData(form)
+            console.log(formData)
+            UserService.saveUser(formData).then(() => {
                 this.$notify.success({
                     message: "Tạo tài khoản thành công",
                     title: "Success",
                     timer: 2000,
                     timerProgressBar: true,
                 });
-                this.hideLoading();
-                this.getAll();
+                // this.hideLoading();
+                this.getData();
             });
+        },
+        // triggerFileInput() {
+        //     // Khi button được nhấp, gọi sự kiện click của input type="file"
+        //     this.$refs.fileInput.click();
+        // },
+        async sendForm() {
+            this.createEmployeeDialogVisible = false;
+            console.log(1);
+            let form = document.querySelector("#formCreate");
+            console.log(2);
+            console.log('userImage', form.userImage.value);
+            console.log(3);
+            console.log('fullName', form.fullName.value);
+            console.log(4);
+            console.log('userCode', form.userCode.value);
+            console.log(5);
+            console.log('address', form.address.value);
+            console.log(6);
+            console.log('phone', form.phone.value);
+            console.log(7);
+            console.log('username', form.username.value);
+            console.log(8);
+            console.log('gender', form.gender.value);
+            console.log(9);
+            console.log('departmentId', form.departmentId.value);
+            console.log(10);
+            console.log('positionId', form.positionId.value);
+            console.log(11);
+            UserService.saveUser(form).then(() => {
+                this.$notify.success({
+                    message: "Tạo tài khoản thành công",
+                    title: "Success",
+                    timer: 2000,
+                    timerProgressBar: true,
+                });
+                // this.hideLoading();
+                this.getData();
+            });
+            console.log(14);
 
         },
 
@@ -437,9 +496,7 @@ export default {
         showCreateEmployeeDialog() {
             this.createEmployeeDialogVisible = true;
         },
-        changeGender() {
-            console.log("123 " + this.user.departmentId)
-        },
+
         getData() {
 
             // let params;
@@ -454,8 +511,6 @@ export default {
             // }
             UserService.getData(this.page, this.pageSize, this.departmentId, this.search, this.status).then((response) => {
                 this.users = response.data.content;
-                console.log("123" + this.users)
-
                 this.page = response.data.pageable.pageNumber;
                 this.totalItems = response.data.totalElements;
             })
@@ -489,7 +544,7 @@ export default {
 
             const theReader = new FileReader();
             theReader.onloadend = async () => {
-                this.imageUrl = await theReader.result;
+                this.user.imageUrl = await theReader.result;
             };
             theReader.readAsDataURL(file);
         },

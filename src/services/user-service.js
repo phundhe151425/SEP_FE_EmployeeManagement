@@ -1,11 +1,14 @@
 import httpCommon from "@/http-common";
-import { BASE_URL } from "@/http-common";
-import axios from 'axios';
-import authHeader from "@/services/auth-header";
+// import { BASE_URL } from "@/http-common";
+// import axios from 'axios';
+// import authHeader from "@/services/auth-header";
 
 class UserService {
-    save(data) {
-        return axios.post(BASE_URL + "/user/create", data,{headers: authHeader()});
+    saveUser(data) {
+        console.log(12, data);
+        let dataForm = new FormData(data)
+        console.log(13, dataForm);
+        return httpCommon.post("/user/create", dataForm);
     }
     getData(page, size, departId, search, status) {
         return httpCommon.get( "/user/data?page="+page+"&size="+size+"&departmentId="+departId+"&search="+search+"&status="+status );

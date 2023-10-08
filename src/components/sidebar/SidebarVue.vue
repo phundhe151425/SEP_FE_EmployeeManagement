@@ -107,7 +107,7 @@
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="/profile">
-                                <router-link to="/calender" class="nav-link sel">
+                                <router-link to="/calendar" class="nav-link sel">
                                     <font-awesome-icon icon="home"/>
                                     Trang chủ
                                 </router-link>
