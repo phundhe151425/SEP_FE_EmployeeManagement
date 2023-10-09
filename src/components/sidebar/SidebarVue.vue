@@ -136,7 +136,7 @@ export default {
     },
     props: {},
     created() {
-this.getUser()
+    this.getUser()
     },
     computed: {
         currentUser() {

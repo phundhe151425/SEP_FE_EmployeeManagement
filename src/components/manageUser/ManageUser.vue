@@ -127,8 +127,8 @@
                         >
                         </el-table-column>
                         <el-table-column
-                                label="Ngày vào làm"
-                                prop="startWork"
+                                label="Số điên thoại"
+                                prop="phone"
                                 align="center"
                         >
                         </el-table-column>
@@ -184,20 +184,36 @@
                                 align="center"
                         >
 
-                            <router-link :to="`/user/${data.row.id}`">
-                                <!--            <el-button type="danger" icon="el-icon-edit-outline" circle></el-button>-->
-                                <button style="margin-right: 10px" class="btn-action">
-                                    <i class="el-icon-edit-outline" style="width: 30px"></i>
-                                </button>
-                            </router-link>
+                            <!--                            <router-link :to="`/user/${data.row.id}`">-->
+                            <!--            <el-button type="danger" icon="el-icon-edit-outline" circle></el-button>-->
+                            <button style="margin-right: 10px" class="btn-action"
+                                    @click="showEditEmployeeDialog(data.row.id)">
+                                <i class="el-icon-edit-outline" style="width: 30px"></i>
+                            </button>
+                            <!--                            </router-link>-->
                             <button
-                                    v-if="data.row.status == 1"
-                                    class="btn-action">
-                                <!--                                @click="changeStatus(-->
-                                <!--                                data.row.id,-->
-                                <!--                                data.row.fullName,-->
-                                <!--                                data.row.status) "-->
+                                    v-if="data.row.status == 1 && data.row.id == logInUser.id"
+                                    class="btn-action"
+                                    disabled>
                                 <i class="el-icon-unlock" style="width: 30px"></i>
+                            </button>
+                            <button
+                                    v-if="data.row.status == 0 && data.row.id == logInUser.id"
+                                    class="btn-action"
+                                    disabled>
+                                <i class="el-icon-lock" style="width: 30px"></i>
+                            </button>
+                            <button
+                                    v-if="data.row.status == 1 && data.row.id != logInUser.id"
+                                    class="btn-action"
+                                    @click="changeStatus(data.row.id, data.row.userCode, data.row.status)">
+                                <i class="el-icon-unlock" style="width: 30px"></i>
+                            </button>
+                            <button
+                                    v-if="data.row.status == 0 && data.row.id != logInUser.id"
+                                    class="btn-action"
+                                    @click="changeStatus(data.row.id, data.row.userCode, data.row.status)">
+                                <i class="el-icon-lock" style="width: 30px"></i>
                             </button>
 
                             <!--          </div>-->
@@ -216,85 +232,154 @@
             </div>
         </div>
 
+        <!--        create-->
         <el-dialog
 
                 :visible.sync="createEmployeeDialogVisible"
                 width="50%"
-                title="Tạo mới Nhân viên"
+                title="Tạo mới nhân viên"
                 left>
             <form id="formCreate">
                 <div class="row">
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Nhập họ tên nhân viên<span style="color: red"> *</span></span><br>
-                        <el-input v-model="user.fullName"  name="fullName" autocomplete="off" maxlength="50"
-                                  style="width: 90%"></el-input>
+                        <el-input id="fullName" v-model="user.fullName" name="fullName" autocomplete="off"
+                                  maxlength="50"
+                                  :class="{'error-border':errFullName !== null && errFullName !== ''}"
+                                  @input="clearErrorFullName('fullName')"
+                                  style="width: 90%;"></el-input>
+                        <div>
+                            <small v-if="errFullName !== null" style="color: red">
+                                {{ errFullName }}
+                            </small>
+                        </div>
+
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Mã nhân viên<span style="color: red"> *</span></span><br>
-                        <el-input v-model="user.userCode" name="userCode" autocomplete="off" maxlength="8"
+                        <el-input id="userCode" v-model="user.userCode" name="userCode" autocomplete="off" maxlength="8"
+                                  :class="{'error-border':errUserCode !== null && errUserCode !== ''}"
+                                  @input="clearErrorFullName('userCode')"
                                   style="width: 90%"></el-input>
+                        <div>
+                            <small v-if="errUserCode !== null" style="color: red">
+                                {{ errUserCode }}
+                            </small>
+                        </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Giới tính<span style="color: red"> *</span></span><br>
-                        <el-radio-group v-model="user.gender" name="gender" @change="changeGender()">
-                            <el-radio-button value="1" label="1">Nam</el-radio-button>
-                            <el-radio-button value="0" label="0">Nữ</el-radio-button>
+                        <el-radio-group id="gender" v-model="user.gender" name="gender"
+                                        :class="{'error-border':errGender !== null && errGender !== ''}"
+                                        @change="clearErrorFullName('gender')">
+                            <el-radio-button value="1" label="1" name="gender">Nam</el-radio-button>
+                            <el-radio-button value="0" label="0" name="gender">Nữ</el-radio-button>
                         </el-radio-group>
+                        <div>
+                            <small v-if="errGender !== null" style="color: red">
+                                {{ errGender }}
+                            </small>
+                        </div>
                     </div>
                 </div>
                 <div class="row" style="margin-top: 20px">
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Nhập địa chỉ<span style="color: red"> *</span></span><br>
-                        <el-input v-model="user.address" name="address" autocomplete="off" maxlength="100"
+                        <el-input id="address" v-model="user.address" name="address" autocomplete="off" maxlength="100"
+                                  :class="{'error-border':errAddress !== null && errAddress !== ''}"
+                                  @input="clearErrorFullName('address')"
                                   style="width: 90%"></el-input>
+                        <div>
+                            <small v-if="errAddress !== null" style="color: red">
+                                {{ errAddress }}
+                            </small>
+                        </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Nhập email nhân viên<span style="color: red"> *</span></span><br>
-                        <el-input v-model="user.email" name="email" autocomplete="off" maxlength="50"
+                        <el-input id="email" v-model="user.email" name="email" autocomplete="off" maxlength="50"
+                                  :class="{'error-border':errEmail !== null && errEmail !== ''}"
+                                  @input="clearErrorFullName('email')"
                                   style="width: 90%"></el-input>
+
+                        <div>
+                            <small v-if="errEmail !== null" style="color: red">
+                                {{ errEmail }}
+                            </small>
+                        </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Nhập số điện thoại<span style="color: red"> *</span></span><br>
-                        <el-input v-model="user.phone" name="phone" autocomplete="off" maxlength="11"
-                                  @input="restrictToNumbers"
+                        <el-input id="phone" v-model="user.phone" name="phone" autocomplete="off" maxlength="11"
+                                  :class="{'error-border':errPhone !== null && errPhone !== ''}"
+                                  @input="validateIsNumbers"
                                   style="width: 90%"></el-input>
+
+                        <div>
+                            <small v-if="errPhone !== null" style="color: red">
+                                {{ errPhone }}
+                            </small>
+                        </div>
                     </div>
                 </div>
                 <div class="row" style="margin-top: 20px">
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Nhập ngày sinh<span style="color: red"> *</span></span><br>
-                        <el-date-picker v-model="user.birthDay" name="birthDay" autocomplete="off"
+                        <el-date-picker id="birthDay" v-model="user.birthDay" name="birthDay" autocomplete="off"
                                         format='yyyy-MM-dd'
                                         value-format='yyyy-MM-dd'
+                                        :editable="false"
+                                        :class="{'error-border':errBirthDay !== null && errBirthDay !== ''}"
+                                        @change="clearErrorFullName('birthDay')"
                                         placeholder="Chọn ngày" style="width: 90%"></el-date-picker>
+
+                        <div>
+                            <small v-if="errBirthDay !== null" style="color: red">
+                                {{ errBirthDay }}
+                            </small>
+                        </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Vị trí<span style="color: red"> *</span></span><br>
 
-                        <el-select v-model="user.positionId" name="positionId" autocomplete="off" style="width: 90%">
-                            <!--                            <el-option v-for="item in positions" :key="item.position" :label="item.positionId" :value="item.id"></el-option>-->
+                        <el-select id="positionId" v-model="user.positionId" name="positionId" autocomplete="off"
+                                   :class="{'error-border':errPositionId !== null && errPositionId !== ''}"
+                                   @change="clearErrorFullName('positionId')"
+                                   style="width: 90%">
                             <el-option
                                     v-for="item in positions"
                                     :key="item.position"
                                     :label="item.positionName"
                                     :value="item.id"
-                            >
-                            </el-option>
+                            ></el-option>
                         </el-select>
+
+                        <div>
+                            <small v-if="errPositionId !== null" style="color: red">
+                                {{ errPositionId }}
+                            </small>
+                        </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Bộ phận<span style="color: red"> *</span></span><br>
-                        <el-select v-model="user.departmentId" name="departmentId" autocomplete="off"
+                        <el-select id="departmentId" v-model="user.departmentId" name="departmentId" autocomplete="off"
+                                   :class="{'error-border':errDepartmentId !== null && errDepartmentId !== ''}"
+                                   @change="clearErrorFullName('departmentId')"
                                    style="width: 90%">
-                            <!--                          <el-option value=""  label="Tất cả các phòng ban"></el-option>-->
                             <el-option
                                     v-for="item in departments"
                                     :key="item.department"
                                     :label="item.name"
                                     :value="item.id"
-                            >
-                            </el-option>
+
+                            ></el-option>
                         </el-select>
+
+                        <div>
+                            <small v-if="errDepartmentId !== null" style="color: red">
+                                {{ errDepartmentId }}
+                            </small>
+                        </div>
                     </div>
                 </div>
 
@@ -302,49 +387,95 @@
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Nhập ảnh nhân viên<span style="color: red"> *</span></span><br>
                         <input
-                                id="fileUser"
+                                id="userImage"
                                 type="file"
                                 name="userImage"
                                 class="form-control"
                                 placeholder="Title"
-                                @change="previewFiles($event)"
+                                @change="previewFiles($event),clearErrorFullName('userImage')"
+                                :class="{'error-border':errUserImage !== null && errUserImage !== ''}"
                                 style="width: 90%"
                         />
 
                         <img alt=""
-                             :src=" user.imageUrl ||'https://www.namepros.com/attachments/empty-png.89209/'"
+                             :src=" user.userImage ||'https://www.namepros.com/attachments/empty-png.89209/'"
                              style="width: 90%"/>
+
+                        <div>
+                            <small v-if="errUserImage !== null" style="color: red">
+                                {{ errUserImage }}
+                            </small>
+                        </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                        <span>Tài khoản<span style="color: red"> *</span></span><br>
-                        <el-input v-model="user.username" name="username" autocomplete="off" maxlength="8"
-                                  style="width: 90%"></el-input>
+                        <div>
+                            <span>Hợp đồng<span style="color: red"> *</span></span><br>
+                            <input id="contractFile" type="file" name="contractFile"
+                                   :class="{'error-border':errContractFile !== null && errContractFile !== ''}"
+                                   @change="clearErrorFullName('contractFile')"
+                                   style="width: 90%"/>
+
+                            <div>
+                                <small v-if="errContractFile !== null" style="color: red">
+                                    {{ errContractFile }}
+                                </small>
+                            </div>
+                        </div>
+                        <div style="margin-top: 36px">
+                            <span>Ngày bắt đầu hợp đồng<span style="color: red"> *</span></span><br>
+                            <el-date-picker id="startWork" v-model="user.startWork" name="startWork" autocomplete="off"
+                                            :class="{'error-border':errStartWork !== null && errStartWork !== ''}"
+                                            @change="clearErrorFullName('startWork')"
+                                            format='yyyy-MM-dd'
+                                            value-format='yyyy-MM-dd'
+                                            :editable="false"
+                                            placeholder="Chọn ngày" style="width: 90%"></el-date-picker>
+
+                            <div>
+                                <small v-if="errStartWork !== null" style="color: red">
+                                    {{ errStartWork }}
+                                </small>
+                            </div>
+                        </div>
                     </div>
+
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                        <!--                        <span>Nhập hồ sơ nhân viên<span style="color: red"> *</span></span><br>-->
-                        <!--                        &lt;!&ndash;                    <b-form-file multiple :file-name-formatter="formatNames" accept="pdf,doc,docx"></b-form-file>&ndash;&gt;-->
-                        <!--                        &lt;!&ndash;                    <div style="border: dotted; width: 90%; height: 80px">&ndash;&gt;-->
-                        <!--                        &lt;!&ndash;                        <input type="file" multiple style="width: 90%; height: 80px;display: none">&ndash;&gt;-->
-                        <!--                        &lt;!&ndash;                    </div>&ndash;&gt;-->
-                        <!--                        <input-->
-                        <!--                                type="file"-->
-                        <!--                                id="fileInput"-->
-                        <!--                                name="contractFile"-->
-                        <!--                                ref="fileInput"-->
-                        <!--                                style="display: none"-->
-                        <!--                                multiple-->
-                        <!--                                @change="handleContractFileInputChange"-->
-                        <!--                        />-->
-                        <!--                        &lt;!&ndash; Sử dụng button để kích hoạt việc chọn tệp &ndash;&gt;-->
-                        <!--                        <button @click="triggerFileInput" style="width: 90%; height: 80px">-->
-                        <!--                            Chọn tệp-->
-                        <!--                        </button>-->
-                    </div>
-                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <div>
+                            <span>Tài khoản<span style="color: red"> *</span></span><br>
+                            <el-input id="username" v-model="user.username" name="username" autocomplete="off"
+                                      maxlength="50"
+                                      :class="{'error-border':errUserName !== null && errUserName !== ''}"
+                                      @change="clearErrorFullName('username')"
+                                      style="width: 90%"></el-input>
+
+                            <div>
+                                <small v-if="errUserName !== null" style="color: red">
+                                    {{ errUserName }}
+                                </small>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 30px">
+                            <span>Ngày kết thúc hợp đồng<span style="color: red"> *</span></span><br>
+                            <el-date-picker id="endWork" v-model="user.endWork" name="endWork" autocomplete="off"
+                                            :class="{'error-border':errEndWork !== null && errEndWork !== ''}"
+                                            @change="clearErrorFullName('endWork')"
+                                            format='yyyy-MM-dd'
+                                            :editable="false"
+                                            value-format='yyyy-MM-dd'
+                                            placeholder="Chọn ngày" style="width: 90%"></el-date-picker>
+
+                            <div>
+                                <small v-if="errEndWork !== null" style="color: red">
+                                    {{ errEndWork }}
+                                </small>
+                            </div>
+                        </div>
+
                         <div style="position: absolute;bottom: 40px;right: 40px">
                             <!--                        <el-button  @click="createEmployeeDialogVisible = false">Huỷ</el-button>-->
                             <button class="save" type="button" @click="sendForm">Thêm</button>
-                            <button class="save" type="button" @click="save">Thêm TEST</button>
+
                         </div>
 
                     </div>
@@ -352,7 +483,257 @@
             </form>
         </el-dialog>
 
+<!--        edit-->
+        <el-dialog
 
+            :visible.sync="editEmployeeDialogVisible"
+            width="50%"
+            title="Sửa thông tin nhân viên"
+            left>
+            <form id="formEdit">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <span>Nhập họ tên nhân viên<span style="color: red"> *</span></span><br>
+                        <el-input id="fullNameEdit" v-model="userEdit.fullName" name="fullName" autocomplete="off"
+                                  maxlength="50"
+                                  :class="{'error-border':errFullName !== null && errFullName !== ''}"
+                                  @input="clearErrorFullName('fullName')"
+                                  style="width: 90%;"></el-input>
+                        <div>
+                            <small v-if="errFullName !== null" style="color: red">
+                                {{ errFullName }}
+                            </small>
+                        </div>
+
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <span>Mã nhân viên<span style="color: red"> *</span></span><br>
+                        <el-input id="userCodeEdit" v-model="userEdit.userCode" name="userCode" autocomplete="off" maxlength="8"
+                                  :class="{'error-border':errUserCode !== null && errUserCode !== ''}"
+                                  @input="clearErrorFullName('userCode')"
+                                  style="width: 90%"></el-input>
+                        <div>
+                            <small v-if="errUserCode !== null" style="color: red">
+                                {{ errUserCode }}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <span>Giới tính<span style="color: red"> *</span></span><br>
+                        <el-radio-group id="genderEdit" v-model="userEdit.gender" name="gender"
+                                        :class="{'error-border':errGender !== null && errGender !== ''}"
+                                        @change="clearErrorFullName('gender')">
+                            <el-radio-button value="1" label="1" name="gender">Nam</el-radio-button>
+                            <el-radio-button value="0" label="0" name="gender">Nữ</el-radio-button>
+                        </el-radio-group>
+                        <div>
+                            <small v-if="errGender !== null" style="color: red">
+                                {{ errGender }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 20px">
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <span>Nhập địa chỉ<span style="color: red"> *</span></span><br>
+                        <el-input id="addressEdit" v-model="userEdit.address" name="address" autocomplete="off" maxlength="100"
+                                  :class="{'error-border':errAddress !== null && errAddress !== ''}"
+                                  @input="clearErrorFullName('address')"
+                                  style="width: 90%"></el-input>
+                        <div>
+                            <small v-if="errAddress !== null" style="color: red">
+                                {{ errAddress }}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <span>Nhập email nhân viên<span style="color: red"> *</span></span><br>
+                        <el-input id="emailEdit" v-model="userEdit.email" name="email" autocomplete="off" maxlength="50"
+                                  :class="{'error-border':errEmail !== null && errEmail !== ''}"
+                                  @input="clearErrorFullName('email')"
+                                  style="width: 90%"></el-input>
+
+                        <div>
+                            <small v-if="errEmail !== null" style="color: red">
+                                {{ errEmail }}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <span>Nhập số điện thoại<span style="color: red"> *</span></span><br>
+                        <el-input id="phoneEdit" v-model="userEdit.phone" name="phone" autocomplete="off" maxlength="11"
+                                  :class="{'error-border':errPhone !== null && errPhone !== ''}"
+                                  @input="validateIsNumbers"
+                                  style="width: 90%"></el-input>
+
+                        <div>
+                            <small v-if="errPhone !== null" style="color: red">
+                                {{ errPhone }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 20px">
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <span>Nhập ngày sinh<span style="color: red"> *</span></span><br>
+                        <el-date-picker id="birthDayEdit" v-model="userEdit.birthDay" name="birthDay" autocomplete="off"
+                                        format='yyyy-MM-dd'
+                                        value-format='yyyy-MM-dd'
+                                        :editable="false"
+                                        :class="{'error-border':errBirthDay !== null && errBirthDay !== ''}"
+                                        @change="clearErrorFullName('birthDay')"
+                                        placeholder="Chọn ngày" style="width: 90%"></el-date-picker>
+
+                        <div>
+                            <small v-if="errBirthDay !== null" style="color: red">
+                                {{ errBirthDay }}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <span>Vị trí<span style="color: red"> *</span></span><br>
+
+                        <el-select id="positionIdEdit" v-model="positionEditName" name="positionId" autocomplete="off"
+                                   :class="{'error-border':errPositionId !== null && errPositionId !== ''}"
+                                   @change="clearErrorFullName('positionId')"
+                                   style="width: 90%">
+                            <el-option
+                                v-for="item in positions"
+                                :key="item.position"
+                                :label="item.positionName"
+                                :value="item.id"
+
+                            ></el-option>
+                        </el-select>
+
+                        <div>
+                            <small v-if="errPositionId !== null" style="color: red">
+                                {{ errPositionId }}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <span>Bộ phận<span style="color: red"> *</span></span><br>
+                        <el-select id="departmentIdEdit" v-model="this.deparmentEditName" name="departmentId" autocomplete="off"
+                                   :class="{'error-border':errDepartmentId !== null && errDepartmentId !== ''}"
+                                   @change="clearErrorFullName('departmentId')"
+                                   style="width: 90%">
+                            <el-option
+                                v-for="item in departments"
+                                :key="item.department"
+                                :label="item.name"
+                                :value="item.id"
+
+                            ></el-option>
+                        </el-select>
+
+                        <div>
+                            <small v-if="errDepartmentId !== null" style="color: red">
+                                {{ errDepartmentId }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 30px">
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <span>Nhập ảnh nhân viên<span style="color: red"> *</span></span><br>
+                        <input
+                            id="userImageEdit"
+                            type="file"
+                            name="userImage"
+                            class="form-control"
+                            placeholder="Title"
+                            @change="previewFilesEdit($event),clearErrorFullName('userImage')"
+                            :class="{'error-border':errUserImage !== null && errUserImage !== ''}"
+                            style="width: 90%"
+                        />
+
+                        <img alt=""
+                             :src="userImageEdit"
+                             style="width: 90%"/>
+
+                        <div>
+                            <small v-if="errUserImage !== null" style="color: red">
+                                {{ errUserImage }}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <div>
+                            <span>Hợp đồng<span style="color: red"> *</span></span><br>
+                            <input id="contractFileEdit" type="file" name="contractFile"
+                                   :class="{'error-border':errContractFile !== null && errContractFile !== ''}"
+                                   @change="clearErrorFullName('contractFile')"
+                                   style="width: 90%"/>
+
+                            <div>
+                                <small v-if="errContractFile !== null" style="color: red">
+                                    {{ errContractFile }}
+                                </small>
+                            </div>
+                        </div>
+                        <div style="margin-top: 36px">
+                            <span>Ngày bắt đầu hợp đồng<span style="color: red"> *</span></span><br>
+                            <el-date-picker id="startWorkEdit" v-model="userEdit.startWork" name="startWork" autocomplete="off"
+                                            :class="{'error-border':errStartWork !== null && errStartWork !== ''}"
+                                            @change="clearErrorFullName('startWork')"
+                                            format='yyyy-MM-dd'
+                                            value-format='yyyy-MM-dd'
+                                            :editable="false"
+                                            placeholder="Chọn ngày" style="width: 90%"></el-date-picker>
+
+                            <div>
+                                <small v-if="errStartWork !== null" style="color: red">
+                                    {{ errStartWork }}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <div>
+                            <span>Tài khoản<span style="color: red"> *</span></span><br>
+                            <el-input id="usernameEdit" v-model="userEdit.username" name="username" autocomplete="off"
+                                      maxlength="50"
+                                      :class="{'error-border':errUserName !== null && errUserName !== ''}"
+                                      @change="clearErrorFullName('username')"
+                                      style="width: 90%"></el-input>
+
+                            <div>
+                                <small v-if="errUserName !== null" style="color: red">
+                                    {{ errUserName }}
+                                </small>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 30px">
+                            <span>Ngày kết thúc hợp đồng<span style="color: red"> *</span></span><br>
+                            <el-date-picker id="endWorkEdit" v-model="userEdit.endWork" name="endWork" autocomplete="off"
+                                            :class="{'error-border':errEndWork !== null && errEndWork !== ''}"
+                                            @change="clearErrorFullName('endWork')"
+                                            format='yyyy-MM-dd'
+                                            :editable="false"
+                                            value-format='yyyy-MM-dd'
+                                            placeholder="Chọn ngày" style="width: 90%"></el-date-picker>
+
+                            <div>
+                                <small v-if="errEndWork !== null" style="color: red">
+                                    {{ errEndWork }}
+                                </small>
+                            </div>
+                        </div>
+
+                        <div style="position: absolute;bottom: 40px;right: 40px">
+                            <!--                        <el-button  @click="createEmployeeDialogVisible = false">Huỷ</el-button>-->
+                            <button class="save" type="button" @click="editUser">Thêm</button>
+
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </el-dialog>
     </div>
 </template>
 
@@ -367,6 +748,7 @@ export default {
     name: "ManageUser",
     data() {
         return {
+            logInUser: '',
             users: [],
             page: 0,
             pageSize: 5,
@@ -390,32 +772,52 @@ export default {
                 gender: 1,
                 address: '',
                 phone: '',
+                startWork: '',
+                endWork: '',
                 birthDay: '',
                 positionId: 1,
                 departmentId: 1,
-                imageUrl: '',
+                userImage: '',
                 contractFile: ''
             },
 
-            user1: {
-                username: 'dut',
-                userCode: 'he4532',
-                email: 'dut@gmail.com',
-                password: '123',
-                startWork: '2023-09-23',
-                endWork: '2023-09-23',
-                fullName: 'Nguyễn Văn Đụt',
-                gender: 1,
-                address: 'Hanoi',
-                phone: '094853348',
-                birthDay: '2001-07-05',
-                positionId: 1,
-                departmentId: 1,
-                imageUrl: '',
-                contractFile: ''
+            editEmployeeDialogVisible: false,
+            userEdit: {
+
             },
+            deparmentEditName: '',
+            positionEditName: '',
+            userImageEdit: '',
+            contractFileEdit: '',
+            // username: '',
+            // userCode: '',
+            // email: '',
+            // fullName: '',
+            // gender: 1,
+            // address: '',
+            // phone: '',
+            // startWork: '',
+            // endWork: '',
+            // birthDay: '',
+            // positionId: 1,
+            // departmentId: 1,
+            // userImage: '',
+            // contractFile: ''
 
-
+            errFullName: '',
+            errUserCode: '',
+            errGender: '',
+            errAddress: '',
+            errEmail: '',
+            errPhone: '',
+            errBirthDay: '',
+            errPositionId: '',
+            errDepartmentId: '',
+            errUserImage: '',
+            errContractFile: '',
+            errUserName: '',
+            errStartWork: '',
+            errEndWork: '',
         };
     },
     created() {
@@ -423,50 +825,103 @@ export default {
         this.getData()
         this.getAllDepartment()
         this.getAllPosition()
+        this.getUser()
+    },
+    computed: {
+        currentUser() {
+            return this.$store.state.auth.user;
+        },
     },
     methods: {
-        save(){
-            let form = document.querySelector("#formCreate");
-            var formData = new FormData(form)
-            console.log(formData)
-            UserService.saveUser(formData).then(() => {
-                this.$notify.success({
-                    message: "Tạo tài khoản thành công",
-                    title: "Success",
-                    timer: 2000,
-                    timerProgressBar: true,
-                });
-                // this.hideLoading();
-                this.getData();
-            });
+        getUser() {
+            this.logInUser = this.$store.state.auth.user;
+            console.log(this.logInUser.id)
+            return this.$store.state.auth.user;
         },
-        // triggerFileInput() {
-        //     // Khi button được nhấp, gọi sự kiện click của input type="file"
-        //     this.$refs.fileInput.click();
-        // },
         async sendForm() {
+            if (!this.user.fullName) {
+                this.errFullName = "Vui lòng nhập họ và tên";
+                document.getElementById("fullName").classList.add("error-border")
+                return;
+            } else if (!this.user.userCode) {
+                this.errUserCode = "Vui lòng nhập mã nhân viên";
+                document.getElementById("userCode").classList.add("error-border")
+                return;
+            } else if (!this.user.gender) {
+                this.errGender = "Vui lòng chọn giới tính";
+                document.getElementById("gender").classList.add("error-border")
+                return;
+            } else if (!this.user.address) {
+                this.errAddress = "Vui lòng nhập địa chỉ";
+                document.getElementById("address").classList.add("error-border")
+                return;
+            }else if (!this.user.email) {
+                this.errEmail = "Vui lòng nhập email";
+                document.getElementById("email").classList.add("error-border")
+                return;
+            } else if (!this.user.phone) {
+                this.errPhone = "Vui lòng nhập số điện thoại";
+                document.getElementById("phone").classList.add("error-border")
+                return;
+            }else if (!this.user.birthDay) {
+                this.errBirthDay = "Vui lòng chọn ngày sinh";
+                document.getElementById("birthDay").classList.add("error-border")
+                return;
+            }else if (!this.user.positionId) {
+                this.errPositionId = "Vui lòng chọn vị trí";
+                document.getElementById("positionId").classList.add("error-border")
+                return;
+            }else if (!this.user.departmentId) {
+                this.errDepartmentId = "Vui lòng chọn phòng ban";
+                document.getElementById("departmentId").classList.add("error-border")
+                return;
+            }else if (!this.user.userImage) {
+                console.log(this.user.userImage)
+                this.errUserImage = "Vui lòng chọn ảnh nhân viên";
+                document.getElementById("userImage").classList.add("error-border")
+                return;
+            }
+            // else if (!this.user.contractFile) {
+            //     console.log(this.user.contractFile)
+            //     this.errContractFile = "Vui lòng chọn hợp đồng";
+            //     document.getElementById("contractFile").classList.add("error-border")
+            //     return;
+            // }
+            else if (!this.user.username) {
+                this.errUserName = "Vui lòng nhập tài khoản";
+                document.getElementById("username").classList.add("error-border")
+                return;
+            }else if (!this.user.startWork) {
+                this.errStartWork = "Vui lòng chọn ngày bắt đầu hợp đồng";
+                document.getElementById("startWork").classList.add("error-border")
+                return;
+            }else if (!this.user.endWork) {
+                this.errEndWork = "Vui lòng chọn ngày kết thúc hợp đồng";
+                document.getElementById("endWork").classList.add("error-border")
+                return;
+            }
+            if (this.user.email) {
+                if(!this.isEmailValid(this.user.email)){
+                    this.errEmail = "Vui lòng nhập lại email";
+                    document.getElementById("email").classList.add("error-border")
+                    return;
+                }
+
+            }
+
             this.createEmployeeDialogVisible = false;
-            console.log(1);
+            for (var i = 0; i < this.departments.length; i++) {
+                if (document.getElementById('departmentId').value === this.departments.at(i).name) {
+                    document.getElementById('departmentId').value = this.departments.at(i).id;
+                }
+            }
+            for (var j = 0; j < this.positions.length; j++) {
+                if (document.getElementById('positionId').value === this.positions.at(j).positionName) {
+                    document.getElementById('positionId').value = this.positions.at(j).id;
+                }
+            }
+
             let form = document.querySelector("#formCreate");
-            console.log(2);
-            console.log('userImage', form.userImage.value);
-            console.log(3);
-            console.log('fullName', form.fullName.value);
-            console.log(4);
-            console.log('userCode', form.userCode.value);
-            console.log(5);
-            console.log('address', form.address.value);
-            console.log(6);
-            console.log('phone', form.phone.value);
-            console.log(7);
-            console.log('username', form.username.value);
-            console.log(8);
-            console.log('gender', form.gender.value);
-            console.log(9);
-            console.log('departmentId', form.departmentId.value);
-            console.log(10);
-            console.log('positionId', form.positionId.value);
-            console.log(11);
             UserService.saveUser(form).then(() => {
                 this.$notify.success({
                     message: "Tạo tài khoản thành công",
@@ -477,9 +932,198 @@ export default {
                 // this.hideLoading();
                 this.getData();
             });
-            console.log(14);
+
 
         },
+        async editUser() {
+            if (!this.userEdit.fullName) {
+                this.errFullName = "Vui lòng nhập họ và tên";
+                document.getElementById("fullNameEdit").classList.add("error-border")
+                return;
+            } else if (!this.userEdit.userCode) {
+                this.errUserCode = "Vui lòng nhập mã nhân viên";
+                document.getElementById("userCodeEdit").classList.add("error-border")
+                return;
+            } else if (!this.userEdit.gender) {
+                this.errGender = "Vui lòng chọn giới tính";
+                document.getElementById("genderEdit").classList.add("error-border")
+                return;
+            } else if (!this.userEdit.address) {
+                this.errAddress = "Vui lòng nhập địa chỉ";
+                document.getElementById("addressEdit").classList.add("error-border")
+                return;
+            }else if (!this.userEdit.email) {
+                this.errEmail = "Vui lòng nhập email";
+                document.getElementById("emailEdit").classList.add("error-border")
+                return;
+            } else if (!this.userEdit.phone) {
+                this.errPhone = "Vui lòng nhập số điện thoại";
+                document.getElementById("phoneEdit").classList.add("error-border")
+                return;
+            }else if (!this.userEdit.birthDay) {
+                this.errBirthDay = "Vui lòng chọn ngày sinh";
+                document.getElementById("birthDayEdit").classList.add("error-border")
+                return;
+            }else if (!this.userEdit.positionId) {
+                this.errPositionId = "Vui lòng chọn vị trí";
+                document.getElementById("positionIdEdit").classList.add("error-border")
+                return;
+            }else if (!this.userEdit.departmentId) {
+                this.errDepartmentId = "Vui lòng chọn phòng ban";
+                document.getElementById("departmentIdEdit").classList.add("error-border")
+                return;
+            }else if (!this.userEdit.userImage) {
+                console.log(this.userEdit.userImage)
+                this.errUserImage = "Vui lòng chọn ảnh nhân viên";
+                document.getElementById("userImageEdit").classList.add("error-border")
+                return;
+            }
+                // else if (!this.user.contractFile) {
+                //     console.log(this.user.contractFile)
+                //     this.errContractFile = "Vui lòng chọn hợp đồng";
+                //     document.getElementById("contractFileEdit").classList.add("error-border")
+                //     return;
+            // }
+            else if (!this.userEdit.username) {
+                this.errUserName = "Vui lòng nhập tài khoản";
+                document.getElementById("usernameEdit").classList.add("error-border")
+                return;
+            }else if (!this.userEdit.startWork) {
+                this.errStartWork = "Vui lòng chọn ngày bắt đầu hợp đồng";
+                document.getElementById("startWorkEdit").classList.add("error-border")
+                return;
+            }else if (!this.userEdit.endWork) {
+                this.errEndWork = "Vui lòng chọn ngày kết thúc hợp đồng";
+                document.getElementById("endWorkEdit").classList.add("error-border")
+                return;
+            }
+            if (this.userEdit.email) {
+                if(!this.isEmailValid(this.userEdit.email)){
+                    this.errEmail = "Vui lòng nhập lại email";
+                    document.getElementById("emailEdit").classList.add("error-border")
+                    return;
+                }
+
+            }
+
+            this.createEmployeeDialogVisible = false;
+            for (var i = 0; i < this.departments.length; i++) {
+                if (document.getElementById('departmentIdEdit').value === this.departments.at(i).name) {
+                    document.getElementById('departmentIdEdit').value = this.departments.at(i).id;
+                }
+            }
+            for (var j = 0; j < this.positions.length; j++) {
+                if (document.getElementById('positionIdEdit').value === this.positions.at(j).positionName) {
+                    document.getElementById('positionIdEdit').value = this.positions.at(j).id;
+                }
+            }
+
+            // let form = document.querySelector("#formEdit");
+            // UserService.saveUser(form).then(() => {
+            //     this.$notify.success({
+            //         message: "Sửa tài khoản thành công",
+            //         title: "Success",
+            //         timer: 2000,
+            //         timerProgressBar: true,
+            //     });
+            //     // this.hideLoading();
+            //     this.getData();
+            // });
+
+
+        },
+        changeStatus(id, userCode, status) {
+            if (status == 1) {
+                this.$swal
+                    .fire({
+                        title: "Khóa mã nhân viên " + userCode + "?",
+                        showDenyButton: true,
+                        confirmButtonColor: "#ED9696",
+                        confirmButtonText: "Khóa",
+                        denyButtonColor: "#75C4C0",
+                        denyButtonText: "Đóng",
+                        customClass: {
+                            actions: "my-actions",
+                            cancelButton: "order-1 right-gap",
+                            confirmButton: "order-2",
+                            denyButton: "order-3",
+                        },
+                    })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            UserService.changeStatus(id).then((response) => {
+                                this.$swal.fire({
+                                    title: response.data.message,
+                                    icon: "success",
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    toast: true,
+                                    position: "top-end",
+                                    showConfirmButton: false,
+                                    width: "24em",
+                                });
+                                this.getData();
+                            });
+                        } else if (result.isDenied) {
+                            this.$swal.fire({
+                                title: "Thay đổi thất bại",
+                                icon: "error",
+                                timer: 2000,
+                                timerProgressBar: true,
+                                toast: true,
+                                position: "top-end",
+                                showConfirmButton: false,
+                                width: "24em",
+                            });
+                        }
+                    });
+            } else {
+                this.$swal
+                    .fire({
+                        title: "Mở mã nhân viên " + userCode + "?",
+                        showDenyButton: true,
+                        confirmButtonColor: "#75C4C0",
+                        confirmButtonText: "Mở",
+                        denyButtonColor: "#ED9696",
+                        denyButtonText: "Đóng",
+                        customClass: {
+                            actions: "my-actions",
+                            cancelButton: "order-1 right-gap",
+                            confirmButton: "order-2",
+                            denyButton: "order-3",
+                        },
+                    })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            UserService.changeStatus(id).then((response) => {
+                                this.$swal.fire({
+                                    title: response.data.message,
+                                    icon: "success",
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    toast: true,
+                                    position: "top-end",
+                                    showConfirmButton: false,
+                                    width: "24em",
+                                });
+                                this.getData();
+                            });
+                        } else if (result.isDenied) {
+                            this.$swal.fire({
+                                title: "Thay đổi thất bại",
+                                icon: "error",
+                                timer: 2000,
+                                timerProgressBar: true,
+                                toast: true,
+                                position: "top-end",
+                                showConfirmButton: false,
+                                width: "24em",
+                            });
+                        }
+                    });
+            }
+        },
+
 
         getAllDepartment() {
             DepartmentService.getAllDepartment().then((response) => {
@@ -490,25 +1134,27 @@ export default {
             console.log(this.gender)
             PositionService.getAllPosition().then((response) => {
                 this.positions = response.data
-                console.log(this.positions)
+                // console.log(this.positions)
             })
         },
         showCreateEmployeeDialog() {
+            this.clearAll()
             this.createEmployeeDialogVisible = true;
         },
-
+        showEditEmployeeDialog(userId) {
+            this.clearAll()
+            UserService.profile(userId).then(response => {
+                this.userEdit = response.data
+                this.deparmentEditName = this.userEdit.department.name
+                this.positionEditName = this.userEdit.position.positionName
+                this.userImageEdit = this.userEdit.userImage !== null
+                    ? "http://localhost:2000/api/file/avatar/" + this.userEdit.userImage
+                    : "https://www.namepros.com/attachments/empty-png.89209/";
+                console.log(this.userEdit.department.name)
+            })
+            this.editEmployeeDialogVisible = true;
+        },
         getData() {
-
-            // let params;
-            //
-            // params = {
-            //     'page': this.page,
-            //     'size': this.pageSize,
-            //     'departmentId': this.departmentId,
-            //     'search': this.search,
-            //     'status': this.status
-            //
-            // }
             UserService.getData(this.page, this.pageSize, this.departmentId, this.search, this.status).then((response) => {
                 this.users = response.data.content;
                 this.page = response.data.pageable.pageNumber;
@@ -544,10 +1190,96 @@ export default {
 
             const theReader = new FileReader();
             theReader.onloadend = async () => {
-                this.user.imageUrl = await theReader.result;
+                this.user.userImage = await theReader.result;
             };
             theReader.readAsDataURL(file);
+            // this.clearErrorFullName('userImage')
         },
+        previewFilesEdit(event) {
+            const file = event.target.files[0];
+
+            const theReader = new FileReader();
+            theReader.onloadend = async () => {
+                this.userImageEdit = await theReader.result;
+            };
+            theReader.readAsDataURL(file);
+            // this.clearErrorFullName('userImage')
+        },
+        validateIsNumbers() {
+            this.user.phone = this.user.phone.replace(/[^0-9]/g, '');
+            this.userEdit.phone = this.userEdit.phone.replace(/[^0-9]/g, '');
+            this.clearErrorFullName('phone')
+        },
+        isEmailValid(email) {
+            // Biểu thức chính quy kiểm tra địa chỉ email
+            const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            return emailRegex.test(email);
+        },
+        clearErrorFullName(input) {
+            console.log(input)
+            if (input == 'fullName') {
+                this.errFullName = '';
+            } else if (input == 'userCode') {
+                this.errUserCode = '';
+            } else if (input == 'gender') {
+                this.errGender = '';
+            } else if (input == 'address') {
+                this.errAddress = '';
+            } else if (input == 'email') {
+                this.errEmail = '';
+            } else if (input == 'phone') {
+                this.errPhone = '';
+            } else if (input == 'birthDay') {
+                this.errBirthDay = '';
+            } else if (input == 'positionId') {
+                this.errPositionId = '';
+            } else if (input == 'departmentId') {
+                this.errDepartmentId = '';
+            } else if (input == 'userImage') {
+                this.errUserImage = '';
+            } else if (input == 'contractFile') {
+                this.errContractFile = '';
+            } else if (input == 'username') {
+                this.errUserName = '';
+            } else if (input == 'startWork') {
+                this.errStartWork = '';
+            } else if (input == 'endWork') {
+                this.errEndWork = '';
+            }
+        },
+        clearAll(){
+            this.user= {
+                username: '',
+                    userCode: '',
+                    email: '',
+                    fullName: '',
+                    gender: 1,
+                    address: '',
+                    phone: '',
+                    startWork: '',
+                    endWork: '',
+                    birthDay: '',
+                    positionId: 1,
+                    departmentId: 1,
+                    userImage: '',
+                    contractFile: ''
+            }
+
+            this.errFullName= ''
+            this.errUserCode= ''
+            this.errGender= ''
+            this.errAddress= ''
+            this.errEmail= ''
+            this.errPhone= ''
+            this.errBirthDay= ''
+            this.errPositionId= ''
+            this.errDepartmentId= ''
+            this.errUserImage= ''
+            this.errContractFile= ''
+            this.errUserName= ''
+            this.errStartWork= ''
+            this.errEndWork= ''
+        }
     }
 }
 </script>
@@ -765,5 +1497,28 @@ input:checked + .slider:before {
     .div-buttons {
         float: right;
     }
+}
+
+.error-messages {
+    color: red;
+    margin-top: 10px;
+}
+
+.error-border {
+    border: 1px solid red;
+    border-radius: 5px
+}
+
+input[type="file"]::file-selector-button {
+    border: 2px solid #6c5ce7;
+    padding: 0.2em 0.4em;
+    border-radius: 0.2em;
+    /*background-color: #a29bfe;*/
+    transition: 1s;
+}
+
+input[type="file"]::file-selector-button:hover {
+    border: 2px solid #00cec9;
+    cursor: pointer;
 }
 </style>

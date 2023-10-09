@@ -13,12 +13,12 @@ class UserService {
     getData(page, size, departId, search, status) {
         return httpCommon.get( "/user/data?page="+page+"&size="+size+"&departmentId="+departId+"&search="+search+"&status="+status );
     }
-
-    getData1(data) {
-        return httpCommon.get( "/user/data" , {data} );
+    profile(id){
+        return httpCommon.get("/user/profile/"+ id);
     }
-
-
+    changeStatus(id){
+        return httpCommon.get("/user/block/"+ id);
+    }
 }
 
 export default new UserService();
