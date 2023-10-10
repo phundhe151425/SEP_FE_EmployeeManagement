@@ -666,7 +666,8 @@
                                    :class="{'error-border':errContractFile !== null && errContractFile !== ''}"
                                    @change="clearErrorFullName('contractFile')"
                                    style="width: 90%"/>
-
+                            <el-link :href="`http://localhost:2000/api/file/contract/`+contractFileEdit" type="warning" target="_blank">
+                                {{ contractNameEdit }}</el-link>
                             <div>
                                 <small v-if="errContractFile !== null" style="color: red">
                                     {{ errContractFile }}
@@ -726,7 +727,7 @@
 
                         <div style="position: absolute;bottom: 40px;right: 40px">
                             <!--                        <el-button  @click="createEmployeeDialogVisible = false">Huỷ</el-button>-->
-                            <button class="save" type="button" @click="editUser">Thêm</button>
+                            <button class="save" type="button" @click="editUser">Chỉnh sửa</button>
 
                         </div>
 
@@ -742,6 +743,7 @@ import DepartmentService from "@/services/department-service";
 import UserService from "@/services/user-service";
 import ExcelService from "@/services/excel-service";
 import PositionService from "@/services/position-service";
+import ContractService from "@/services/contract-service";
 
 export default {
     components: {},
@@ -788,21 +790,10 @@ export default {
             deparmentEditName: '',
             positionEditName: '',
             userImageEdit: '',
+            contractNameEdit: '',
             contractFileEdit: '',
-            // username: '',
-            // userCode: '',
-            // email: '',
-            // fullName: '',
-            // gender: 1,
-            // address: '',
-            // phone: '',
-            // startWork: '',
-            // endWork: '',
-            // birthDay: '',
-            // positionId: 1,
-            // departmentId: 1,
-            // userImage: '',
-            // contractFile: ''
+
+
 
             errFullName: '',
             errUserCode: '',
@@ -1152,6 +1143,7 @@ export default {
                     : "https://www.namepros.com/attachments/empty-png.89209/";
                 console.log(this.userEdit.department.name)
             })
+            this.getCurrentContractByUserId(userId)
             this.editEmployeeDialogVisible = true;
         },
         getData() {
@@ -1184,6 +1176,13 @@ export default {
         restrictToNumbers() {
             // Xóa bất kỳ ký tự nào không phải số khỏi chuỗi
             this.numberInput = this.numberInput.replace(/[^0-9]/g, "");
+        },
+        getCurrentContractByUserId(userId){
+          ContractService.getCurrentContractByUserId(userId).then(response => {
+              this.contractFileEdit = response.data.fileName
+              this.contractNameEdit = response.data.contractName
+              console.log(this.contractFileEdit)
+          })
         },
         previewFiles(event) {
             const file = event.target.files[0];
