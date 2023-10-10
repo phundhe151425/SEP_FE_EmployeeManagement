@@ -34,6 +34,10 @@ const router = new Router({
             path: "/changepassword",
             component: () => import("./components/manageUser/ChangePassword.vue"),
         },
+        {
+            path: "/manageHoliday",
+            component: () => import("./components/manageHoliday/ManageHoliday.vue"),
+        },
 
     ],
 });

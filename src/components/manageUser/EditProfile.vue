@@ -285,7 +285,7 @@ export default {
               console.log(e);
             });
            
-          this.$router.push("/profile");
+           this.$router.push("/profile");
         } else {
           console.log("error submit!!");
           return false;

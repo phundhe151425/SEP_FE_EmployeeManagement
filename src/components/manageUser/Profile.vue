@@ -78,7 +78,6 @@ export default {
           console.log(response.data)
             this.currentUser = response.data;
             this.dateFormat = moment(String(this.currentUser.birthDay)).format("DD/MM/yyyy");
-            console.log(typeof(this.dateFormat))
             this.file = require('@/assets/images/'+ this.currentUser.userImage)
             
         //   this.value = this.currentTutorial.brandId;
