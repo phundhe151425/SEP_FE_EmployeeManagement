@@ -1,11 +1,11 @@
 <template>
   <div>
-    <h3 >Quản lý ngày nghỉ </h3>
+        <h3 >Quản lý chức vụ </h3>
     <hr style="margin-bottom:5%">
     <div style="padding-bottom: 20px">
       <div className="" style="width: 100%; margin: auto">
         <el-row :gutter="20">
-          <el-col :md="6" :lg="6" :xl="6">
+          <!-- <el-col :md="6" :lg="6" :xl="6">
             <div class="grid-content" style="margin-bottom: 20px">
               <span>Năm</span> &ensp;
               <el-select
@@ -22,7 +22,7 @@
                 </el-option>
               </el-select>
             </div>
-          </el-col>
+          </el-col> -->
 
           <el-col :md="6" :lg="6" :xl="6" style="margin-bottom: 20px">
             <div class="grid-content">
@@ -40,7 +40,7 @@
             <div class="grid-content div-buttons">
               <import-excel
                 class="text-start buttons btn-import"
-                header="Thêm ngày nghỉ"
+                header="Thêm chức vụ"
                 format="1"
                 @getData="getData"
                 style="margin-right: 10px"
@@ -50,8 +50,8 @@
                 type="danger"
                 style=""
                 round
-                @click="showCreateHolidayDialog"
-                ><i class="el-icon-plus"></i> Thêm ngày nghỉ
+                @click="showCreatePositionDialog"
+                ><i class="el-icon-plus"></i> Thêm chức vụ
               </el-button>
             </div>
           </el-col>
@@ -59,7 +59,7 @@
         <br />
         <div>
           <el-table
-            :data="holidays"
+            :data="positions"
             height="700px"
             :header-cell-style="{
               background: '#D9D9D9',
@@ -81,47 +81,31 @@
               align="center"
               width="100px"
             ></el-table-column>
-            <el-table-column
-              label="Ngày bắt đầu"
-              prop="startDate"
-              align="center"
-            >
+            <el-table-column label="Ngày tạo" prop="createdDate" align="center">
             </el-table-column>
             <el-table-column
-              label="Ngày kết thúc"
-              prop="endDate"
-              align="center"
-            >
-            </el-table-column>
-            <el-table-column
-              label="Tên ngày nghỉ"
-              prop="holidayName"
+              label="Tên chức vụ"
+              prop="name"
               align="center"
             ></el-table-column>
-            <el-table-column
-              label="Số ngày nghỉ"
-              prop="totalDayOff"
-              align="center"
-            >
-            </el-table-column>
+
             <el-table-column
               v-slot:="data"
               label="Thao tác"
               width="150px"
               align="center"
             >
-              <!--            <el-button type="danger" icon="el-icon-edit-outline" circle></el-button>-->
               <button
                 style="margin-right: 10px"
                 class="btn-action"
-                @click="showEditHolidayDialog(data.row.id)"
+                @click="showEditPositionDialog(data.row.id)"
               >
                 <i class="el-icon-edit-outline" style="width: 30px"></i>
               </button>
               <button
                 style="margin-right: 10px"
                 class="btn-action"
-                @click="showDeleteHolidayDialog(data.row.id)"
+                @click="showDeletePositionDialog(data.row.id)"
               >
                 <i class="el-icon-delete" style="width: 30px"></i>
               </button>
@@ -151,9 +135,9 @@
     </div>
 
     <el-dialog
-      :visible.sync="editHolidayDialogVisible"
+      :visible.sync="editPositionDialogVisible"
       width="50%"
-      title="Sửa ngày nghi"
+      title="Sửa chức vụ"
       left
     >
       <el-form
@@ -166,46 +150,32 @@
       >
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <el-form-item label="Nhập tên ngày nghỉ" prop="holidayName">
+            <el-form-item label="Nhập tên chức vụ" prop="positionName">
               <el-input
-                v-model="ruleForm.holidayName"
-                name="holidayName"
+                v-model="ruleForm.positionName"
+                name="positionName"
                 autocomplete="off"
                 maxlength="50"
               ></el-input>
             </el-form-item>
           </div>
         </div>
-
-        <div class="row" style="margin-top: 20px">
-          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-            <el-form-item label="Nghỉ từ" required>
-              <el-form-item prop="startDate">
-                <el-date-picker
-                  type="date"
-                  v-model="ruleForm.startDate"
-                  format="dd/MM/yyyy"
-                  value-format="yyyy-MM-dd"
-                  name="startDate"
-                  placeholder="Chọn ngày"
-                  style="width: 100%"
-                ></el-date-picker>
-              </el-form-item>
-            </el-form-item>
-          </div>
-          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-            <el-form-item label="Nghỉ đến" required>
-              <el-form-item prop="endDate">
-                <el-date-picker
-                  type="date"
-                  v-model="ruleForm.endDate"
-                  name="endDate"
-                  format="dd/MM/yyyy"
-                  value-format="yyyy-MM-dd"
-                  placeholder="Chọn ngày"
-                  style="width: 100%"
-                ></el-date-picker>
-              </el-form-item>
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <el-form-item label="Phân quyền" prop="role">
+              <el-select
+                v-model="ruleForm.roleId"
+                @change="getData"
+                placeholder="Chọn quyền"
+              >
+                <el-option
+                  v-for="item in roles"
+                  :key="item.id"
+                  :label="item.roleName"
+                  :value="item.id"
+                >
+                </el-option>
+              </el-select>
             </el-form-item>
           </div>
         </div>
@@ -213,20 +183,19 @@
         <div class="row" style="margin-top: 80px">
           <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
             <div style="position: absolute; bottom: 40px; right: 17%">
-            <el-form-item>
-              <el-button
-                class="btn btn-outline-danger"
-                type="primary"
-                style="padding: 6px 36px"
-                @click="editHolidayDialogVisible = false"
-                >Hủy</el-button
-              >
-            </el-form-item>
+              <el-form-item>
+                <el-button
+                  class="btn btn-outline-danger"
+                  type="primary"
+                  style="padding: 6px 36px"
+                  @click="editPositionDialogVisible = false"
+                  >Hủy</el-button
+                >
+              </el-form-item>
             </div>
           </div>
           <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
             <div style="position: absolute; bottom: 40px; right: 20px">
-           
               <el-form-item>
                 <el-button
                   class="btn btn-success"
@@ -243,9 +212,9 @@
     </el-dialog>
 
     <el-dialog
-      :visible.sync="createHolidayDialogVisible"
+      :visible.sync="createPositionDialogVisible"
       width="50%"
-      title="Thêm ngày nghi"
+      title="Thêm chức vụ"
       left
     >
       <el-form
@@ -258,67 +227,52 @@
       >
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <el-form-item label="Nhập tên ngày nghỉ" prop="holidayName">
+            <el-form-item label="Nhập tên chức vụ" prop="positionName">
               <el-input
-                v-model="ruleForm.holidayName"
-                name="holidayName"
+                v-model="ruleForm.positionName"
+                name="positionName"
                 autocomplete="off"
                 maxlength="50"
               ></el-input>
             </el-form-item>
           </div>
         </div>
-
-        <div class="row" style="margin-top: 20px">
-          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-            <el-form-item label="Nghỉ từ" required>
-              <el-form-item prop="startDate">
-                <el-date-picker
-                  type="date"
-                  v-model="ruleForm.startDate"
-                  format="dd/MM/yyyy"
-                  value-format="yyyy-MM-dd"
-                  name="startDate"
-                  placeholder="Chọn ngày"
-                  style="width: 100%"
-                ></el-date-picker>
-              </el-form-item>
-            </el-form-item>
-          </div>
-          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-            <el-form-item label="Nghỉ đến" required>
-              <el-form-item prop="endDate">
-                <el-date-picker
-                  type="date"
-                  v-model="ruleForm.endDate"
-                  name="endDate"
-                  format="dd/MM/yyyy"
-                  value-format="yyyy-MM-dd"
-                  placeholder="Chọn ngày"
-                  style="width: 100%"
-                ></el-date-picker>
-              </el-form-item>
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <el-form-item label="Phân quyền" prop="role">
+              <el-select
+                v-model="ruleForm.roleId"
+                @change="getData"
+                placeholder="Chọn quyền"
+              >
+                <el-option
+                  v-for="item in roles"
+                  :key="item.id"
+                  :label="item.roleName"
+                  :value="item.id"
+                >
+                </el-option>
+              </el-select>
             </el-form-item>
           </div>
         </div>
 
-               <div class="row" style="margin-top: 80px">
-          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+        <div class="row" style="margin-top: 80px">
+          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
             <div style="position: absolute; bottom: 40px; right: 17%">
-            <el-form-item>
-              <el-button
-                class="btn btn-outline-danger"
-                type="primary"
-                style="padding: 6px 36px"
-                @click="createHolidayDialogVisible = false"
-                >Hủy</el-button
-              >
-            </el-form-item>
+              <el-form-item>
+                <el-button
+                  class="btn btn-outline-danger"
+                  type="primary"
+                  style="padding: 6px 36px"
+                  @click="createPositionDialogVisible = false"
+                  >Hủy</el-button
+                >
+              </el-form-item>
             </div>
           </div>
-          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
             <div style="position: absolute; bottom: 40px; right: 20px">
-           
               <el-form-item>
                 <el-button
                   class="btn btn-success"
@@ -335,7 +289,7 @@
     </el-dialog>
 
     <el-dialog
-      :visible.sync="deleteHolidayDialogVisible"
+      :visible.sync="deletePositionDialogVisible"
       width="20%"
       title="Xóa ngày nghi"
       left
@@ -348,16 +302,16 @@
         label-width="200px"
         class="demo-ruleForm"
       >
-        <p style="text-align: center">Xác nhận xóa ngày nghỉ</p>
-        <p style="text-align: center">{{ ruleForm.holidayName }}</p>
+        <p style="text-align: center">Xác nhận xóa chức vụ</p>
+        <p style="text-align: center">{{ ruleForm.positionName }}</p>
 
         <div class="row" style="margin-top: 70px">
           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
             <el-form-item>
               <el-button
-               class="btn btn-success"
+                class="btn btn-success"
                 style="margin-left: 30%; padding: 6px 36px"
-                @click="deleteHolidayDialogVisible = false"
+                @click="deletePositionDialogVisible = false"
                 >Huỷ</el-button
               >
             </el-form-item>
@@ -380,81 +334,59 @@
 
 <script>
 import HolidayService from "@/services/holiday-service";
+import PositionService from "@/services/position-service";
 import moment from "moment";
 export default {
   components: {},
-  name: "ManageHoliday",
+  name: "ManagePosition",
   data() {
-    var validateEndDate = (rule, value, callback) => {
-      if (value < this.ruleForm.startDate) {
-        callback(
-          new Error("Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu!")
-        );
-      } else {
-        callback();
-      }
-    };
-
     var date = new Date();
     var currentYear = date.getFullYear();
     return {
       year: currentYear,
       years: [],
-      holidayId: "",
+      roleId: "",
+      roles: [],
       ruleForm: {
-        endDate: "",
-        holidayName: "",
-        startDate: "",
+        positionName: "",
+        roleId: "",
       },
       rules: {
-        holidayName: [
+        positionName: [
           {
             required: true,
-            message: "Vui lòng nhập tên ngày nghỉ!",
+            message: "Vui lòng nhập tên chức vụ!",
             trigger: "blur",
           },
-        ],
-        startDate: [
-          {
-            required: true,
-            message: "Vui lòng nhập ngày bắt đầu kỳ nghỉ!",
-            trigger: "blur",
-          },
-        ],
-        endDate: [
-          {
-            required: true,
-            message: "Vui lòng nhập ngày kết thúc kỳ nghỉ!",
-            trigger: "blur",
-          },
-          { validator: validateEndDate, trigger: "blur" },
         ],
       },
-      holidays: [],
+      positions: [],
       page: 0,
       pageSize: 5,
       search: "",
       date: "",
       totalItems: 0,
       fit: "fill",
-      editHolidayDialogVisible: false,
-      createHolidayDialogVisible: false,
-      deleteHolidayDialogVisible: false,
+      editPositionDialogVisible: false,
+      createPositionDialogVisible: false,
+      deletePositionDialogVisible: false,
     };
   },
 
   created() {
     this.getData();
     this.getAllYear();
+    this.getAllRole();
   },
+
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          HolidayService.save(this.ruleForm).then(() => {
-            this.createHolidayDialogVisible = false;
+          PositionService.save(this.ruleForm).then(() => {
+            this.createPositionDialogVisible = false;
             this.$notify.success({
-              message: "Tạo ngày nghỉ thành công",
+              message: "Tạo chức vụ thành công",
               title: "Success",
               timer: 2000,
               timerProgressBar: true,
@@ -471,10 +403,10 @@ export default {
     submitEditForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          HolidayService.updateHoliday(this.holidayId, this.ruleForm).then(
+          PositionService.updatePosition(this.roleId, this.ruleForm).then(
             () => {
-              this.createHolidayDialogVisible = false;
-              this.editHolidayDialogVisible = false;
+              this.createPositionDialogVisible = false;
+              this.editPositionDialogVisible = false;
               this.$notify.success({
                 message: "Sửa thành công",
                 title: "Success",
@@ -491,37 +423,40 @@ export default {
       });
     },
 
-    showCreateHolidayDialog() {
-      this.createHolidayDialogVisible = true;
-      this.editHolidayDialogVisible = false;
-      this.deleteHolidayDialogVisible = false;
+    showCreatePositionDialog() {
+      this.createPositionDialogVisible = true;
+      this.editPositionDialogVisible = false;
+      this.deletePositionDialogVisible = false;
       this.ruleForm = {};
     },
 
-    showEditHolidayDialog(id) {
-      this.editHolidayDialogVisible = true;
-      this.createHolidayDialogVisible = false;
-      this.deleteHolidayDialogVisible = false;
-      this.holidayId = id;
-
-      HolidayService.getHoliday(id)
+    showEditPositionDialog(id) {
+      this.editPositionDialogVisible = true;
+      this.createPositionDialogVisible = false;
+      this.deletePositionDialogVisible = false;
+      this.roleId = id;
+      PositionService.getPosition(id)
         .then((response) => {
-          this.ruleForm = response.data;
+          console.log(response.data);
+          this.ruleForm.positionName = response.data.name;
+           this.ruleForm.roleId = response.data.role[0].id;
+           console.log(this.ruleForm.roleId)
         })
         .catch((e) => {
           console.log(e);
         });
     },
 
-    showDeleteHolidayDialog(id) {
-      this.editHolidayDialogVisible = false;
-      this.createHolidayDialogVisible = false;
-      this.deleteHolidayDialogVisible = true;
-      this.holidayId = id;
+    showDeletePositionDialog(id) {
+      this.editPositionDialogVisible = false;
+      this.createPositionDialogVisible = false;
+      this.deletePositionDialogVisible = true;
+      this.roleId = id;
 
-      HolidayService.getHoliday(id)
+      PositionService.getPosition(id)
         .then((response) => {
-          this.ruleForm = response.data;
+          this.ruleForm.positionName = response.data.name;
+          this.ruleForm.roleId = response.data.role.id;
         })
         .catch((e) => {
           console.log(e);
@@ -529,12 +464,12 @@ export default {
     },
 
     acceptDelete() {
-      HolidayService.deleteHoliday(this.holidayId)
+      PositionService.deletePosition(this.roleId)
         .then((response) => {
           console.log(response.data);
-          this.editHolidayDialogVisible = false;
-          this.createHolidayDialogVisible = false;
-          this.deleteHolidayDialogVisible = false;
+          this.editPositionDialogVisible = false;
+          this.createPositionDialogVisible = false;
+          this.deletePositionDialogVisible = false;
           this.$notify.success({
             message: "Xóa thành công",
             title: "Success",
@@ -544,38 +479,47 @@ export default {
           this.getData();
         })
         .catch((e) => {
+          this.editPositionDialogVisible = false;
+          this.createPositionDialogVisible = false;
+          this.deletePositionDialogVisible = false;
+          this.$notify.error({
+            message: "Không thể xóa chức vụ!",
+            title: "Failed",
+            timer: 2000,
+            timerProgressBar: true,
+          });
+          this.getData();
           console.log(e);
         });
     },
 
     getData() {
-      console.log(this.page)
-      HolidayService.getData(
-        this.page,
-        this.pageSize,
-        this.search,
-        this.year
-      ).then((response) => {
-        
-        this.holidays = response.data.content;
-         console.log(response.data)
-        for (const key in this.holidays) {
-          if (Object.hasOwnProperty.call(this.holidays, key)) {
-            this.holidays[key].startDate = moment(
-              String(this.holidays[key].startDate)
-            ).format("DD/MM/yyyy");
-            this.holidays[key].endDate = moment(
-              String(this.holidays[key].endDate)
-            ).format("DD/MM/yyyy");
+      PositionService.getPositions(this.page, this.pageSize, this.search).then(
+        (response) => {
+          this.positions = response.data.content;
+          for (const key in this.positions) {
+            if (Object.hasOwnProperty.call(this.positions, key)) {
+              this.positions[key].createdDate = moment(
+                String(this.positions[key].createdDate)
+              ).format("DD/MM/yyyy");
+            }
           }
+          this.page = response.data.pageable.pageNumber;
+          this.totalItems = response.data.totalElements;
         }
-        this.page = response.data.pageable.pageNumber;
-        this.totalItems = response.data.totalElements;
-      });
+      );
     },
+
     getAllYear() {
       HolidayService.getYears().then((response) => {
         this.years = response.data;
+      });
+    },
+
+    getAllRole() {
+      PositionService.getRoles(1, 5, "").then((response) => {
+        console.log(response.data);
+        this.roles = response.data.content;
       });
     },
 
@@ -609,6 +553,11 @@ export default {
 }
 .el-form-item__content {
   margin-left: 0px !important;
+}
+
+.el-form-item {
+  display: flex;
+  flex-direction: column;
 }
 
 .avatar {

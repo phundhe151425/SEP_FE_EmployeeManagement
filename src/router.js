@@ -38,6 +38,15 @@ const router = new Router({
             path: "/manageHoliday",
             component: () => import("./components/manageHoliday/ManageHoliday.vue"),
         },
+        {
+            path: "/managePosition",
+            component: () => import("./components/managePosition/ManagePosition.vue"),
+        },
+        {
+            path: "/manageDepartment",
+            component: () => import("./components/manageDepartment/ManageDepartment.vue"),
+        },
+        
 
     ],
 });

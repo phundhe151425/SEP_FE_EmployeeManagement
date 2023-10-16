@@ -121,6 +121,30 @@
                                 </router-link>
                             </a>
                         </li>
+                            <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/profile">
+                                <router-link to="/manageHoliday" class="nav-link sel">
+                                    <font-awesome-icon icon="home"/>
+                                    Quản lý ngày nghỉ
+                                </router-link>
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/profile">
+                                <router-link to="/manageDepartment" class="nav-link sel">
+                                    <font-awesome-icon icon="home"/>
+                                    Quản lý phòng ban
+                                </router-link>
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/profile">
+                                <router-link to="/managePosition" class="nav-link sel">
+                                    <font-awesome-icon icon="home"/>
+                                    Quản lý chức vụ
+                                </router-link>
+                            </a>
+                        </li>
 
 
                     </ul>

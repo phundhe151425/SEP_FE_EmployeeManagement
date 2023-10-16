@@ -1,10 +1,29 @@
 import axios from 'axios';
 import { BASE_URL } from "@/http-common";
-
+import authHeader from "@/services/auth-header";
 
 class DepartmentService {
     getAllDepartment() {
         return axios.get(BASE_URL + '/department/get-list');
+    }
+
+    getDepartments(page, size, search) {
+        return axios.get(BASE_URL + '/department/data?pageNo='+page+"&pageSize="+size+"&search="+search, {headers: authHeader()});
+    }
+
+    save(data) {
+        return axios.post(BASE_URL + "/department/create", data);
+    }
+
+    getDepartment(id) {
+        return axios.get(BASE_URL +`/department/${id}`);
+    }
+
+    updateDepartment(id, data) {
+        return axios.put(BASE_URL + `/department/update/${id}`,data);
+    }
+    deleteDepartment(id){
+        return axios.delete(BASE_URL +`/department/delete/${id}`);
     }
 }
 
