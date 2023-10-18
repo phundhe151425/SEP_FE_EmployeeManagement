@@ -1,7 +1,7 @@
 <template>
   <div>
-        <h3 >Quản lý chức vụ </h3>
-    <hr style="margin-bottom:5%">
+    <h3>Quản lý chức vụ</h3>
+    <hr style="margin-bottom: 5%" />
     <div style="padding-bottom: 20px">
       <div className="" style="width: 100%; margin: auto">
         <el-row :gutter="20">
@@ -180,29 +180,29 @@
           </div>
         </div>
 
-        <div class="row" style="margin-top: 80px">
-          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-            <div style="position: absolute; bottom: 40px; right: 17%">
+        <div class="row" style="display: flex; justify-content: flex-end">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+            <div style="bottom: 40px">
               <el-form-item>
                 <el-button
                   class="btn btn-outline-danger"
                   type="primary"
-                  style="padding: 6px 36px"
-                  @click="editPositionDialogVisible = false"
+                  style="width: 90%"
+                  @click="cancelEditForm('ruleForm')"
                   >Hủy</el-button
                 >
               </el-form-item>
             </div>
           </div>
-          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-            <div style="position: absolute; bottom: 40px; right: 20px">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+            <div style="bottom: 40px">
               <el-form-item>
                 <el-button
                   class="btn btn-success"
                   type="primary"
-                  style="padding: 6px 36px"
+                  style="width: 90%"
                   @click="submitEditForm('ruleForm')"
-                  >Sửa</el-button
+                  >Lưu</el-button
                 >
               </el-form-item>
             </div>
@@ -257,27 +257,27 @@
           </div>
         </div>
 
-        <div class="row" style="margin-top: 80px">
-          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-            <div style="position: absolute; bottom: 40px; right: 17%">
+        <div class="row" style="display: flex; justify-content: flex-end">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+            <div style="bottom: 40px">
               <el-form-item>
                 <el-button
                   class="btn btn-outline-danger"
                   type="primary"
-                  style="padding: 6px 36px"
-                  @click="createPositionDialogVisible = false"
+                  style="width: 90%"
+                  @click="cancelCreateForm('ruleForm')"
                   >Hủy</el-button
                 >
               </el-form-item>
             </div>
           </div>
-          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-            <div style="position: absolute; bottom: 40px; right: 20px">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+            <div style="bottom: 40px">
               <el-form-item>
                 <el-button
                   class="btn btn-success"
                   type="primary"
-                  style="padding: 6px 36px"
+                  style="width: 90%"
                   @click="submitForm('ruleForm')"
                   >Lưu</el-button
                 >
@@ -290,8 +290,8 @@
 
     <el-dialog
       :visible.sync="deletePositionDialogVisible"
-      width="20%"
-      title="Xóa ngày nghi"
+      width="30%"
+      title="Xóa chức vụ"
       left
     >
       <el-form
@@ -306,20 +306,20 @@
         <p style="text-align: center">{{ ruleForm.positionName }}</p>
 
         <div class="row" style="margin-top: 70px">
-          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
             <el-form-item>
               <el-button
                 class="btn btn-success"
-                style="margin-left: 30%; padding: 6px 36px"
-                @click="deletePositionDialogVisible = false"
+                style="width: 100%"
+                @click="deleteHolidayDialogVisible = false"
                 >Huỷ</el-button
               >
             </el-form-item>
           </div>
-          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
             <el-form-item>
               <el-button
-                style="padding: 6px 23px"
+                style="width: 100%"
                 class="btn btn-outline-danger"
                 @click="acceptDelete()"
                 >Xác nhận</el-button
@@ -333,7 +333,7 @@
 </template>
 
 <script>
-import HolidayService from "@/services/holiday-service";
+// import HolidayService from "@/services/holiday-service";
 import PositionService from "@/services/position-service";
 import moment from "moment";
 export default {
@@ -358,6 +358,12 @@ export default {
             message: "Vui lòng nhập tên chức vụ!",
             trigger: "blur",
           },
+          {
+            min: 1,
+            max: 200,
+            message: "Tên chức vụ từ 1 đến 200 kí tự!",
+            trigger: "blur",
+          },
         ],
       },
       positions: [],
@@ -375,7 +381,7 @@ export default {
 
   created() {
     this.getData();
-    this.getAllYear();
+    // this.getAllYear();
     this.getAllRole();
   },
 
@@ -384,7 +390,9 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           PositionService.save(this.ruleForm).then(() => {
+            this.editPositionDialogVisible = false;
             this.createPositionDialogVisible = false;
+            this.deletePositionDialogVisible = false;
             this.$notify.success({
               message: "Tạo chức vụ thành công",
               title: "Success",
@@ -400,13 +408,19 @@ export default {
       });
     },
 
+    cancelCreateForm(formName) {
+      this.$refs[formName].resetFields();
+      this.createPositionDialogVisible = false;
+    },
+
     submitEditForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           PositionService.updatePosition(this.roleId, this.ruleForm).then(
             () => {
-              this.createPositionDialogVisible = false;
               this.editPositionDialogVisible = false;
+              this.createPositionDialogVisible = false;
+              this.deletePositionDialogVisible = false;
               this.$notify.success({
                 message: "Sửa thành công",
                 title: "Success",
@@ -421,6 +435,11 @@ export default {
           return false;
         }
       });
+    },
+
+    cancelEditForm(formName) {
+      this.$refs[formName].resetFields();
+      this.editPositionDialogVisible = false;
     },
 
     showCreatePositionDialog() {
@@ -439,8 +458,8 @@ export default {
         .then((response) => {
           console.log(response.data);
           this.ruleForm.positionName = response.data.name;
-           this.ruleForm.roleId = response.data.role[0].id;
-           console.log(this.ruleForm.roleId)
+          this.ruleForm.roleId = response.data.role[0].id;
+
         })
         .catch((e) => {
           console.log(e);
@@ -456,7 +475,7 @@ export default {
       PositionService.getPosition(id)
         .then((response) => {
           this.ruleForm.positionName = response.data.name;
-          this.ruleForm.roleId = response.data.role.id;
+          // this.ruleForm.roleId = response.data.role.id;
         })
         .catch((e) => {
           console.log(e);
@@ -510,11 +529,11 @@ export default {
       );
     },
 
-    getAllYear() {
-      HolidayService.getYears().then((response) => {
-        this.years = response.data;
-      });
-    },
+    // getAllYear() {
+    //   HolidayService.getYears().then((response) => {
+    //     this.years = response.data;
+    //   });
+    // },
 
     getAllRole() {
       PositionService.getRoles(1, 5, "").then((response) => {
