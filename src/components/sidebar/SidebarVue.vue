@@ -1,6 +1,6 @@
 <template>
     <nav class="navbar fixed-top container-fluid" style="padding: 14px 0">
-        <div class="user-detail nav-item dropdown " style="margin-right: 40px">
+        <div class="user-detail nav-item dropdown " >
             <a
                     class="nav-link dropdown-toggle"
                     href="#"
@@ -8,9 +8,9 @@
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
             >
-<!--                <b-avatar class="mr-3"></b-avatar>-->
-<!--                <b-avatar v-if="currentUser.user.userImage != null" class="mr-3"-->
-<!--                          v-bind:src="`http://localhost:2000/` + currentUser.user.userImage"></b-avatar>-->
+                <b-avatar  v-if="currentUser.userImage == null" class="mr-3"></b-avatar>
+                <b-avatar v-if="currentUser.userImage != null" class="mr-3"
+                          v-bind:src="`http://localhost:2000/api/file/avatar/` + currentUser.userImage"></b-avatar>
                {{currentUser.username}}
             </a>
 
@@ -107,13 +107,13 @@
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="/profile">
-                                <router-link to="/calender" class="nav-link sel">
+                                <router-link to="/calendar" class="nav-link sel">
                                     <font-awesome-icon icon="home"/>
                                     Trang chủ
                                 </router-link>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" v-if="isAdmin">
                             <a class="nav-link active" aria-current="page" href="/profile">
                                 <router-link to="/manageUser" class="nav-link sel">
                                     <font-awesome-icon icon="home"/>
@@ -145,6 +145,54 @@
                                 </router-link>
                             </a>
                         </li>
+                        <li class="nav-item" v-if="currentUser">
+                            <a class="nav-link">
+                                <router-link to="/logCheckUser"  class="nav-link sel">
+                                    <i class="el-icon-view"></i>
+                                    Xem log (In/Out) cá nhân
+                                </router-link>
+                            </a>
+                        </li>
+                        <li class="nav-item" v-if="isModerator">
+                            <a class="nav-link">
+                                <router-link to="/logCheckMod"  class="nav-link sel">
+                                    <i class="el-icon-view"></i>
+                                    Xem log (In/Out)
+                                </router-link>
+                            </a>
+                        </li>
+                        <li class="nav-item" v-if="isAdmin">
+                            <a class="nav-link">
+                                <router-link to="/logCheckAdmin"  class="nav-link sel">
+                                    <i class="el-icon-view"></i>
+                                    Xem log (In/Out)
+                                </router-link>
+                            </a>
+                        </li>
+                        <li class="nav-item" v-if="currentUser">
+                            <a class="nav-link">
+                                <router-link to="/inLateOutEarlyUser"  class="nav-link sel">
+                                    <i class="el-icon-school"></i>
+                                    Đến muộn/ Về sớm cá nhân
+                                </router-link>
+                            </a>
+                        </li>
+                        <li class="nav-item" v-if="isModerator">
+                            <a class="nav-link">
+                                <router-link to="/inLateOutEarlyMod"  class="nav-link sel">
+                                    <i class="el-icon-school"></i>
+                                    Đến muộn/ Về sớm
+                                </router-link>
+                            </a>
+                        </li>
+                        <li class="nav-item" v-if="isAdmin">
+                            <a class="nav-link">
+                                <router-link to="/inLateOutEarlyAdmin"  class="nav-link sel">
+                                    <i class="el-icon-school"></i>
+                                    Đến muộn/ Về sớm
+                                </router-link>
+                            </a>
+                        </li>
 
 
                     </ul>
@@ -156,33 +204,34 @@
 <script>
 export default {
     data() {
-        return {};
+        return {
+            logInUser: ''
+        };
     },
     props: {},
     created() {
-this.getUser()
+    this.getUser()
     },
     computed: {
         currentUser() {
             return this.$store.state.auth.user;
         },
-        showAdminBoard() {
+        isAdmin() {
             if (this.currentUser.roles) {
                 return this.currentUser.roles.includes("ROLE_ADMIN");
             }
             return false;
         },
-        showModeratorBoard() {
+        isModerator() {
             if (this.currentUser.roles) {
-                return this.currentUser.roles.includes("ROLE_MANAGE");
+                return this.currentUser.roles.includes("ROLE_MODERATOR");
             }
             return false;
         },
     },
     methods: {
-        getUser() {
-            return this.$store.state.auth.user;
-        },
+
+
         logOut() {
             this.$store.dispatch("auth/logout");
             window.location.replace("http://localhost:2001/login");
