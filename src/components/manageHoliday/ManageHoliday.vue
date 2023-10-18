@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h3 >Quản lý ngày nghỉ </h3>
-    <hr style="margin-bottom:5%">
+    <h3>Quản lý ngày nghỉ</h3>
+    <hr style="margin-bottom: 5%" />
     <div style="padding-bottom: 20px">
       <div className="" style="width: 100%; margin: auto">
         <el-row :gutter="20">
@@ -209,31 +209,29 @@
             </el-form-item>
           </div>
         </div>
-
-        <div class="row" style="margin-top: 80px">
-          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-            <div style="position: absolute; bottom: 40px; right: 17%">
-            <el-form-item>
-              <el-button
-                class="btn btn-outline-danger"
-                type="primary"
-                style="padding: 6px 36px"
-                @click="editHolidayDialogVisible = false"
-                >Hủy</el-button
-              >
-            </el-form-item>
+        <div class="row" style="display: flex; justify-content: flex-end">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+            <div style="bottom: 40px">
+              <el-form-item>
+                <el-button
+                  class="btn btn-outline-danger"
+                  type="primary"
+                  style="width: 90%"
+                  @click="cancelEditForm('ruleForm')"
+                  >Hủy</el-button
+                >
+              </el-form-item>
             </div>
           </div>
-          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-            <div style="position: absolute; bottom: 40px; right: 20px">
-           
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+            <div style="bottom: 40px">
               <el-form-item>
                 <el-button
                   class="btn btn-success"
                   type="primary"
-                  style="padding: 6px 36px"
+                  style="width: 90%"
                   @click="submitEditForm('ruleForm')"
-                  >Sửa</el-button
+                  >Lưu</el-button
                 >
               </el-form-item>
             </div>
@@ -301,29 +299,27 @@
             </el-form-item>
           </div>
         </div>
-
-               <div class="row" style="margin-top: 80px">
-          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-            <div style="position: absolute; bottom: 40px; right: 17%">
-            <el-form-item>
-              <el-button
-                class="btn btn-outline-danger"
-                type="primary"
-                style="padding: 6px 36px"
-                @click="createHolidayDialogVisible = false"
-                >Hủy</el-button
-              >
-            </el-form-item>
+        <div class="row" style="display: flex; justify-content: flex-end">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+            <div style="bottom: 40px">
+              <el-form-item>
+                <el-button
+                  class="btn btn-outline-danger"
+                  type="primary"
+                  style="width: 90%"
+                  @click="cancelCreateForm('ruleForm')"
+                  >Hủy</el-button
+                >
+              </el-form-item>
             </div>
           </div>
-          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-            <div style="position: absolute; bottom: 40px; right: 20px">
-           
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+            <div style="bottom: 40px">
               <el-form-item>
                 <el-button
                   class="btn btn-success"
                   type="primary"
-                  style="padding: 6px 36px"
+                  style="width: 90%"
                   @click="submitForm('ruleForm')"
                   >Lưu</el-button
                 >
@@ -336,7 +332,7 @@
 
     <el-dialog
       :visible.sync="deleteHolidayDialogVisible"
-      width="20%"
+      width="30%"
       title="Xóa ngày nghi"
       left
     >
@@ -352,20 +348,20 @@
         <p style="text-align: center">{{ ruleForm.holidayName }}</p>
 
         <div class="row" style="margin-top: 70px">
-          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
             <el-form-item>
               <el-button
-               class="btn btn-success"
-                style="margin-left: 30%; padding: 6px 36px"
+                class="btn btn-success"
+                style="width: 100%"
                 @click="deleteHolidayDialogVisible = false"
                 >Huỷ</el-button
               >
             </el-form-item>
           </div>
-          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
             <el-form-item>
               <el-button
-                style="padding: 6px 23px"
+                style="width: 100%"
                 class="btn btn-outline-danger"
                 @click="acceptDelete()"
                 >Xác nhận</el-button
@@ -397,8 +393,10 @@ export default {
 
     var date = new Date();
     var currentYear = date.getFullYear();
+
     return {
       year: currentYear,
+      currentDate: date,
       years: [],
       holidayId: "",
       ruleForm: {
@@ -411,6 +409,12 @@ export default {
           {
             required: true,
             message: "Vui lòng nhập tên ngày nghỉ!",
+            trigger: "blur",
+          },
+          {
+            min: 3,
+            max: 100,
+            message: "Tên ngày nghỉ từ 3 đến 100 kí tự",
             trigger: "blur",
           },
         ],
@@ -468,6 +472,11 @@ export default {
       });
     },
 
+    cancelCreateForm(formName) {
+      this.$refs[formName].resetFields();
+      this.createHolidayDialogVisible = false;
+    },
+
     submitEditForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -489,6 +498,11 @@ export default {
           return false;
         }
       });
+    },
+
+    cancelEditForm(formName) {
+      this.$refs[formName].resetFields();
+      this.editHolidayDialogVisible = false;
     },
 
     showCreateHolidayDialog() {
@@ -529,6 +543,19 @@ export default {
     },
 
     acceptDelete() {
+      var startHolidayDate = new Date(this.ruleForm.startDate);
+      if (this.currentDate >= startHolidayDate) {
+        this.editHolidayDialogVisible = false;
+        this.createHolidayDialogVisible = false;
+        this.deleteHolidayDialogVisible = false;
+        this.$notify.error({
+          message: "Xóa không thành công vì ngày nghỉ đã qua.",
+          title: "Failed",
+          timer: 2000,
+          timerProgressBar: true,
+        });
+        this.getData();
+      }else{
       HolidayService.deleteHoliday(this.holidayId)
         .then((response) => {
           console.log(response.data);
@@ -546,19 +573,19 @@ export default {
         .catch((e) => {
           console.log(e);
         });
+      }
     },
 
     getData() {
-      console.log(this.page)
+      console.log(this.page);
       HolidayService.getData(
         this.page,
         this.pageSize,
         this.search,
         this.year
       ).then((response) => {
-        
         this.holidays = response.data.content;
-         console.log(response.data)
+        console.log(response.data);
         for (const key in this.holidays) {
           if (Object.hasOwnProperty.call(this.holidays, key)) {
             this.holidays[key].startDate = moment(
