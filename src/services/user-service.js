@@ -5,9 +5,7 @@ import httpCommon from "@/http-common";
 
 class UserService {
     saveUser(data) {
-        console.log(12, data);
         let dataForm = new FormData(data)
-        console.log(13, dataForm);
         return httpCommon.post("/user/create", dataForm);
     }
     getData(page, size, departId, search, status) {
@@ -18,6 +16,13 @@ class UserService {
     }
     changeStatus(id){
         return httpCommon.get("/user/block/"+ id);
+    }
+
+    updateUser(id,data) {
+        console.log(12, data);
+        let dataForm = new FormData(data)
+        console.log(13, dataForm);
+        return httpCommon.put("/user/update/"+id, dataForm);
     }
 }
 

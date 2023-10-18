@@ -257,10 +257,12 @@
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Mã nhân viên<span style="color: red"> *</span></span><br>
-                        <el-input id="userCode" v-model="user.userCode" name="userCode" autocomplete="off" maxlength="8"
+                        <el-input id="userCode" v-model="user.userCode" name="userCode" autocomplete="off" maxlength="5"
                                   :class="{'error-border':errUserCode !== null && errUserCode !== ''}"
                                   @input="clearErrorFullName('userCode')"
-                                  style="width: 90%"></el-input>
+                                  style="width: 90%">
+                            <template slot="prepend">FPT_</template>
+                        </el-input>
                         <div>
                             <small v-if="errUserCode !== null" style="color: red">
                                 {{ errUserCode }}
@@ -407,89 +409,89 @@
                             </small>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                        <div>
-                            <span>Hợp đồng<span style="color: red"> *</span></span><br>
-                            <input id="contractFile" type="file" name="contractFile"
-                                   :class="{'error-border':errContractFile !== null && errContractFile !== ''}"
-                                   @change="clearErrorFullName('contractFile')"
-                                   style="width: 90%"/>
 
-                            <div>
-                                <small v-if="errContractFile !== null" style="color: red">
-                                    {{ errContractFile }}
-                                </small>
+
+                    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+                        <div class="row">
+                            <div class="col">
+                                <span>Hợp đồng<span style="color: red"> *</span></span><br>
+                                <input id="contractFile" type="file" name="contractFile"
+                                       :class="{'error-border':errContractFile !== null && errContractFile !== ''}"
+                                       @change="clearErrorFullName('contractFile')"
+                                       style="width: 90%"/>
+
+                                <div>
+                                    <small v-if="errContractFile !== null" style="color: red">
+                                        {{ errContractFile }}
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <span>Tài khoản<span style="color: red"> *</span></span><br>
+                                <el-input id="username" v-model="user.username" name="username" autocomplete="off"
+                                          maxlength="50"
+                                          :class="{'error-border':errUserName !== null && errUserName !== ''}"
+                                          @change="clearErrorFullName('username')"
+                                          style="width: 90%"></el-input>
+
+                                <div>
+                                    <small v-if="errUserName !== null" style="color: red">
+                                        {{ errUserName }}
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="w-100"></div>
+                            <div class="col" style="margin-top: 30px">
+                                <span>Ngày bắt đầu hợp đồng<span style="color: red"> *</span></span><br>
+                                <el-date-picker id="startWork" v-model="user.startWork" name="startWork" autocomplete="off"
+                                                :class="{'error-border':errStartWork !== null && errStartWork !== ''}"
+                                                @change="clearErrorFullName('startWork')"
+                                                format='yyyy-MM-dd'
+                                                value-format='yyyy-MM-dd'
+                                                :editable="false"
+                                                placeholder="Chọn ngày" style="width: 90%"></el-date-picker>
+
+                                <div>
+                                    <small v-if="errStartWork !== null" style="color: red">
+                                        {{ errStartWork }}
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col" style="margin-top: 30px">
+                                <span>Ngày kết thúc hợp đồng<span style="color: red"> *</span></span><br>
+                                <el-date-picker id="endWork" v-model="user.endWork" name="endWork" autocomplete="off"
+                                                :class="{'error-border':errEndWork !== null && errEndWork !== ''}"
+                                                @change="clearErrorFullName('endWork')"
+                                                format='yyyy-MM-dd'
+                                                :editable="false"
+                                                value-format='yyyy-MM-dd'
+                                                :picker-options="pickerOptionsCreate"
+                                                placeholder="Chọn ngày" style="width: 90%"></el-date-picker>
+
+                                <div>
+                                    <small v-if="errEndWork !== null" style="color: red">
+                                        {{ errEndWork }}
+                                    </small>
+                                </div>
                             </div>
                         </div>
-                        <div style="margin-top: 36px">
-                            <span>Ngày bắt đầu hợp đồng<span style="color: red"> *</span></span><br>
-                            <el-date-picker id="startWork" v-model="user.startWork" name="startWork" autocomplete="off"
-                                            :class="{'error-border':errStartWork !== null && errStartWork !== ''}"
-                                            @change="clearErrorFullName('startWork')"
-                                            format='yyyy-MM-dd'
-                                            value-format='yyyy-MM-dd'
-                                            :editable="false"
-                                            placeholder="Chọn ngày" style="width: 90%"></el-date-picker>
-
-                            <div>
-                                <small v-if="errStartWork !== null" style="color: red">
-                                    {{ errStartWork }}
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                        <div>
-                            <span>Tài khoản<span style="color: red"> *</span></span><br>
-                            <el-input id="username" v-model="user.username" name="username" autocomplete="off"
-                                      maxlength="50"
-                                      :class="{'error-border':errUserName !== null && errUserName !== ''}"
-                                      @change="clearErrorFullName('username')"
-                                      style="width: 90%"></el-input>
-
-                            <div>
-                                <small v-if="errUserName !== null" style="color: red">
-                                    {{ errUserName }}
-                                </small>
-                            </div>
-                        </div>
-
-                        <div style="margin-top: 30px">
-                            <span>Ngày kết thúc hợp đồng<span style="color: red"> *</span></span><br>
-                            <el-date-picker id="endWork" v-model="user.endWork" name="endWork" autocomplete="off"
-                                            :class="{'error-border':errEndWork !== null && errEndWork !== ''}"
-                                            @change="clearErrorFullName('endWork')"
-                                            format='yyyy-MM-dd'
-                                            :editable="false"
-                                            value-format='yyyy-MM-dd'
-                                            placeholder="Chọn ngày" style="width: 90%"></el-date-picker>
-
-                            <div>
-                                <small v-if="errEndWork !== null" style="color: red">
-                                    {{ errEndWork }}
-                                </small>
-                            </div>
-                        </div>
-
                         <div style="position: absolute;bottom: 40px;right: 40px">
                             <!--                        <el-button  @click="createEmployeeDialogVisible = false">Huỷ</el-button>-->
                             <button class="save" type="button" @click="sendForm">Thêm</button>
 
                         </div>
-
                     </div>
                 </div>
             </form>
         </el-dialog>
 
-<!--        edit-->
+        <!--        edit-->
         <el-dialog
 
-            :visible.sync="editEmployeeDialogVisible"
-            width="50%"
-            title="Sửa thông tin nhân viên"
-            left>
+                :visible.sync="editEmployeeDialogVisible"
+                width="50%"
+                title="Sửa thông tin nhân viên"
+                left>
             <form id="formEdit">
                 <div class="row">
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
@@ -508,10 +510,13 @@
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Mã nhân viên<span style="color: red"> *</span></span><br>
-                        <el-input id="userCodeEdit" v-model="userEdit.userCode" name="userCode" autocomplete="off" maxlength="8"
+                        <el-input id="userCodeEdit" v-model="userEdit.userCode" name="userCode" autocomplete="off"
+                                  maxlength="5"
                                   :class="{'error-border':errUserCode !== null && errUserCode !== ''}"
                                   @input="clearErrorFullName('userCode')"
-                                  style="width: 90%"></el-input>
+                                  style="width: 90%">
+                            <template slot="prepend">FPT_</template>
+                        </el-input>
                         <div>
                             <small v-if="errUserCode !== null" style="color: red">
                                 {{ errUserCode }}
@@ -536,7 +541,8 @@
                 <div class="row" style="margin-top: 20px">
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Nhập địa chỉ<span style="color: red"> *</span></span><br>
-                        <el-input id="addressEdit" v-model="userEdit.address" name="address" autocomplete="off" maxlength="100"
+                        <el-input id="addressEdit" v-model="userEdit.address" name="address" autocomplete="off"
+                                  maxlength="100"
                                   :class="{'error-border':errAddress !== null && errAddress !== ''}"
                                   @input="clearErrorFullName('address')"
                                   style="width: 90%"></el-input>
@@ -563,7 +569,7 @@
                         <span>Nhập số điện thoại<span style="color: red"> *</span></span><br>
                         <el-input id="phoneEdit" v-model="userEdit.phone" name="phone" autocomplete="off" maxlength="11"
                                   :class="{'error-border':errPhone !== null && errPhone !== ''}"
-                                  @input="validateIsNumbers"
+                                  @input="validateIsNumbers,clearErrorFullName('birthDay')"
                                   style="width: 90%"></el-input>
 
                         <div>
@@ -598,10 +604,10 @@
                                    @change="clearErrorFullName('positionId')"
                                    style="width: 90%">
                             <el-option
-                                v-for="item in positions"
-                                :key="item.position"
-                                :label="item.positionName"
-                                :value="item.id"
+                                    v-for="item in positions"
+                                    :key="item.position"
+                                    :label="item.positionName"
+                                    :value="item.id"
 
                             ></el-option>
                         </el-select>
@@ -614,15 +620,16 @@
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Bộ phận<span style="color: red"> *</span></span><br>
-                        <el-select id="departmentIdEdit" v-model="this.deparmentEditName" name="departmentId" autocomplete="off"
+                        <el-select id="departmentIdEdit" v-model="this.deparmentEditName" name="departmentId"
+                                   autocomplete="off"
                                    :class="{'error-border':errDepartmentId !== null && errDepartmentId !== ''}"
                                    @change="clearErrorFullName('departmentId')"
                                    style="width: 90%">
                             <el-option
-                                v-for="item in departments"
-                                :key="item.department"
-                                :label="item.name"
-                                :value="item.id"
+                                    v-for="item in departments"
+                                    :key="item.department"
+                                    :label="item.name"
+                                    :value="item.id"
 
                             ></el-option>
                         </el-select>
@@ -639,18 +646,18 @@
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Nhập ảnh nhân viên<span style="color: red"> *</span></span><br>
                         <input
-                            id="userImageEdit"
-                            type="file"
-                            name="userImage"
-                            class="form-control"
-                            placeholder="Title"
-                            @change="previewFilesEdit($event),clearErrorFullName('userImage')"
-                            :class="{'error-border':errUserImage !== null && errUserImage !== ''}"
-                            style="width: 90%"
+                                id="userImageEdit"
+                                type="file"
+                                name="userImage"
+                                class="form-control"
+                                placeholder="Title"
+                                @change="previewFilesEdit($event),clearErrorFullName('userImage')"
+                                :class="{'error-border':errUserImage !== null && errUserImage !== ''}"
+                                style="width: 90%"
                         />
 
                         <img alt=""
-                             :src="userImageEdit"
+                             :src="userImageEdit ||'https://www.namepros.com/attachments/empty-png.89209/'"
                              style="width: 90%"/>
 
                         <div>
@@ -659,79 +666,83 @@
                             </small>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                        <div>
-                            <span>Hợp đồng<span style="color: red"> *</span></span><br>
-                            <input id="contractFileEdit" type="file" name="contractFile"
-                                   :class="{'error-border':errContractFile !== null && errContractFile !== ''}"
-                                   @change="clearErrorFullName('contractFile')"
-                                   style="width: 90%"/>
-                            <el-link :href="`http://localhost:2000/api/file/contract/`+contractFileEdit" type="warning" target="_blank">
-                                {{ contractNameEdit }}</el-link>
-                            <div>
-                                <small v-if="errContractFile !== null" style="color: red">
-                                    {{ errContractFile }}
-                                </small>
+                    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+                        <div class="row">
+                            <div class="col">
+                                <span>Hợp đồng<span style="color: red"> *</span></span><br>
+                                <input id="contractFileEdit" type="file" name="contractFile"
+                                       :class="{'error-border':errContractFile !== null && errContractFile !== ''}"
+                                       @change="clearErrorFullName('contractFile')"
+                                       style="width: 90%"/>
+                                <el-link :href="`http://localhost:2000/api/file/contract/`+contractFileEdit" type="warning"
+                                         target="_blank">
+                                    {{ contractNameEdit }}
+                                </el-link>
+                                <div>
+                                    <small v-if="errContractFile !== null" style="color: red">
+                                        {{ errContractFile }}
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <span>Tài khoản<span style="color: red"> *</span></span><br>
+                                <el-input id="usernameEdit" v-model="userEdit.username" name="username" autocomplete="off"
+                                          maxlength="50"
+                                          :class="{'error-border':errUserName !== null && errUserName !== ''}"
+                                          @change="clearErrorFullName('username')"
+                                          style="width: 90%"></el-input>
+
+                                <div>
+                                    <small v-if="errUserName !== null" style="color: red">
+                                        {{ errUserName }}
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="w-100"></div>
+                            <div class="col" style="margin-top: 30px">
+                                <span>Ngày bắt đầu hợp đồng<span style="color: red"> *</span></span><br>
+                                <el-date-picker id="startWorkEdit" v-model="userEdit.startWork" name="startWork"
+                                                autocomplete="off"
+                                                :class="{'error-border':errStartWork !== null && errStartWork !== ''}"
+                                                @change="clearErrorFullName('startWork'), changeStartWorkEdit"
+                                                format='yyyy-MM-dd'
+                                                value-format='yyyy-MM-dd'
+                                                :editable="false"
+                                                placeholder="Chọn ngày" style="width: 90%"></el-date-picker>
+
+                                <div>
+                                    <small v-if="errStartWork !== null" style="color: red">
+                                        {{ errStartWork }}
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col" style="margin-top: 30px">
+                                <span>Ngày kết thúc hợp đồng<span style="color: red"> *</span></span><br>
+                                <el-date-picker id="endWorkEdit" v-model="userEdit.endWork" name="endWork"
+                                                autocomplete="off"
+                                                :class="{'error-border':errEndWork !== null && errEndWork !== ''}"
+                                                @change="clearErrorFullName('endWork')"
+                                                format='yyyy-MM-dd'
+                                                :editable="false"
+                                                value-format='yyyy-MM-dd'
+                                                :picker-options="pickerOptionsEdit"
+                                                placeholder="Chọn ngày" style="width: 90%"></el-date-picker>
+
+                                <div>
+                                    <small v-if="errEndWork !== null" style="color: red">
+                                        {{ errEndWork }}
+                                    </small>
+                                </div>
                             </div>
                         </div>
-                        <div style="margin-top: 36px">
-                            <span>Ngày bắt đầu hợp đồng<span style="color: red"> *</span></span><br>
-                            <el-date-picker id="startWorkEdit" v-model="userEdit.startWork" name="startWork" autocomplete="off"
-                                            :class="{'error-border':errStartWork !== null && errStartWork !== ''}"
-                                            @change="clearErrorFullName('startWork')"
-                                            format='yyyy-MM-dd'
-                                            value-format='yyyy-MM-dd'
-                                            :editable="false"
-                                            placeholder="Chọn ngày" style="width: 90%"></el-date-picker>
-
-                            <div>
-                                <small v-if="errStartWork !== null" style="color: red">
-                                    {{ errStartWork }}
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                        <div>
-                            <span>Tài khoản<span style="color: red"> *</span></span><br>
-                            <el-input id="usernameEdit" v-model="userEdit.username" name="username" autocomplete="off"
-                                      maxlength="50"
-                                      :class="{'error-border':errUserName !== null && errUserName !== ''}"
-                                      @change="clearErrorFullName('username')"
-                                      style="width: 90%"></el-input>
-
-                            <div>
-                                <small v-if="errUserName !== null" style="color: red">
-                                    {{ errUserName }}
-                                </small>
-                            </div>
-                        </div>
-
-                        <div style="margin-top: 30px">
-                            <span>Ngày kết thúc hợp đồng<span style="color: red"> *</span></span><br>
-                            <el-date-picker id="endWorkEdit" v-model="userEdit.endWork" name="endWork" autocomplete="off"
-                                            :class="{'error-border':errEndWork !== null && errEndWork !== ''}"
-                                            @change="clearErrorFullName('endWork')"
-                                            format='yyyy-MM-dd'
-                                            :editable="false"
-                                            value-format='yyyy-MM-dd'
-                                            placeholder="Chọn ngày" style="width: 90%"></el-date-picker>
-
-                            <div>
-                                <small v-if="errEndWork !== null" style="color: red">
-                                    {{ errEndWork }}
-                                </small>
-                            </div>
-                        </div>
-
-                        <div style="position: absolute;bottom: 40px;right: 40px">
+                        <div style="position: absolute;bottom: 40px;right: 40px; margin-top: 50px">
                             <!--                        <el-button  @click="createEmployeeDialogVisible = false">Huỷ</el-button>-->
                             <button class="save" type="button" @click="editUser">Chỉnh sửa</button>
 
                         </div>
-
                     </div>
+
+
                 </div>
             </form>
         </el-dialog>
@@ -784,15 +795,12 @@ export default {
             },
 
             editEmployeeDialogVisible: false,
-            userEdit: {
-
-            },
+            userEdit: {},
             deparmentEditName: '',
             positionEditName: '',
             userImageEdit: '',
             contractNameEdit: '',
             contractFileEdit: '',
-
 
 
             errFullName: '',
@@ -822,8 +830,20 @@ export default {
         currentUser() {
             return this.$store.state.auth.user;
         },
+        pickerOptionsCreate() {
+            return {
+                disabledDate: this.disableOneDayAgoCreate,
+            };
+        },
+        pickerOptionsEdit() {
+            return {
+                disabledDate: this.disableOneDayAgoEdit,
+            };
+        },
+
     },
     methods: {
+
         getUser() {
             this.logInUser = this.$store.state.auth.user;
             console.log(this.logInUser.id)
@@ -834,71 +854,84 @@ export default {
                 this.errFullName = "Vui lòng nhập họ và tên";
                 document.getElementById("fullName").classList.add("error-border")
                 return;
-            } else if (!this.user.userCode) {
+            }
+            if (!this.user.userCode) {
                 this.errUserCode = "Vui lòng nhập mã nhân viên";
                 document.getElementById("userCode").classList.add("error-border")
                 return;
-            } else if (!this.user.gender) {
+            }
+            if (this.user.gender == '' || this.user.gender == null) {
                 this.errGender = "Vui lòng chọn giới tính";
                 document.getElementById("gender").classList.add("error-border")
                 return;
-            } else if (!this.user.address) {
+            }
+            if (!this.user.address) {
                 this.errAddress = "Vui lòng nhập địa chỉ";
                 document.getElementById("address").classList.add("error-border")
                 return;
-            }else if (!this.user.email) {
+            }
+            if (!this.user.email) {
                 this.errEmail = "Vui lòng nhập email";
                 document.getElementById("email").classList.add("error-border")
                 return;
-            } else if (!this.user.phone) {
-                this.errPhone = "Vui lòng nhập số điện thoại";
-                document.getElementById("phone").classList.add("error-border")
-                return;
-            }else if (!this.user.birthDay) {
-                this.errBirthDay = "Vui lòng chọn ngày sinh";
-                document.getElementById("birthDay").classList.add("error-border")
-                return;
-            }else if (!this.user.positionId) {
-                this.errPositionId = "Vui lòng chọn vị trí";
-                document.getElementById("positionId").classList.add("error-border")
-                return;
-            }else if (!this.user.departmentId) {
-                this.errDepartmentId = "Vui lòng chọn phòng ban";
-                document.getElementById("departmentId").classList.add("error-border")
-                return;
-            }else if (!this.user.userImage) {
-                console.log(this.user.userImage)
-                this.errUserImage = "Vui lòng chọn ảnh nhân viên";
-                document.getElementById("userImage").classList.add("error-border")
-                return;
             }
-            // else if (!this.user.contractFile) {
-            //     console.log(this.user.contractFile)
-            //     this.errContractFile = "Vui lòng chọn hợp đồng";
-            //     document.getElementById("contractFile").classList.add("error-border")
-            //     return;
-            // }
-            else if (!this.user.username) {
-                this.errUserName = "Vui lòng nhập tài khoản";
-                document.getElementById("username").classList.add("error-border")
-                return;
-            }else if (!this.user.startWork) {
-                this.errStartWork = "Vui lòng chọn ngày bắt đầu hợp đồng";
-                document.getElementById("startWork").classList.add("error-border")
-                return;
-            }else if (!this.user.endWork) {
-                this.errEndWork = "Vui lòng chọn ngày kết thúc hợp đồng";
-                document.getElementById("endWork").classList.add("error-border")
-                return;
-            }
+
             if (this.user.email) {
-                if(!this.isEmailValid(this.user.email)){
-                    this.errEmail = "Vui lòng nhập lại email";
+                if (!this.isEmailValid(this.user.email)) {
+                    this.errEmail = "Vui lòng nhập đúng định dạng email";
                     document.getElementById("email").classList.add("error-border")
                     return;
                 }
 
             }
+            if (!this.user.phone) {
+                this.errPhone = "Vui lòng nhập số điện thoại";
+                document.getElementById("phone").classList.add("error-border")
+                return;
+            }
+            if (!this.user.birthDay) {
+                this.errBirthDay = "Vui lòng chọn ngày sinh";
+                document.getElementById("birthDay").classList.add("error-border")
+                return;
+            }
+            if (!this.user.positionId) {
+                this.errPositionId = "Vui lòng chọn vị trí";
+                document.getElementById("positionId").classList.add("error-border")
+                return;
+            }
+            if (!this.user.departmentId) {
+                this.errDepartmentId = "Vui lòng chọn phòng ban";
+                document.getElementById("departmentId").classList.add("error-border")
+                return;
+            }
+            if (!this.user.userImage) {
+                console.log(this.user.userImage)
+                this.errUserImage = "Vui lòng chọn ảnh nhân viên";
+                document.getElementById("userImage").classList.add("error-border")
+                return;
+            }
+                // else if (!this.user.contractFile) {
+                //     console.log(this.user.contractFile)
+                //     this.errContractFile = "Vui lòng chọn hợp đồng";
+                //     document.getElementById("contractFile").classList.add("error-border")
+                //     return;
+            // }
+             if (!this.user.username) {
+                this.errUserName = "Vui lòng nhập tài khoản";
+                document.getElementById("username").classList.add("error-border")
+                return;
+            }
+             if (!this.user.startWork) {
+                this.errStartWork = "Vui lòng chọn ngày bắt đầu hợp đồng";
+                document.getElementById("startWork").classList.add("error-border")
+                return;
+            }
+             if (!this.user.endWork) {
+                this.errEndWork = "Vui lòng chọn ngày kết thúc hợp đồng";
+                document.getElementById("endWork").classList.add("error-border")
+                return;
+            }
+
 
             this.createEmployeeDialogVisible = false;
             for (var i = 0; i < this.departments.length; i++) {
@@ -931,73 +964,87 @@ export default {
                 this.errFullName = "Vui lòng nhập họ và tên";
                 document.getElementById("fullNameEdit").classList.add("error-border")
                 return;
-            } else if (!this.userEdit.userCode) {
+            }
+            if (!this.userEdit.userCode) {
                 this.errUserCode = "Vui lòng nhập mã nhân viên";
                 document.getElementById("userCodeEdit").classList.add("error-border")
                 return;
-            } else if (!this.userEdit.gender) {
+            }
+            if (this.userEdit.gender != 0 && this.userEdit.gender != 1) {
                 this.errGender = "Vui lòng chọn giới tính";
                 document.getElementById("genderEdit").classList.add("error-border")
                 return;
-            } else if (!this.userEdit.address) {
+            }
+            if (!this.userEdit.address) {
                 this.errAddress = "Vui lòng nhập địa chỉ";
                 document.getElementById("addressEdit").classList.add("error-border")
                 return;
-            }else if (!this.userEdit.email) {
+            }
+            if (!this.userEdit.email) {
                 this.errEmail = "Vui lòng nhập email";
                 document.getElementById("emailEdit").classList.add("error-border")
                 return;
-            } else if (!this.userEdit.phone) {
-                this.errPhone = "Vui lòng nhập số điện thoại";
-                document.getElementById("phoneEdit").classList.add("error-border")
-                return;
-            }else if (!this.userEdit.birthDay) {
-                this.errBirthDay = "Vui lòng chọn ngày sinh";
-                document.getElementById("birthDayEdit").classList.add("error-border")
-                return;
-            }else if (!this.userEdit.positionId) {
-                this.errPositionId = "Vui lòng chọn vị trí";
-                document.getElementById("positionIdEdit").classList.add("error-border")
-                return;
-            }else if (!this.userEdit.departmentId) {
-                this.errDepartmentId = "Vui lòng chọn phòng ban";
-                document.getElementById("departmentIdEdit").classList.add("error-border")
-                return;
-            }else if (!this.userEdit.userImage) {
-                console.log(this.userEdit.userImage)
-                this.errUserImage = "Vui lòng chọn ảnh nhân viên";
-                document.getElementById("userImageEdit").classList.add("error-border")
-                return;
             }
-                // else if (!this.user.contractFile) {
-                //     console.log(this.user.contractFile)
-                //     this.errContractFile = "Vui lòng chọn hợp đồng";
-                //     document.getElementById("contractFileEdit").classList.add("error-border")
-                //     return;
-            // }
-            else if (!this.userEdit.username) {
-                this.errUserName = "Vui lòng nhập tài khoản";
-                document.getElementById("usernameEdit").classList.add("error-border")
-                return;
-            }else if (!this.userEdit.startWork) {
-                this.errStartWork = "Vui lòng chọn ngày bắt đầu hợp đồng";
-                document.getElementById("startWorkEdit").classList.add("error-border")
-                return;
-            }else if (!this.userEdit.endWork) {
-                this.errEndWork = "Vui lòng chọn ngày kết thúc hợp đồng";
-                document.getElementById("endWorkEdit").classList.add("error-border")
-                return;
-            }
+
             if (this.userEdit.email) {
-                if(!this.isEmailValid(this.userEdit.email)){
-                    this.errEmail = "Vui lòng nhập lại email";
+                if (!this.isEmailValid(this.userEdit.email)) {
+                    this.errEmail = "Vui lòng nhập đúng định dạng email";
                     document.getElementById("emailEdit").classList.add("error-border")
                     return;
                 }
 
             }
+            if (!this.userEdit.phone) {
+                this.errPhone = "Vui lòng nhập số điện thoại";
+                document.getElementById("phoneEdit").classList.add("error-border")
+                return;
+            }
+            if (!this.userEdit.birthDay) {
+                this.errBirthDay = "Vui lòng chọn ngày sinh";
+                document.getElementById("birthDayEdit").classList.add("error-border")
+                return;
+            }
+            if (!this.positionEditName) {
+                console.log(this.positionEditName)
+                this.errPositionId = "Vui lòng chọn vị trí";
+                document.getElementById("positionIdEdit").classList.add("error-border")
+                return;
+            }
+            if (!this.deparmentEditName) {
+                this.errDepartmentId = "Vui lòng chọn phòng ban";
+                document.getElementById("departmentIdEdit").classList.add("error-border")
+                return;
+            }
+            if (!this.userEdit.userImage) {
+                this.errUserImage = "Vui lòng chọn ảnh nhân viên";
+                document.getElementById("userImageEdit").classList.add("error-border")
+                return;
+            }
+            // else if (!this.user.contractFile) {
+            //     console.log(this.user.contractFile)
+            //     this.errContractFile = "Vui lòng chọn hợp đồng";
+            //     document.getElementById("contractFile").classList.add("error-border")
+            //     return;
+            // }
+            if (!this.userEdit.username) {
+                this.errUserName = "Vui lòng nhập tài khoản";
+                document.getElementById("usernameEdit").classList.add("error-border")
+                return;
+            }
+            if (!this.userEdit.startWork) {
+                this.errStartWork = "Vui lòng chọn ngày bắt đầu hợp đồng";
+                document.getElementById("startWorkEdit").classList.add("error-border")
+                return;
+            }
+            if (!this.userEdit.endWork) {
+                this.errEndWork = "Vui lòng chọn ngày kết thúc hợp đồng";
+                document.getElementById("endWorkEdit").classList.add("error-border")
+                return;
+            }
 
-            this.createEmployeeDialogVisible = false;
+
+
+            this.editEmployeeDialogVisible = false;
             for (var i = 0; i < this.departments.length; i++) {
                 if (document.getElementById('departmentIdEdit').value === this.departments.at(i).name) {
                     document.getElementById('departmentIdEdit').value = this.departments.at(i).id;
@@ -1009,17 +1056,19 @@ export default {
                 }
             }
 
-            // let form = document.querySelector("#formEdit");
-            // UserService.saveUser(form).then(() => {
-            //     this.$notify.success({
-            //         message: "Sửa tài khoản thành công",
-            //         title: "Success",
-            //         timer: 2000,
-            //         timerProgressBar: true,
-            //     });
-            //     // this.hideLoading();
-            //     this.getData();
-            // });
+            let form = document.querySelector("#formEdit");
+            console.log('userId', this.userEdit.id)
+
+            UserService.updateUser(this.userEdit.id, form).then(() => {
+                this.$notify.success({
+                    message: "Sửa tài khoản thành công",
+                    title: "Success",
+                    timer: 2000,
+                    timerProgressBar: true,
+                });
+                // this.hideLoading();
+                this.getData();
+            });
 
 
         },
@@ -1114,8 +1163,6 @@ export default {
                     });
             }
         },
-
-
         getAllDepartment() {
             DepartmentService.getAllDepartment().then((response) => {
                 this.departments = response.data
@@ -1136,9 +1183,11 @@ export default {
             this.clearAll()
             UserService.profile(userId).then(response => {
                 this.userEdit = response.data
+                // this.codeEdit = this.userEdit.userCode;
+                this.userEdit.userCode = String(this.userEdit.userCode.split("_")[1]);
                 this.deparmentEditName = this.userEdit.department.name
                 this.positionEditName = this.userEdit.position.positionName
-                this.userImageEdit = this.userEdit.userImage !== null
+                this.userImageEdit = this.userEdit.userImage !== ''
                     ? "http://localhost:2000/api/file/avatar/" + this.userEdit.userImage
                     : "https://www.namepros.com/attachments/empty-png.89209/";
                 console.log(this.userEdit.department.name)
@@ -1173,16 +1222,12 @@ export default {
             }
             return "success-row";
         },
-        restrictToNumbers() {
-            // Xóa bất kỳ ký tự nào không phải số khỏi chuỗi
-            this.numberInput = this.numberInput.replace(/[^0-9]/g, "");
-        },
-        getCurrentContractByUserId(userId){
-          ContractService.getCurrentContractByUserId(userId).then(response => {
-              this.contractFileEdit = response.data.fileName
-              this.contractNameEdit = response.data.contractName
-              console.log(this.contractFileEdit)
-          })
+        getCurrentContractByUserId(userId) {
+            ContractService.getCurrentContractByUserId(userId).then(response => {
+                this.contractFileEdit = response.data.fileName
+                this.contractNameEdit = response.data.contractName
+                console.log(this.contractFileEdit)
+            })
         },
         previewFiles(event) {
             const file = event.target.files[0];
@@ -1204,10 +1249,23 @@ export default {
             theReader.readAsDataURL(file);
             // this.clearErrorFullName('userImage')
         },
+        disableOneDayAgoCreate(date) {
+            const startWork = new Date(this.user.startWork)
+            startWork.setDate(startWork.getDate())
+            return date < startWork;
+        },
+        disableOneDayAgoEdit(date) {
+            const startWorkEdit = new Date(this.userEdit.startWork)
+            startWorkEdit.setDate(startWorkEdit.getDate())
+            return date < startWorkEdit;
+        },
         validateIsNumbers() {
+            this.clearErrorFullName('phone');
             this.user.phone = this.user.phone.replace(/[^0-9]/g, '');
             this.userEdit.phone = this.userEdit.phone.replace(/[^0-9]/g, '');
-            this.clearErrorFullName('phone')
+            if(this.user.phone != '' || this.userEdit.phone != ''){
+                this.clearErrorFullName('phone');
+            }
         },
         isEmailValid(email) {
             // Biểu thức chính quy kiểm tra địa chỉ email
@@ -1246,40 +1304,41 @@ export default {
                 this.errEndWork = '';
             }
         },
-        clearAll(){
-            this.user= {
+        clearAll() {
+            this.user = {
                 username: '',
-                    userCode: '',
-                    email: '',
-                    fullName: '',
-                    gender: 1,
-                    address: '',
-                    phone: '',
-                    startWork: '',
-                    endWork: '',
-                    birthDay: '',
-                    positionId: 1,
-                    departmentId: 1,
-                    userImage: '',
-                    contractFile: ''
+                userCode: '',
+                email: '',
+                fullName: '',
+                gender: 1,
+                address: '',
+                phone: '',
+                startWork: '',
+                endWork: '',
+                birthDay: '',
+                positionId: 1,
+                departmentId: 1,
+                userImage: '',
+                contractFile: ''
             }
 
-            this.errFullName= ''
-            this.errUserCode= ''
-            this.errGender= ''
-            this.errAddress= ''
-            this.errEmail= ''
-            this.errPhone= ''
-            this.errBirthDay= ''
-            this.errPositionId= ''
-            this.errDepartmentId= ''
-            this.errUserImage= ''
-            this.errContractFile= ''
-            this.errUserName= ''
-            this.errStartWork= ''
-            this.errEndWork= ''
+            this.errFullName = ''
+            this.errUserCode = ''
+            this.errGender = ''
+            this.errAddress = ''
+            this.errEmail = ''
+            this.errPhone = ''
+            this.errBirthDay = ''
+            this.errPositionId = ''
+            this.errDepartmentId = ''
+            this.errUserImage = ''
+            this.errContractFile = ''
+            this.errUserName = ''
+            this.errStartWork = ''
+            this.errEndWork = ''
         }
-    }
+    },
+
 }
 </script>
 

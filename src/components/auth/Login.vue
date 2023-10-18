@@ -139,7 +139,7 @@ export default {
         if (this.loggedIn) {
             console.log(this.$store.state.auth.user)
             // this.$store.dispatch("auth/logout");
-            this.$router.push("/manageUser");
+            this.$router.push("/calendar");
         }
     },
     methods: {
@@ -153,7 +153,7 @@ export default {
 
             this.$store.dispatch("auth/login", this.user).then(
                 () => {
-                    this.$router.push("/manageUser");
+                    this.$router.push("/calendar");
                 },
                 (error) => {
                     this.loading = false;
