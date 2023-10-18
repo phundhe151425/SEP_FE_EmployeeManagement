@@ -1,7 +1,7 @@
 import httpCommon from "@/http-common";
 import { BASE_URL } from "@/http-common";
 import axios from 'axios';
-import authHeader from "@/services/auth-header";
+// import authHeader from "@/services/auth-header";
 
 class UserService {
     saveUser(data) {

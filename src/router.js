@@ -100,7 +100,10 @@ router.beforeEach((to, from, next) => {
     const adminPages = [
         "/logCheckAdmin",
         "/inLateOutEarlyAdmin",
-        "/manageUser"
+        "/manageUser",
+        "/manageHoliday",
+        "/managePosition",
+        "/manageDepartment",
     ];
     const managePages = [
         "/logCheckMod",
