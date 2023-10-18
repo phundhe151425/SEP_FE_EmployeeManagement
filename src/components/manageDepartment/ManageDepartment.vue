@@ -50,7 +50,7 @@
                 type="danger"
                 style=""
                 round
-                @click="showCreatePositionDialog"
+                @click="showCreateDepartmentDialog"
                 ><i class="el-icon-plus"></i> Thêm phòng ban
               </el-button>
             </div>
@@ -59,7 +59,7 @@
         <br />
         <div>
           <el-table
-            :data="positions"
+            :data="departments"
             height="700px"
             :header-cell-style="{
               background: '#D9D9D9',
@@ -98,14 +98,14 @@
               <button
                 style="margin-right: 10px"
                 class="btn-action"
-                @click="showEditPositionDialog(data.row.id)"
+                @click="showEditDepartmentDialog(data.row.id)"
               >
                 <i class="el-icon-edit-outline" style="width: 30px"></i>
               </button>
               <button
                 style="margin-right: 10px"
                 class="btn-action"
-                @click="showDeletePositionDialog(data.row.id)"
+                @click="showDeleteDepartmentDialog(data.row.id)"
               >
                 <i class="el-icon-delete" style="width: 30px"></i>
               </button>
@@ -135,7 +135,7 @@
     </div>
 
     <el-dialog
-      :visible.sync="editPositionDialogVisible"
+      :visible.sync="editDepartmentDialogVisible"
       width="50%"
       title="Sửa phòng ban"
       left
@@ -161,29 +161,29 @@
           </div>
         </div>
 
-        <div class="row" style="margin-top: 80px">
-          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-            <div style="position: absolute; bottom: 40px; right: 17%">
+        <div class="row" style="display: flex; justify-content: flex-end">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+            <div style="bottom: 40px">
               <el-form-item>
                 <el-button
                   class="btn btn-outline-danger"
                   type="primary"
-                  style="padding: 6px 36px"
-                  @click="editPositionDialogVisible = false"
+                  style="width: 90%"
+                  @click="cancelEditForm('ruleForm')"
                   >Hủy</el-button
                 >
               </el-form-item>
             </div>
           </div>
-          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-            <div style="position: absolute; bottom: 40px; right: 20px">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+            <div style="bottom: 40px">
               <el-form-item>
                 <el-button
                   class="btn btn-success"
                   type="primary"
-                  style="padding: 6px 36px"
+                  style="width: 90%"
                   @click="submitEditForm('ruleForm')"
-                  >Sửa</el-button
+                  >Lưu</el-button
                 >
               </el-form-item>
             </div>
@@ -193,7 +193,7 @@
     </el-dialog>
 
     <el-dialog
-      :visible.sync="createPositionDialogVisible"
+      :visible.sync="createDepartmentDialogVisible"
       width="50%"
       title="Thêm phòng ban"
       left
@@ -218,27 +218,27 @@
             </el-form-item>
           </div>
         </div>
-        <div class="row" style="margin-top: 80px">
-          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-            <div style="position: absolute; bottom: 40px; right: 17%">
+        <div class="row" style="display: flex; justify-content: flex-end">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+            <div style="bottom: 40px">
               <el-form-item>
                 <el-button
                   class="btn btn-outline-danger"
                   type="primary"
-                  style="padding: 6px 36px"
-                  @click="createPositionDialogVisible = false"
+                  style="width: 90%"
+                  @click="cancelCreateForm('ruleForm')"
                   >Hủy</el-button
                 >
               </el-form-item>
             </div>
           </div>
-          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-            <div style="position: absolute; bottom: 40px; right: 20px">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+            <div style="bottom: 40px">
               <el-form-item>
                 <el-button
                   class="btn btn-success"
                   type="primary"
-                  style="padding: 6px 36px"
+                  style="width: 90%"
                   @click="submitForm('ruleForm')"
                   >Lưu</el-button
                 >
@@ -250,8 +250,8 @@
     </el-dialog>
 
     <el-dialog
-      :visible.sync="deletePositionDialogVisible"
-      width="20%"
+      :visible.sync="deleteDepartmentDialogVisible"
+      width="30%"
       title="Xóa phòng ban"
       left
     >
@@ -267,20 +267,20 @@
         <p style="text-align: center">{{ ruleForm.name }}</p>
 
         <div class="row" style="margin-top: 70px">
-          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
             <el-form-item>
               <el-button
                 class="btn btn-success"
-                style="margin-left: 30%; padding: 6px 36px"
-                @click="deletePositionDialogVisible = false"
+                style="width: 100%"
+                @click="deleteDepartmentDialogVisible = false"
                 >Huỷ</el-button
               >
             </el-form-item>
           </div>
-          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
             <el-form-item>
               <el-button
-                style="padding: 6px 23px"
+                style="width: 100%"
                 class="btn btn-outline-danger"
                 @click="acceptDelete()"
                 >Xác nhận</el-button
@@ -294,20 +294,19 @@
 </template>
 
 <script>
-import HolidayService from "@/services/holiday-service";
-import PositionService from "@/services/position-service";
+// import HolidayService from "@/services/holiday-service";
 import DepartmentService from "@/services/department-service";
 import moment from "moment";
 export default {
   components: {},
-  name: "ManagePosition",
+  name: "ManageDepartment",
   data() {
     var date = new Date();
     var currentYear = date.getFullYear();
     return {
       year: currentYear,
       years: [],
-      roleId: "",
+      departmentId: "",
       roles: [],
       ruleForm: {
         name: "",
@@ -316,28 +315,33 @@ export default {
         name: [
           {
             required: true,
-            message: "Vui lòng nhập tên chức vụ!",
+            message: "Vui lòng nhập tên phòng ban!",
+            trigger: "blur",
+          },
+            {
+            min: 1,
+            max: 100,
+            message: "Tên phòng ban từ 1 đến 100 kí tự",
             trigger: "blur",
           },
         ],
       },
-      positions: [],
+      departments: [],
       page: 0,
       pageSize: 5,
       search: "",
       date: "",
       totalItems: 0,
       fit: "fill",
-      editPositionDialogVisible: false,
-      createPositionDialogVisible: false,
-      deletePositionDialogVisible: false,
+      editDepartmentDialogVisible: false,
+      createDepartmentDialogVisible: false,
+      deleteDepartmentDialogVisible: false,
     };
   },
 
   created() {
     this.getData();
-    this.getAllYear();
-    this.getAllRole();
+    // this.getAllYear();
   },
 
   methods: {
@@ -361,41 +365,52 @@ export default {
       });
     },
 
+    cancelCreateForm(formName) {
+      this.$refs[formName].resetFields();
+      this.createDepartmentDialogVisible = false;
+    },
+
     submitEditForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          DepartmentService.updateDepartment(this.roleId, this.ruleForm).then(
-            () => {
-              this.createPositionDialogVisible = false;
-              this.editPositionDialogVisible = false;
-              this.$notify.success({
-                message: "Sửa thành công",
-                title: "Success",
-                timer: 2000,
-                timerProgressBar: true,
-              });
-              this.getData();
-            }
-          );
+          DepartmentService.updateDepartment(
+            this.departmentId,
+            this.ruleForm
+          ).then(() => {
+            this.createDepartmentDialogVisible = false;
+            this.editDepartmentDialogVisible = false;
+            this.deleteDepartmentDialogVisible = false;
+            this.$notify.success({
+              message: "Sửa thành công",
+              title: "Success",
+              timer: 2000,
+              timerProgressBar: true,
+            });
+            this.getData();
+          });
         } else {
-          console.log("error submit!!");
           return false;
         }
       });
     },
 
-    showCreatePositionDialog() {
-      this.createPositionDialogVisible = true;
-      this.editPositionDialogVisible = false;
-      this.deletePositionDialogVisible = false;
+    cancelEditForm(formName) {
+      this.$refs[formName].resetFields();
+      this.editDepartmentDialogVisible = false;
+    },
+
+    showCreateDepartmentDialog() {
+      this.createDepartmentDialogVisible = true;
+      this.editDepartmentDialogVisible = false;
+      this.deleteDepartmentDialogVisible = false;
       this.ruleForm = {};
     },
 
-    showEditPositionDialog(id) {
-      this.editPositionDialogVisible = true;
-      this.createPositionDialogVisible = false;
-      this.deletePositionDialogVisible = false;
-      this.roleId = id;
+    showEditDepartmentDialog(id) {
+      this.editDepartmentDialogVisible = true;
+      this.createDepartmentDialogVisible = false;
+      this.deleteDepartmentDialogVisible = false;
+      this.departmentId = id;
       DepartmentService.getDepartment(id)
         .then((response) => {
           this.ruleForm.name = response.data.name;
@@ -405,11 +420,11 @@ export default {
         });
     },
 
-    showDeletePositionDialog(id) {
-      this.editPositionDialogVisible = false;
-      this.createPositionDialogVisible = false;
-      this.deletePositionDialogVisible = true;
-      this.roleId = id;
+    showDeleteDepartmentDialog(id) {
+      this.editDepartmentDialogVisible = false;
+      this.createDepartmentDialogVisible = false;
+      this.deleteDepartmentDialogVisible = true;
+      this.departmentId = id;
 
       DepartmentService.getDepartment(id)
         .then((response) => {
@@ -421,12 +436,12 @@ export default {
     },
 
     acceptDelete() {
-      DepartmentService.deleteDepartment(this.roleId)
+      DepartmentService.deleteDepartment(this.departmentId)
         .then((response) => {
           console.log(response.data);
-          this.editPositionDialogVisible = false;
-          this.createPositionDialogVisible = false;
-          this.deletePositionDialogVisible = false;
+          this.editDepartmentDialogVisible = false;
+          this.createDepartmentDialogVisible = false;
+          this.deleteDepartmentDialogVisible = false;
           this.$notify.success({
             message: "Xóa thành công",
             title: "Success",
@@ -436,9 +451,9 @@ export default {
           this.getData();
         })
         .catch((e) => {
-          this.editPositionDialogVisible = false;
-          this.createPositionDialogVisible = false;
-          this.deletePositionDialogVisible = false;
+          this.editDepartmentDialogVisible = false;
+          this.createDepartmentDialogVisible = false;
+          this.deleteDepartmentDialogVisible = false;
           this.$notify.error({
             message: "Không thể xóa phòng ban!",
             title: "Failed",
@@ -456,33 +471,26 @@ export default {
         this.pageSize,
         this.search
       ).then((response) => {
-        this.positions = response.data.content;
-        console.log(response.data);
-        for (const key in this.positions) {
-          if (Object.hasOwnProperty.call(this.positions, key)) {
-            this.positions[key].createdDate = moment(
-              String(this.positions[key].createdDate)
+        this.departments = response.data.content;
+        for (const key in this.departments) {
+          if (Object.hasOwnProperty.call(this.departments, key)) {
+            this.departments[key].createdDate = moment(
+              String(this.departments[key].createdDate)
             ).format("DD/MM/yyyy");
           }
         }
-
         this.page = response.data.pageable.pageNumber;
         this.totalItems = response.data.totalElements;
       });
     },
 
-    getAllYear() {
-      HolidayService.getYears().then((response) => {
-        this.years = response.data;
-      });
-    },
+    // getAllYear() {
+    //   HolidayService.getYears().then((response) => {
+    //     this.years = response.data;
+    //   });
+    // },
 
-    getAllRole() {
-      PositionService.getRoles(1, 5, "").then((response) => {
-        console.log(response.data);
-        this.roles = response.data.content;
-      });
-    },
+
 
     handlePageChange(value) {
       this.page = value - 1;
