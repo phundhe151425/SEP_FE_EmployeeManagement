@@ -25,7 +25,7 @@
                 </li>
                 <li>
                     <a class="dropdown-item">
-                        <router-link to="/changepassword" class="nav-link">
+                        <router-link to="/changePassword" class="nav-link">
                             <i class="el-icon-refresh-left"></i>
                             Thay đổi mật khẩu
                         </router-link>
@@ -67,7 +67,7 @@
                 </li>
                 <li>
                     <a class="dropdown-item">
-                        <router-link to="/changepassword" class="nav-link">
+                        <router-link to="/changePassword" class="nav-link">
                             <i class="el-icon-refresh-left"></i>
                             Thay đổi mật khẩu
                         </router-link>
@@ -106,7 +106,7 @@
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/profile">
+                            <a class="nav-link active" aria-current="page">
                                 <router-link to="/calendar" class="nav-link sel">
                                     <font-awesome-icon icon="home"/>
                                     Trang chủ
@@ -114,7 +114,7 @@
                             </a>
                         </li>
                         <li class="nav-item" v-if="isAdmin">
-                            <a class="nav-link active" aria-current="page" href="/profile">
+                            <a class="nav-link active" aria-current="page">
                                 <router-link to="/manageUser" class="nav-link sel">
                                     <font-awesome-icon icon="home"/>
                                     Quản lý nhân viên
@@ -186,13 +186,22 @@
                             </a>
                         </li>
                             <li class="nav-item" v-if="isAdmin">
-                            <a class="nav-link active" aria-current="page" href="/profile">
+                            <a class="nav-link active" aria-current="page" >
                                 <router-link to="/managePosition" class="nav-link sel">
                                     <font-awesome-icon icon="home"/>
                                     Quản lý chức vụ
                                 </router-link>
                             </a>
                         </li>
+                           <li class="nav-item" v-if="isAdmin">
+                            <a class="nav-link active" aria-current="page">
+                                <router-link to="/manageRequest" class="nav-link sel">
+                                    <font-awesome-icon icon="home"/>
+                                    Quản lý yêu cầu
+                                </router-link>
+                            </a>
+                        </li>
+
 
 
 

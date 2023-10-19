@@ -36,7 +36,7 @@ const router = new Router({
             component: () => import("./components/manageUser/ForgotPassword.vue"),
         },
         {
-            path: "/changepassword",
+            path: "/changePassword",
             component: () => import("./components/manageUser/ChangePassword.vue"),
         },
         {
@@ -50,6 +50,14 @@ const router = new Router({
         {
             path: "/manageDepartment",
             component: () => import("./components/manageDepartment/ManageDepartment.vue"),
+        },
+        {
+            path: "/manageRequest",
+            component: () => import("./components/manageRequest/ManageRequest.vue"),
+        },
+        {
+            path: "/request/:id",
+            component: () => import("./components/manageRequest/RequestDetail.vue"),
         },
         
         {
@@ -95,7 +103,9 @@ router.beforeEach((to, from, next) => {
         "/unpermist",
         "/logCheckUser",
         "/inLateOutEarlyUser",
-        "/profile"
+        "/profile",
+        "/request",
+        "/changePassword"
     ];
     const adminPages = [
         "/logCheckAdmin",
@@ -104,6 +114,7 @@ router.beforeEach((to, from, next) => {
         "/manageHoliday",
         "/managePosition",
         "/manageDepartment",
+        "/manageRequest",
     ];
     const managePages = [
         "/logCheckMod",
@@ -132,7 +143,7 @@ router.beforeEach((to, from, next) => {
         if (
             ((adminPages.includes(to.path) || to.path.startsWith("/user/")) && admin) ||
             (managePages.includes(to.path) && manage) ||
-            userPages.includes(to.path) ||
+            userPages.includes(to.path) || to.path.startsWith("/request/") ||
             publicPages.includes(to.path)
         )
             next();

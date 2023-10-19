@@ -1,23 +1,23 @@
 <template>
   <div>
-    <h3>Quản lý ngày nghỉ</h3>
+    <h3>Quản lý đề xuất</h3>
     <hr style="margin-bottom: 5%" />
     <div style="padding-bottom: 20px">
       <div className="" style="width: 100%; margin: auto">
         <el-row :gutter="20">
           <el-col :md="6" :lg="6" :xl="6">
             <div class="grid-content" style="margin-bottom: 20px">
-              <span>Năm</span> &ensp;
+              <span>Trạng thái</span> &ensp;
               <el-select
-                v-model="year"
+                v-model="s"
                 @change="getData"
-                placeholder="Chọn Phòng ban"
+                placeholder="Chọn trạng thái"
               >
                 <el-option
-                  v-for="item in years"
-                  :key="item"
-                  :label="item"
-                  :value="item"
+                  v-for="item in status"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
                 >
                 </el-option>
               </el-select>
@@ -51,7 +51,7 @@
                 style=""
                 round
                 @click="showCreateHolidayDialog"
-                ><i class="el-icon-plus"></i> Thêm ngày nghỉ
+                ><i class="el-icon-plus"></i> Tạo đề xuất
               </el-button>
             </div>
           </el-col>
@@ -81,28 +81,38 @@
               align="center"
               width="100px"
             ></el-table-column>
+            <el-table-column label="Đề xuất" v-slot:="data" align="center">
+              <router-link
+                style="text-decoration: none; color: black; font-weight: bold"
+                :to="'/request/' + data.row.id"
+              >
+                {{ data.row.requestTitle }}</router-link
+              >
+            </el-table-column>
             <el-table-column
-              label="Ngày bắt đầu"
-              prop="startDate"
+              label="Nhân viên"
+              prop="user.fullName"
               align="center"
             >
             </el-table-column>
             <el-table-column
-              label="Ngày kết thúc"
-              prop="endDate"
-              align="center"
-            >
-            </el-table-column>
-            <el-table-column
-              label="Tên ngày nghỉ"
-              prop="holidayName"
+              label="Phòng ban"
+              prop="department.name"
               align="center"
             ></el-table-column>
-            <el-table-column
-              label="Số ngày nghỉ"
-              prop="totalDayOff"
-              align="center"
-            >
+            <el-table-column label="Trạng thái" v-slot:="data" align="center">
+              <button v-if="data.row.status == 1" class="tt3">
+                Chờ phê duyệt
+              </button>
+              <button v-if="data.row.status == 2" class="tt1">
+                Đã chấp thuận
+              </button>
+              <button v-if="data.row.status == 3" class="tt2">
+                Đã từ chối
+              </button>
+            </el-table-column>
+
+            <el-table-column label="Ngày tạo" prop="createdDate" align="center">
             </el-table-column>
             <el-table-column
               v-slot:="data"
@@ -110,31 +120,42 @@
               width="150px"
               align="center"
             >
-              <!--            <el-button type="danger" icon="el-icon-edit-outline" circle></el-button>-->
-              <button
-                style="margin-right: 10px"
-                class="btn-action"
-                @click="showEditHolidayDialog(data.row.id)"
-              >
-                <i class="el-icon-edit-outline" style="width: 30px"></i>
-              </button>
-              <button
-                style="margin-right: 10px"
-                class="btn-action"
-                @click="showDeleteHolidayDialog(data.row.id)"
-              >
-                <i class="el-icon-delete" style="width: 30px"></i>
-              </button>
-
-              <button v-if="data.row.status == 1" class="btn-action">
-                <!--                                @click="changeStatus(-->
-                <!--                                data.row.id,-->
-                <!--                                data.row.fullName,-->
-                <!--                                data.row.status) "-->
-                <i class="el-icon-unlock" style="width: 30px"></i>
-              </button>
-
-              <!--          </div>-->
+              <!-- 
+                           <el-button type="danger" icon="el-icon-edit-outline" circle></el-button>-->
+              <div v-if="data.row.status == 1">
+                <button
+                  style="margin-right: 10px"
+                  class="btn-action"
+                  @click="acceptRequest(data.row.id)"
+                >
+                  <i class="el-icon-check" style="width: 30px"></i>
+                </button>
+                <button
+                  style="margin-right: 10px"
+                  class="btn-action"
+                  @click="declineRequest(data.row.id)"
+                >
+                  <i class="el-icon-close" style="width: 30px"></i>
+                </button>
+              </div>
+              <div v-else>
+                <button
+                  style="margin-right: 10px"
+                  class="btn-action"
+                  @click="acceptRequest(data.row.id)"
+                  disabled
+                >
+                  <i class="el-icon-check" style="width: 30px"></i>
+                </button>
+                <button
+                  style="margin-right: 10px"
+                  class="btn-action"
+                  @click="declineRequest(data.row.id)"
+                  disabled
+                >
+                  <i class="el-icon-close" style="width: 30px"></i>
+                </button>
+              </div>
             </el-table-column>
           </el-table>
         </div>
@@ -255,19 +276,61 @@
         class="demo-ruleForm"
       >
         <div class="row">
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <el-form-item label="Nhập tên ngày nghỉ" prop="holidayName">
+          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <el-form-item label="Họ và tên" required>
               <el-input
-                v-model="ruleForm.holidayName"
-                name="holidayName"
+                v-model="name"
+                name="name"
+                autocomplete="off"
+                maxlength="50"
+                :disabled="true"
+              ></el-input>
+            </el-form-item>
+          </div>
+          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <el-form-item label="Bộ phận" required>
+              <el-input
+                v-model="department"
+                name="department"
+                autocomplete="off"
+                maxlength="50"
+                :disabled="true"
+              ></el-input>
+            </el-form-item>
+          </div>
+        </div>
+        <div class="row" style="margin-top: 15px">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <el-form-item label="Nhập tiêu đề" prop="requestTitle">
+              <el-input
+                v-model="ruleForm.requestTitle"
+                name="requestTitle"
                 autocomplete="off"
                 maxlength="50"
               ></el-input>
             </el-form-item>
           </div>
         </div>
-
-        <div class="row" style="margin-top: 20px">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <el-form-item label="Chọn loại đề xuất" prop="requestTypeId">
+              <el-select
+                v-model="ruleForm.requestTypeId"
+                @change="getData"
+                placeholder="Chọn loại đề xuất nghỉ"
+              >
+                <el-option
+                  v-for="item in requestTypes"
+                  :key="item.id"
+                  :label="item.requestTypeName"
+                  :value="item.id"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+        </div>
+        <div class="row" style="margin-top: 15px">
           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
             <el-form-item label="Nghỉ từ" required>
               <el-form-item prop="startDate">
@@ -284,6 +347,19 @@
             </el-form-item>
           </div>
           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <el-form-item label="Thời gian" required>
+              <el-form-item prop="startTime">
+                <el-time-picker
+                  v-model="ruleForm.startTime"
+                  placeholder="Chọn thời gian"
+                >
+                </el-time-picker>
+              </el-form-item>
+            </el-form-item>
+          </div>
+        </div>
+        <div class="row" style="margin-top: 15px">
+          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
             <el-form-item label="Nghỉ đến" required>
               <el-form-item prop="endDate">
                 <el-date-picker
@@ -296,6 +372,30 @@
                   style="width: 100%"
                 ></el-date-picker>
               </el-form-item>
+            </el-form-item>
+          </div>
+          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <el-form-item label="Thời gian" required>
+              <el-form-item prop="endTime">
+                <el-time-picker
+                  v-model="ruleForm.endTime"
+                  placeholder="Chọn thời gian"
+                >
+                </el-time-picker>
+              </el-form-item>
+            </el-form-item>
+          </div>
+        </div>
+        <div class="row" style="margin-top: 15px">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <el-form-item label="Nhập nội dung" prop="requestContent">
+              <el-input
+                type="textarea"
+                v-model="ruleForm.requestContent"
+                name="requestContent"
+                autocomplete="off"
+                maxlength="50"
+              ></el-input>
             </el-form-item>
           </div>
         </div>
@@ -376,12 +476,13 @@
 
 <script>
 import HolidayService from "@/services/holiday-service";
+import RequestService from "@/services/request-service";
 import moment from "moment";
 export default {
   components: {},
   name: "ManageHoliday",
   data() {
-     var date = new Date();
+      var date = new Date();
     var currentYear = date.getFullYear();
     var validateEndDate = (rule, value, callback) => {
       if (value < this.ruleForm.startDate) {
@@ -393,6 +494,7 @@ export default {
       }
     };
 
+    
       var validateStartDate = (rule, value, callback) => {
          var startHolidayDate = new Date(value);
       if (startHolidayDate < date) {
@@ -404,51 +506,107 @@ export default {
       }
     };
 
-   
 
     return {
+      name: "",
+      department: "",
       year: currentYear,
       currentDate: date,
       years: [],
+      requestTypes: [],
+      s:0,
+      status:[
+        {
+          id: 0,
+          name: "Tất cả"
+        },
+        {
+
+          id: 1,
+          name: "Chờ phê duyệt"
+        },
+        {
+          id: 2,
+          name: "Đã chấp thuận"
+        },
+        {
+          id: 3,
+          name: "Đã từ chối"
+        }
+      ],
       holidayId: "",
       ruleForm: {
         endDate: "",
-        holidayName: "",
+        requestTitle: "",
+        requestContent: "",
         startDate: "",
+        requestTypeId: "",
+        startTime: "",
+        endTime: "",
       },
       rules: {
-        holidayName: [
+        requestTitle: [
           {
             required: true,
-            message: "Vui lòng nhập tên ngày nghỉ!",
+            message: "Vui lòng nhập tên tiêu đề!",
             trigger: "blur",
           },
           {
             min: 3,
             max: 100,
-            message: "Tên ngày nghỉ từ 3 đến 100 kí tự",
+            message: "Tên tiêu đề từ 3 đến 100 kí tự",
             trigger: "blur",
           },
-            
+        ],
+        requestContent: [
+          {
+            required: true,
+            message: "Vui lòng nhập nọi dung xin nghỉ!",
+            trigger: "blur",
+          },
+          {
+            min: 3,
+            max: 255,
+            message: "Tên ngày nghỉ từ 3 đến 255 kí tự",
+            trigger: "blur",
+          },
         ],
         startDate: [
           {
             required: true,
-            message: "Vui lòng nhập ngày bắt đầu kỳ nghỉ!",
+            message: "Vui lòng nhập ngày bắt đầu nghỉ!",
             trigger: "blur",
           },
           { validator: validateStartDate, trigger: "blur" },
         ],
+        startTime: [
+          {
+            required: true,
+            message: "Vui lòng nhập thời gian!",
+            trigger: "blur",
+          },
+        ],
+
+        endTime: [
+          {
+            required: true,
+            message: "Vui lòng nhập thời gian!",
+            trigger: "blur",
+          },
+        ],
         endDate: [
           {
             required: true,
-            message: "Vui lòng nhập ngày kết thúc kỳ nghỉ!",
+            message: "Vui lòng nhập ngày kết thúc nghỉ!",
             trigger: "blur",
           },
           { validator: validateEndDate, trigger: "blur" },
         ],
       },
       holidays: [],
+      requestStatus: {
+        status: "",
+      },
       page: 0,
       pageSize: 5,
       search: "",
@@ -463,16 +621,51 @@ export default {
 
   created() {
     this.getData();
-    this.getAllYear();
+    this.getAllRequestType();
+    this.name = this.$store.state.auth.user.fullName;
+    this.department = this.$store.state.auth.user.departmentName;
+    // this.getAllYear();
   },
   methods: {
+    acceptRequest(id) {
+      this.requestStatus.status = 2;
+      RequestService.changeStatus(id, this.requestStatus).then(() => {
+        this.$notify.success({
+          message: "Yêu cầu đã được chấp nhận",
+          title: "Success",
+          timer: 2000,
+          timerProgressBar: true,
+        });
+        this.getData();
+      });
+    },
+
+    declineRequest(id) {
+      this.requestStatus.status = 3;
+      RequestService.changeStatus(id, this.requestStatus).then(() => {
+        this.$notify.success({
+          message: "Yêu cầu đã bị từ chối",
+          title: "Success",
+          timer: 2000,
+          timerProgressBar: true,
+        });
+        this.getData();
+      });
+    },
+
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          HolidayService.save(this.ruleForm).then(() => {
+          this.ruleForm.startTime = moment(
+            String(this.ruleForm.startTime)
+          ).format("HH:mm:ss");
+          this.ruleForm.endTime = moment(String(this.ruleForm.endTime)).format(
+            "HH:mm:ss"
+          );
+          RequestService.save(this.ruleForm).then(() => {
             this.createHolidayDialogVisible = false;
             this.$notify.success({
-              message: "Tạo ngày nghỉ thành công",
+              message: "Tạo đề xuất thành công",
               title: "Success",
               timer: 2000,
               timerProgressBar: true,
@@ -569,54 +762,54 @@ export default {
           timerProgressBar: true,
         });
         this.getData();
-      }else{
-      HolidayService.deleteHoliday(this.holidayId)
-        .then((response) => {
-          console.log(response.data);
-          this.editHolidayDialogVisible = false;
-          this.createHolidayDialogVisible = false;
-          this.deleteHolidayDialogVisible = false;
-          this.$notify.success({
-            message: "Xóa thành công",
-            title: "Success",
-            timer: 2000,
-            timerProgressBar: true,
+      } else {
+        HolidayService.deleteHoliday(this.holidayId)
+          .then((response) => {
+            console.log(response.data);
+            this.editHolidayDialogVisible = false;
+            this.createHolidayDialogVisible = false;
+            this.deleteHolidayDialogVisible = false;
+            this.$notify.success({
+              message: "Xóa thành công",
+              title: "Success",
+              timer: 2000,
+              timerProgressBar: true,
+            });
+            this.getData();
+          })
+          .catch((e) => {
+            console.log(e);
           });
-          this.getData();
-        })
-        .catch((e) => {
-          console.log(e);
-        });
       }
     },
 
     getData() {
-      console.log(this.page);
-      HolidayService.getData(
-        this.page,
-        this.pageSize,
-        this.search,
-        this.year
-      ).then((response) => {
-        this.holidays = response.data.content;
-        console.log(response.data);
-        for (const key in this.holidays) {
-          if (Object.hasOwnProperty.call(this.holidays, key)) {
-            this.holidays[key].startDate = moment(
-              String(this.holidays[key].startDate)
-            ).format("DD/MM/yyyy");
-            this.holidays[key].endDate = moment(
-              String(this.holidays[key].endDate)
-            ).format("DD/MM/yyyy");
+      RequestService.getData(this.page, this.pageSize, this.search, this.s).then(
+        (response) => {
+          this.holidays = response.data.content;
+
+          for (const key in this.holidays) {
+            if (Object.hasOwnProperty.call(this.holidays, key)) {
+              this.holidays[key].createdDate = moment(
+                String(this.holidays[key].createdDate)
+              ).format("DD/MM/yyyy");
+            }
           }
+          this.page = response.data.pageable.pageNumber;
+          this.totalItems = response.data.totalElements;
         }
-        this.page = response.data.pageable.pageNumber;
-        this.totalItems = response.data.totalElements;
-      });
+      );
     },
     getAllYear() {
       HolidayService.getYears().then((response) => {
         this.years = response.data;
+      });
+    },
+
+    getAllRequestType() {
+      RequestService.getRequestTypes(0, 30).then((response) => {
+        console.log(response.data.content);
+        this.requestTypes = response.data.content;
       });
     },
 
@@ -650,6 +843,11 @@ export default {
 }
 .el-form-item__content {
   margin-left: 0px !important;
+}
+
+.el-form-item {
+  display: flex;
+  flex-direction: column;
 }
 
 .avatar {
@@ -686,7 +884,7 @@ export default {
 
 .el-table .tt1 {
   cursor: default;
-  color: black;
+  color: white;
   background-color: #75c4c0;
   border: none;
   border-radius: 5px;
@@ -695,13 +893,21 @@ export default {
 
 .el-table .tt2 {
   cursor: default;
-  color: black;
+  color: white;
   background-color: #ed9696;
   border: none;
   border-radius: 5px;
   padding: 3px 20px;
 }
 
+.el-table .tt3 {
+  cursor: default;
+  color: white;
+  background-color: #f8cbad;
+  border: none;
+  border-radius: 5px;
+  padding: 3px 20px;
+}
 .el-table .btn-action {
   border: none;
   padding: 5px 5px;
