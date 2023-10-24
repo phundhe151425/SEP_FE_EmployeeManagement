@@ -1,8 +1,16 @@
 <template>
   <div>
     <router-link
+      v-if="type === 'manage'"
       style="text-decoration: none; font-size: 18px; margin-left: 5%"
       :to="'/manageRequest'"
+    >
+      Chi tiết đề xuất</router-link
+    >
+    <router-link
+      v-else
+      style="text-decoration: none; font-size: 18px; margin-left: 5%"
+      :to="'/myRequest'"
     >
       Chi tiết đề xuất</router-link
     >
@@ -75,35 +83,38 @@
     <h4 style="margin-left: 5%">Người xử lý đơn</h4>
     <hr style="margin-bottom: 2%; width: 20%; margin-left: 5%" />
     <div v-if="accept">
-    <div class="row" style="display: flex">
-      <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 request">
-        <div style="display: flex;">
-          <i class="el-icon-user" style="margin-right:4%;font-size:20px"></i>
-          <h5 >{{ request.user.fullName }}</h5>
+      <div class="row" style="display: flex">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 request">
+          <div style="display: flex">
+            <i
+              class="el-icon-user"
+              style="margin-right: 4%; font-size: 20px"
+            ></i>
+            <h5>{{ request.user.fullName }}</h5>
+          </div>
         </div>
       </div>
-       
-    </div>
-    <div class="row" style="display: flex">
-     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 request">
-        <div style="display: flex;">
-          <i class="el-icon-s-cooperation" style="margin-right:4%;font-size:20px"></i>
-          <h5 style="margin-bottom: 20%">Giám đốc</h5>
-        </div>
-      </div>
-    </div>
-    </div>
-     <div v-else>
-        <div class="row" style="display: flex">
-      <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 request">
-        <div style="display: flex;">
-          <h5  style="margin-bottom: 20%">Hiện tại đơn chưa được xử lý</h5>
+      <div class="row" style="display: flex">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 request">
+          <div style="display: flex">
+            <i
+              class="el-icon-s-cooperation"
+              style="margin-right: 4%; font-size: 20px"
+            ></i>
+            <h5 style="margin-bottom: 20%">Giám đốc</h5>
+          </div>
         </div>
       </div>
     </div>
-     </div>
-
-   
+    <div v-else>
+      <div class="row" style="display: flex">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 request">
+          <div style="display: flex">
+            <h5 style="margin-bottom: 20%">Hiện tại đơn chưa được xử lý</h5>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -116,6 +127,7 @@ export default {
   name: "edit-profile",
   data() {
     return {
+      type: "",
       id: "",
       accept: false,
       status: "",
@@ -145,7 +157,7 @@ export default {
             this.accept = true;
           } else {
             this.status = "Đã từ chối";
-             this.accept = true;
+            this.accept = true;
           }
           this.request.createdDate = moment(
             String(this.request.createdDate)
@@ -188,7 +200,7 @@ export default {
   },
   mounted() {
     this.getUser(this.$route.params.id);
-
+    this.type = this.$route.params.type;
     // this.retrieveTutorials();
     // this.message = '';
   },

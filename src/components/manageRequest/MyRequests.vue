@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>Quản lý đề xuất</h3>
+    <h3>Đề xuất của tôi</h3>
     <hr style="margin-bottom: 5%" />
     <div style="padding-bottom: 20px">
       <div className="" style="width: 100%; margin: auto">
@@ -41,32 +41,7 @@
           </el-col>
         </el-row>
         <el-row :gutter="20">
-          <el-col :md="6" :lg="6" :xl="6" v-if="isModerator == false">
-            <div class="grid-content" style="margin-bottom: 20px">
-              <span>Phòng ban</span> &ensp;
-              <el-select
-                v-model="departmentId"
-                @change="getData"
-                placeholder="Chọn Phòng ban"
-              >
-                <el-option value="" label="Tất cả các phòng ban"></el-option>
-                <el-option
-                  v-for="item in departments"
-                  :key="item.department"
-                  :label="item.name"
-                  :value="item.id"
-                >
-                </el-option>
-              </el-select>
-            </div>
-          </el-col>
 
-          <el-col :md="6" :lg="6" :xl="6" v-else>
-            <div class="grid-content" style="margin-bottom: 20px">
-              <span>Phòng ban</span> &ensp;
-              <span>{{ departmentOfModerator }}</span>
-            </div>
-          </el-col>
 
           <el-col :md="6" :lg="6" :xl="6">
             <div class="grid-content" style="margin-bottom: 20px">
@@ -149,7 +124,7 @@
             <el-table-column label="Đề xuất" v-slot:="data" align="center">
               <router-link
                 style="text-decoration: none; color: black; font-weight: bold"
-                :to="'/request/'+type+ '/' + data.row.id"
+                :to="'/request/'+type+'/'+ data.row.id"
               >
                 {{ data.row.requestTitle }}</router-link
               >
@@ -187,38 +162,13 @@
             >
               <!-- 
                            <el-button type="danger" icon="el-icon-edit-outline" circle></el-button>-->
-              <div v-if="data.row.status == 1">
+              <div>
                 <button
                   style="margin-right: 10px"
                   class="btn-action"
                   @click="showAcceptRequestDialog(data.row.id)"
                 >
-                  <i class="el-icon-check" style="width: 30px"></i>
-                </button>
-                <button
-                  style="margin-right: 10px"
-                  class="btn-action"
-                  @click="showDeclineRequestDialog(data.row.id)"
-                >
-                  <i class="el-icon-close" style="width: 30px"></i>
-                </button>
-              </div>
-              <div v-else>
-                <button
-                  style="margin-right: 10px"
-                  class="btn-action"
-                  @click="showAcceptRequestDialog(data.row.id)"
-                  disabled
-                >
-                  <i class="el-icon-check" style="width: 30px"></i>
-                </button>
-                <button
-                  style="margin-right: 10px"
-                  class="btn-action"
-                  @click="showDeclineRequestDialog(data.row.id)"
-                  disabled
-                >
-                  <i class="el-icon-close" style="width: 30px"></i>
+                  <i class="el-icon-view" style="width: 30px"></i>
                 </button>
               </div>
             </el-table-column>
@@ -236,121 +186,7 @@
       </div>
     </div>
 
-    <el-dialog
-      :visible.sync="acceptRequestDialogVisible"
-      width="50%"
-      title="Ghi chú"
-      left
-    >
-      <el-form
-        id="formCreate"
-        :model="requestStatus"
-        :rules="noteRules"
-        ref="requestStatus"
-        label-width="200px"
-        class="demo-ruleForm"
-      >
-        <div class="row" style="margin-top: 15px">
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <el-form-item label="Nhập ghi chú" prop="note">
-              <el-input
-                type="textarea"
-                v-model="requestStatus.note"
-                name="requestContent"
-                autocomplete="off"
-                maxlength="50"
-              ></el-input>
-            </el-form-item>
-          </div>
-        </div>
-        <div class="row" style="display: flex; justify-content: flex-end">
-          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
-            <div style="bottom: 40px">
-              <el-form-item>
-                <el-button
-                  class="btn btn-outline-danger"
-                  type="primary"
-                  style="width: 90%"
-                  @click="cancelEditForm('requestStatus')"
-                  >Hủy</el-button
-                >
-              </el-form-item>
-            </div>
-          </div>
-          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
-            <div style="bottom: 40px">
-              <el-form-item>
-                <el-button
-                  class="btn btn-success"
-                  type="primary"
-                  style="width: 90%"
-                  @click="acceptRequest('requestStatus')"
-                  >Lưu</el-button
-                >
-              </el-form-item>
-            </div>
-          </div>
-        </div>
-      </el-form>
-    </el-dialog>
 
-    <el-dialog
-      :visible.sync="declineRequestDialogVisible"
-      width="50%"
-      title="Ghi chú"
-      left
-    >
-      <el-form
-        id="formCreate"
-        :model="requestStatus"
-        :rules="noteRules"
-        ref="requestStatus"
-        label-width="200px"
-        class="demo-ruleForm"
-      >
-        <div class="row" style="margin-top: 15px">
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <el-form-item label="Nhập ghi chú" prop="note">
-              <el-input
-                type="textarea"
-                v-model="requestStatus.note"
-                name="requestContent"
-                autocomplete="off"
-                maxlength="50"
-              ></el-input>
-            </el-form-item>
-          </div>
-        </div>
-        <div class="row" style="display: flex; justify-content: flex-end">
-          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
-            <div style="bottom: 40px">
-              <el-form-item>
-                <el-button
-                  class="btn btn-outline-danger"
-                  type="primary"
-                  style="width: 90%"
-                  @click=" cancelDeclineRequestForm('requestStatus')"
-                  >Hủy</el-button
-                >
-              </el-form-item>
-            </div>
-          </div>
-          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
-            <div style="bottom: 40px">
-              <el-form-item>
-                <el-button
-                  class="btn btn-success"
-                  type="primary"
-                  style="width: 90%"
-                  @click="declineRequest('requestStatus')"
-                  >Lưu</el-button
-                >
-              </el-form-item>
-            </div>
-          </div>
-        </div>
-      </el-form>
-    </el-dialog>
 
     <el-dialog
       :visible.sync="createRequestDialogVisible"
@@ -567,7 +403,7 @@ export default {
     };
 
     return {
-      type:"manage",
+      type:"personalList",
       departmentOfModerator: "",
       isModerator: false,
       name: "",
@@ -601,25 +437,7 @@ export default {
           name: "Đã từ chối",
         },
       ],
-      requestStatus: {
-        status: "",
-        note: "",
-      },
-      noteRules: {
-        note: [
-          {
-            required: true,
-            message: "Vui lòng nhập nọi dung ghi chú!",
-            trigger: "blur",
-          },
-          {
-            min: 3,
-            max: 255,
-            message: "Nội dung ghi chú từ 3 đến 255 kí tự",
-            trigger: "blur",
-          },
-        ],
-      },
+
       ruleForm: {
         endDate: "",
         requestTitle: "",
@@ -711,51 +529,6 @@ export default {
     // this.getAllYear();
   },
   methods: {
-    acceptRequest(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.requestStatus.status = 2;
-          RequestService.changeStatus(this.requestId, this.requestStatus).then(
-            () => {
-              this.acceptRequestDialogVisible = false;
-              this.$notify.success({
-                message: "Yêu cầu đã được chấp nhận",
-                title: "Success",
-                timer: 2000,
-                timerProgressBar: true,
-              });
-              this.getData();
-            }
-          );
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
-
-    declineRequest(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.declineRequestDialogVisible = false;
-          this.requestStatus.status = 3;
-          RequestService.changeStatus(this.requestId, this.requestStatus).then(
-            () => {
-              this.$notify.success({
-                message: "Yêu cầu đã bị từ chối",
-                title: "Success",
-                timer: 2000,
-                timerProgressBar: true,
-              });
-              this.getData();
-            }
-          );
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
 
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -788,15 +561,6 @@ export default {
       this.createRequestDialogVisible = false;
     },
 
-    cancelEditForm(formName) {
-      this.$refs[formName].resetFields();
-      this.acceptRequestDialogVisible = false;
-    },
-
-    cancelDeclineRequestForm(formName) {
-      this.$refs[formName].resetFields();
-      this.declineRequestDialogVisible = false;
-    },
 
     showCreateRequestDialog() {
       this.createRequestDialogVisible = true;
@@ -806,34 +570,20 @@ export default {
     },
 
     showAcceptRequestDialog(id) {
-      this.requestId = id;
-      this.requestStatus.note = "Đề xuất của bạn được chấp thuận!";
-      this.createRequestDialogVisible = false;
-      this.acceptRequestDialogVisible = true;
-      this.deleteHolidayDialogVisible = false;
-      this.ruleForm = {};
+      this.$router.push("/request/"+this.type+"/"+id);
     },
 
-    showDeclineRequestDialog(id) {
-      this.requestId = id;
-      this.requestStatus.note = "Đề xuất của bạn bị từ chối!";
-      this.createRequestDialogVisible = false;
-      this.declineRequestDialogVisible = true;
-      this.deleteHolidayDialogVisible = false;
-      this.ruleForm = {};
-    },
     getData() {
       if (this.$store.state.auth.user.roles[0] === "ROLE_MODERATOR") {
         this.isModerator = true;
         this.departmentOfModerator = this.$store.state.auth.user.departmentName;
         this.departmentId = this.$store.state.auth.user.departmentId;
       }
-      RequestService.getData(
+      RequestService.getListRequestByUser(
         this.page,
         this.pageSize,
         this.search,
         this.status,
-        this.departmentId,
         this.startDate,
         this.endDate
       ).then((response) => {

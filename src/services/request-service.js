@@ -8,9 +8,9 @@ class HolidayService {
         return axios.post(BASE_URL + "/auth/request/create-request", data,{headers: authHeader()});
     }
 
-    getData(page, size, search, status) {
+    getData(page, size, search, status, departmentId, from, to) {
         return axios.get( BASE_URL+"/auth/request/get-list-request?page="+page
-        +"&size="+size+"&search="+search +"&status="+ status,{headers: authHeader()});
+        +"&size="+size+"&search="+search +"&status="+ status +"&departmentId="+departmentId+"&from="+from+"&to="+to,{headers: authHeader()});
     }
 
     changeStatus(id, data){
@@ -19,6 +19,11 @@ class HolidayService {
 
     getRequest(id) {
         return httpCommon.get(`/auth/request/get-request-by-id/${id}`,{headers: authHeader()});
+    }
+
+    getListRequestByUser(page, size, search, status, from, to) {
+        return httpCommon.get("/auth/request/get-list-request-by-user-id?page="+page
+        +"&size="+size+"&search="+search +"&status="+ status+"&from="+from+"&to="+to,{headers: authHeader()});
     }
 
     getRequestTypes(page, size) {

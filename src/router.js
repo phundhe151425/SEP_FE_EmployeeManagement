@@ -56,8 +56,12 @@ const router = new Router({
             component: () => import("./components/manageRequest/ManageRequest.vue"),
         },
         {
-            path: "/request/:id",
+            path: "/request/:type/:id",
             component: () => import("./components/manageRequest/RequestDetail.vue"),
+        },
+        {
+            path: "/myRequest",
+            component: () => import("./components/manageRequest/MyRequests.vue"),
         },
         
         {
@@ -105,7 +109,8 @@ router.beforeEach((to, from, next) => {
         "/inLateOutEarlyUser",
         "/profile",
         "/request",
-        "/changePassword"
+        "/changePassword",
+        "/myRequest"
     ];
     const adminPages = [
         "/logCheckAdmin",
@@ -118,7 +123,8 @@ router.beforeEach((to, from, next) => {
     ];
     const managePages = [
         "/logCheckMod",
-        "/inLateOutEarlyMod"
+        "/inLateOutEarlyMod",
+        "/manageRequest",
     ];
     const authRequired = !publicPages.includes(to.path);
     const loggedIn = localStorage.getItem("user");
