@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="manage-holiday">
     <h3>Quản lý ngày nghỉ</h3>
     <hr style="margin-bottom: 5%" />
     <div style="padding-bottom: 20px">
@@ -645,10 +645,10 @@ export default {
 * {
   font-size: 16px;
 }
-.el-form-item__label {
+.manage-holiday .el-form-item__label {
   text-align: left;
 }
-.el-form-item__content {
+.manage-holiday .el-form-item__content {
   margin-left: 0px !important;
 }
 

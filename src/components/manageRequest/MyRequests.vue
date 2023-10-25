@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="my-requests">
     <h3>Đề xuất của tôi</h3>
     <hr style="margin-bottom: 5%" />
     <div style="padding-bottom: 20px">
@@ -637,23 +637,23 @@ export default {
 * {
   font-size: 16px;
 }
-.el-date-editor.el-input {
+.my-requests .el-date-editor.el-input {
   width: 60% !important;
 }
 
-.el-form-item__label {
+.my-requests .el-form-item__label {
   text-align: left;
 }
-.el-form-item__content {
+.my-requests .el-form-item__content {
   margin-left: 0px !important;
 }
 
-.el-form-item {
+.my-requests .el-form-item {
   display: flex;
   flex-direction: column;
 }
 
-.avatar {
+ .avatar {
   width: 178px;
   height: 178px;
   display: block;
@@ -685,7 +685,7 @@ export default {
   padding: 6px 36px;
 }
 
-.el-table .tt1 {
+.my-requests .el-table .tt1 {
   cursor: default;
   color: white;
   background-color: #75c4c0;
@@ -694,7 +694,7 @@ export default {
   padding: 3px 20px;
 }
 
-.el-table .tt2 {
+.my-requests .el-table .tt2 {
   cursor: default;
   color: white;
   background-color: #ed9696;
@@ -703,7 +703,7 @@ export default {
   padding: 3px 20px;
 }
 
-.el-table .tt3 {
+.my-requests .el-table .tt3 {
   cursor: default;
   color: white;
   background-color: #f8cbad;

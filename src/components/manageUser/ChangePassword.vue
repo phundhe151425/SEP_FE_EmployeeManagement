@@ -3,48 +3,58 @@
     <h3>Thay đổi mật khẩu</h3>
     <small style="color: red" v-if="message">{{ message }}</small>
     <hr style="margin-bottom: 5%" />
-    <div class="row">
-      <div class="col-md-12">
-        <el-form
-          :model="ruleForm"
-          status-icon
-          :rules="rules"
-          ref="ruleForm"
-          label-width="120px"
-          class="demo-ruleForm"
-        >
-          <el-form-item label="Nhập mật khẩu hiện tại" prop="oldPassword">
-            <el-input
-              type="password"
-              v-model="ruleForm.oldPassword"
-              autocomplete="off"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="Nhập mật khẩu mới" prop="newPassword1">
-            <el-input
-              type="password"
-              v-model="ruleForm.newPassword1"
-              autocomplete="off"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="Xác nhận mật khẩu mới" prop="newPassword2">
-            <el-input
-              type="password"
-              v-model="ruleForm.newPassword2"
-              autocomplete="off"
-            ></el-input>
-          </el-form-item>
-          <!-- <el-form-item label="Age" prop="age">
+
+    <el-form
+      :model="ruleForm"
+      status-icon
+      :rules="rules"
+      ref="ruleForm"
+      label-width="120px"
+      class="demo-ruleForm"
+    >
+      <div class="input">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <el-form-item label="Nhập mật khẩu hiện tại" prop="oldPassword">
+              <el-input
+                type="password"
+                v-model="ruleForm.oldPassword"
+                autocomplete="off"
+              ></el-input>
+            </el-form-item>
+
+            <el-form-item label="Nhập mật khẩu mới" prop="newPassword1">
+              <el-input
+                type="password"
+                v-model="ruleForm.newPassword1"
+                autocomplete="off"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="Xác nhận mật khẩu mới" prop="newPassword2">
+              <el-input
+                type="password"
+                v-model="ruleForm.newPassword2"
+                autocomplete="off"
+              ></el-input>
+            </el-form-item>
+          </div>
+        </div>
+
+        <!-- <el-form-item label="Age" prop="age">
             <el-input v-model.number="ruleForm.age"></el-input>
           </el-form-item> -->
-          <el-form-item>
-            <el-button class="btn" @click="submitForm('ruleForm')"
-              >Cập nhật</el-button
-            >
-          </el-form-item>
-        </el-form>
+
+        <div class="row" style="display: flex; justify-content: flex-end">
+          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-7">
+            <el-form-item>
+              <el-button class="btn-changepass" @click="submitForm('ruleForm')"
+                >Cập nhật</el-button
+              >
+            </el-form-item>
+          </div>
+        </div>
       </div>
-    </div>
+    </el-form>
   </div>
 </template>
 
@@ -118,7 +128,6 @@ export default {
           },
           { validator: validateNewPass2, trigger: "blur" },
         ],
-        // age: [{ validator: checkAge, trigger: "blur" }],
       },
     };
   },
@@ -129,9 +138,14 @@ export default {
         this.ruleForm.email = this.$store.state.auth.user.email;
         if (valid) {
           DataService.changePass(this.ruleForm)
-            .then((response) => {
-              console.log(response);
-              window.location.replace("http://localhost:2001/manageUser");
+            .then(() => {
+              this.$notify.success({
+                message: "Đổi mật khẩu thành công!",
+                title: "Success",
+                timer: 2000,
+                timerProgressBar: true,
+              });
+              window.location.replace("http://localhost:2001/calendar");
             })
             .catch((e) => {
               this.message = "Mật khẩu cũ không đúng vui lòng nhập lại!";
@@ -150,39 +164,39 @@ export default {
 </script>
 
 <style>
-.el-form-item__label {
-  width: 200px !important;
-  text-align: left;
-  margin-left: 20%;
-}
 .el-form-item {
   display: flex;
   flex-direction: column;
+}
+
+.input .el-form-item .el-form-item__label {
+  width: 200px !important;
+  text-align: left !important;
+  margin-left: 20% !important;
 }
 
 /* .mt-3{
     margin-top: 10% !important;
 } */
 
-.el-form-item__content {
+.input .el-form-item__content {
   margin-left: 0px !important;
 }
 
-.el-input {
+.input .el-input {
   width: 40% !important;
   margin-left: 20%;
 }
 
-.el-form-item__error {
+.input .el-form-item__error {
   margin-left: 20%;
 }
 
-.btn {
+.input .btn-changepass {
   border-radius: 15px;
   color: white;
-  width: 7%;
   margin-top: 50px;
-  margin-left: 53%;
+  margin-left: 20%;
   background-color: #75c4c0;
 }
 </style>

@@ -28,7 +28,7 @@ const router = new Router({
             component: () => import("./components/manageUser/Profile.vue"),
         },
         {
-            path: "/editprofile",
+            path: "/editProfile",
             component: () => import("./components/manageUser/EditProfile.vue"),
         },
         {
@@ -110,7 +110,8 @@ router.beforeEach((to, from, next) => {
         "/profile",
         "/request",
         "/changePassword",
-        "/myRequest"
+        "/myRequest",
+        "/editProfile"
     ];
     const adminPages = [
         "/logCheckAdmin",

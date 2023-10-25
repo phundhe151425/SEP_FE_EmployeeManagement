@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="manage-department">
     <h3>Quản lý phòng ban</h3>
     <hr style="margin-bottom: 5%" />
     <div style="padding-bottom: 20px">
@@ -517,14 +517,14 @@ export default {
 * {
   font-size: 16px;
 }
-.el-form-item__label {
+.manage-department .el-form-item__label {
   text-align: left;
 }
-.el-form-item__content {
+.manage-department .el-form-item__content {
   margin-left: 0px !important;
 }
 
-.el-form-item {
+.manage-department .el-form-item {
   display: flex;
   flex-direction: column;
 }
