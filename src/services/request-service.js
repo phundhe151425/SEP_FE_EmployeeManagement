@@ -26,9 +26,13 @@ class HolidayService {
         +"&size="+size+"&search="+search +"&status="+ status+"&from="+from+"&to="+to,{headers: authHeader()});
     }
 
-    getRequestTypes(page, size) {
-        return axios.get( BASE_URL+"/auth/request-type/get-list-request-type?page="+page
-        +"&size="+size,{headers: authHeader()});
+    getRequestTypes(categoryId) {
+        return axios.get( BASE_URL+"/auth/request-type/get-list-request-type-by-category-id?categoryId="+categoryId
+        ,{headers: authHeader()});
+    }
+
+    getRequestCategories() {
+        return axios.get( BASE_URL+"/auth/request-category/get-list-request-category",{headers: authHeader()});
     }
 
 

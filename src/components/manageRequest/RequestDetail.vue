@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="request-detail">
     <router-link
       v-if="type === 'manage'"
       style="text-decoration: none; font-size: 18px; margin-left: 5%"
@@ -64,14 +64,60 @@
           <label class="label" for="Mã Nhân viên">Thời gian tạo: </label
           ><span class="detail">{{ request.createdDate }}</span>
         </div>
-        <div class="infor">
-          <label class="label" for="">Thời gian thực hiện: </label
-          ><span class="detail">{{ request.startDate }}</span>
+
+        <div v-if="isOT">
+          <div class="infor">
+            <label class="label" for="">Ngày thực hiện: </label
+            ><span class="detail">{{ request.startDate }}</span>
+          </div>
+          <div class="infor">
+            <label class="label" for="">Thời gian thực hiện: </label
+            ><span class="detail"
+              >{{ request.startTime }} - {{ request.endTime }}</span
+            >
+          </div>
         </div>
-        <div class="infor">
-          <label class="label" for="">Số ngày nghỉ: </label
-          ><span class="detail">{{ request.numberOfDays }} ngày</span>
+        <div v-else-if="isForgetTimeKeeping">
+          <div class="infor">
+            <label class="label" for="">Ngày quên chấm công: </label
+            ><span class="detail">{{ request.startDate }}</span>
+          </div>
+          <div class="infor">
+            <label class="label" for="">Thời gian: </label
+            ><span class="detail"
+              >{{ request.startTime }} - {{ request.endTime }}</span
+            >
+          </div>
         </div>
+        <div v-else-if="isBusinessTravel || isWorkFromHome">
+          <div class="infor">
+            <label class="label" for="">Thời gian thực hiện: </label
+            ><span class="detail"
+              >{{ request.startDate }} - {{ request.startTime }}</span
+            >
+          </div>
+          <div class="infor">
+            <label class="label" for="">Thời gian kết thúc: </label
+            ><span class="detail"
+              >{{ request.startDate }} - {{ request.endTime }}</span
+            >
+          </div>
+        </div>
+        <div v-else>
+          <div class="infor">
+            <label class="label" for="">Thời gian thực hiện: </label
+            ><span class="detail"
+              >{{ request.startDate }} - {{ request.startTime }}</span
+            >
+          </div>
+          <div class="infor">
+            <label class="label" for="">Thời gian kết thúc: </label
+            ><span class="detail"
+              >{{ request.startDate }} - {{ request.endTime }}</span
+            >
+          </div>
+        </div>
+
         <div class="infor1">
           <label class="label" style="margin-right: 13%" for=""
             >Nội dung đề xuất:
@@ -80,9 +126,21 @@
         </div>
       </div>
     </div>
+
     <h4 style="margin-left: 5%">Người xử lý đơn</h4>
-    <hr style="margin-bottom: 2%; width: 20%; margin-left: 5%" />
+    <hr style="margin-bottom: 2%; width: 40%; margin-left: 5%" />
     <div v-if="accept">
+      <div class="row" style="display: flex">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 request">
+          <div style="display: flex">
+            <i
+              class="el-icon-time"
+              style="margin-right: 4%; font-size: 20px"
+            ></i>
+            <h5>Đê xuất đã xử lý vào lúc: {{ handleTime }}</h5>
+          </div>
+        </div>
+      </div>
       <div class="row" style="display: flex">
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 request">
           <div style="display: flex">
@@ -90,7 +148,7 @@
               class="el-icon-user"
               style="margin-right: 4%; font-size: 20px"
             ></i>
-            <h5>{{ request.user.fullName }}</h5>
+            <h5>Họ và tên người xử lý: {{ request.handlerName }}</h5>
           </div>
         </div>
       </div>
@@ -101,11 +159,23 @@
               class="el-icon-s-cooperation"
               style="margin-right: 4%; font-size: 20px"
             ></i>
-            <h5 style="margin-bottom: 20%">Giám đốc</h5>
+            <h5>Chức vụ người xử lý: {{ request.handlerPosition }}</h5>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="display: flex">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 request">
+          <div style="display: flex">
+            <i
+              class="el-icon-tickets"
+              style="margin-right: 4%; font-size: 20px"
+            ></i>
+            <h5 style="margin-bottom: 20%">Ghi chú: {{ request.note }}</h5>
           </div>
         </div>
       </div>
     </div>
+
     <div v-else>
       <div class="row" style="display: flex">
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 request">
@@ -127,6 +197,11 @@ export default {
   name: "edit-profile",
   data() {
     return {
+      isOT: false,
+      isForgetTimeKeeping: false,
+      isWorkFromHome: false,
+      isBusinessTravel: false,
+      handleTime: "",
       type: "",
       id: "",
       accept: false,
@@ -165,8 +240,33 @@ export default {
           this.request.startDate = moment(
             String(this.request.startDate)
           ).format("DD/MM/yyyy");
+          if (this.request.requestTypeId == 3) {
+            this.isOT = true;
+            this.isForgetTimeKeeping = false;
+            this.isWorkFromHome = false;
+            this.isBusinessTravel = false;
+          } else if (this.request.requestTypeId == 4) {
+            this.isOT = false;
+            this.isForgetTimeKeeping = true;
+            this.isWorkFromHome = false;
+            this.isBusinessTravel = false;
+          } else if (
+            this.request.requestTypeId == 8 ||
+            this.request.requestTypeId == 10
+          ) {
+            this.isWorkFromHome = true;
+            this.isBusinessTravel = true;
+            this.isOT = false;
+            this.isForgetTimeKeeping = false;
+          }
+          if (this.request.updatedDate != null) {
+            this.handleTime = moment(String(this.request.updatedDate)).format(
+              "DD/MM/yyyy HH:mm:ss"
+            );
+          }
         })
         .catch((e) => {
+          this.logout();
           console.log(e);
         });
     },
@@ -193,6 +293,11 @@ export default {
         }
       });
     },
+    logout() {
+      this.$store.dispatch("auth/logout");
+      window.location.replace("http://localhost:2001/login");
+      localStorage.removeItem("user");
+    },
   },
   computed: {},
   beforeMount() {
@@ -207,8 +312,8 @@ export default {
 };
 </script>
 
-<style >
-.tt1 {
+<style>
+.request-detail .tt1 {
   cursor: default;
   color: white;
   background-color: #75c4c0;
@@ -217,7 +322,7 @@ export default {
   padding: 3px 20px;
 }
 
-.tt2 {
+.request-detail .tt2 {
   cursor: default;
   color: white;
   background-color: #ed9696;
@@ -225,7 +330,7 @@ export default {
   border-radius: 5px;
   padding: 3px 20px;
 }
-.tt3 {
+.request-detail .tt3 {
   cursor: default;
   color: white;
   background-color: #f8cbad;
@@ -233,44 +338,42 @@ export default {
   border-radius: 5px;
   padding: 3px 20px;
 }
-.row {
+.request-detail .row {
   width: 80%;
   margin-left: auto;
   margin-right: auto;
 }
 
-.request {
-}
-.infor {
+.request-detail .infor {
   width: 65%;
   margin-bottom: 5%;
 }
 
-.infor1 {
+.request-detail .infor1 {
   display: flex;
   width: 65%;
   margin-bottom: 5%;
 }
-.label {
+.request-detail .label {
   width: 50%;
   /* border: solid 1px black; */
   font-weight: bold;
   font-size: 18px;
 }
 
-.detail {
+.request-detail .detail {
   width: 70%;
   /* font-weight: 10; */
   font-size: 18px;
 }
-.el-form-item__label {
+.request-detail .el-form-item__label {
   text-align: left;
 }
 
-.left .el-form-item__label {
+.request-detail .left .el-form-item__label {
   margin-left: 22%;
 }
-.el-form-item {
+.request-detail .el-form-item {
   display: flex;
   flex-direction: column;
 }
@@ -279,28 +382,28 @@ export default {
     margin-top: 10% !important;
 } */
 
-.el-form-item__content {
+.request-detail .el-form-item__content {
   margin-left: 0px !important;
 }
 
-.el-input {
+.request-detail .el-input {
   width: 70% !important;
 }
 
-.left .el-input {
+.request-detail .left .el-input {
   margin-left: 22%;
 }
-.el-radio-group {
+.request-detail .el-radio-group {
   margin-left: 22%;
 }
-.left .el-form-item__error {
+.request-detail .left .el-form-item__error {
   margin-left: 22%;
 }
-.img {
+.request-detail .img {
   margin-left: 22%;
 }
 
-.btn {
+.request-detail .btn {
   border-radius: 15px;
   color: white;
   width: 20%;

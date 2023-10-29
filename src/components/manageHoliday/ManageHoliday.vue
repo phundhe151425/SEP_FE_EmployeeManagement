@@ -612,12 +612,25 @@ export default {
         }
         this.page = response.data.pageable.pageNumber;
         this.totalItems = response.data.totalElements;
-      });
+      }).catch((e) => {
+          this.logout();
+          console.log(e);
+        });
     },
+
     getAllYear() {
       HolidayService.getYears().then((response) => {
         this.years = response.data;
-      });
+      }).catch((e) => {
+          this.logout();
+          console.log(e);
+        });
+    },
+
+      logout(){
+          this.$store.dispatch("auth/logout");
+          window.location.replace("http://localhost:2001/login");
+          localStorage.removeItem('user');
     },
 
     handlePageChange(value) {
