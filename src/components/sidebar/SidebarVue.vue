@@ -175,6 +175,14 @@
               </a>
             </li>
             <li class="nav-item" v-if="isAdmin">
+              <a class="nav-link">
+                <router-link to="/manageTimeKeeping" class="nav-link sel">
+                  <i class="el-icon-school"></i>
+                  Quản lý chấm công
+                </router-link>
+              </a>
+            </li>
+            <li class="nav-item" v-if="isAdmin">
               <a class="nav-link active" aria-current="page" href="/profile">
                 <router-link to="/manageHoliday" class="nav-link sel">
                   <font-awesome-icon icon="home" />

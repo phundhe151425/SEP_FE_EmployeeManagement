@@ -92,6 +92,10 @@ const router = new Router({
             path: "/inLateOutEarlyUser",
             component: () => import("./components/logInLateOutEarly/LogInLateOutEarlyUser.vue"),
         },
+        {
+            path: "/manageTimeKeeping",
+            component: () => import("./components/manageTimeKeeping/ManageTimeKeeping.vue"),
+        }
 
     ],
 });
@@ -121,6 +125,7 @@ router.beforeEach((to, from, next) => {
         "/managePosition",
         "/manageDepartment",
         "/manageRequest",
+        "/manageTimeKeeping"
     ];
     const managePages = [
         "/logCheckMod",
