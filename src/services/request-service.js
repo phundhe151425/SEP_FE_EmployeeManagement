@@ -3,7 +3,7 @@ import { BASE_URL } from "@/http-common";
 import axios from 'axios';
 import authHeader from "@/services/auth-header";
 
-class HolidayService {
+class RequestService {
     save(data) {
         return axios.post(BASE_URL + "/auth/request/create-request", data,{headers: authHeader()});
     }
@@ -51,4 +51,4 @@ class HolidayService {
 
 }
 
-export default new HolidayService();
+export default new RequestService();

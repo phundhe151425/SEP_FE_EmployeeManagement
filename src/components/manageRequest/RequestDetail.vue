@@ -14,31 +14,47 @@
     >
       Chi tiết đề xuất</router-link
     >
-    <h1 style="margin-top: 2%; margin-left: 5%; margin-bottom: 2%">
+    <h1 style="margin-top: 2%; margin-left: 5%; margin-bottom: 2%;">
       {{ request.requestTitle }}
     </h1>
-    <label
-      style="
-        margin-bottom: 2%;
-        margin-left: 5%;
-        font-size: 20px;
-        margin-right: 1.5%;
-      "
-    >
-      Trạng thái:
-    </label>
-    <span
-      ><button v-if="request.status == 1" class="tt3">
-        {{ status }}
-      </button>
-      <button v-else-if="request.status == 2" class="tt1">
-        {{ status }}
-      </button>
-      <button v-else class="tt2">
-        {{ status }}
-      </button></span
-    >
-    <h4 style="margin-left: 5%">THÔNG TIN ĐỀ XUẤT</h4>
+    <div style="display: flex">
+      <div style="display: flex; width:24%; margin-left: 3%;">
+        <label
+          style="
+            margin-bottom: 2%;
+            margin-left: 5%;
+            font-size: 20px;
+            margin-right: 1.5%;
+          "
+        >
+          Trạng thái:
+        </label>
+
+        <span
+          ><button v-if="request.status == 1" class="tt3">
+            {{ status }}
+          </button>
+          <button v-else-if="request.status == 2" class="tt1">
+            {{ status }}
+          </button>
+          <button v-else class="tt2">
+            {{ status }}
+          </button></span
+        >
+      </div>
+      <div v-if="type==='manage'&&request.status == 1" style="margin-left:5%">
+        <el-row >
+          <span>Thao tác: </span>
+          <el-button type="success" @click="acceptRequest(request.id)" style="padding: 6px;"
+            >Chấp thuận</el-button
+          >
+          <el-button type="danger" @click="showDeclineRequestDialog(request.id)" style="padding: 6px;"
+            >Từ chối</el-button
+          >
+        </el-row>
+      </div>
+    </div>
+    <h4 style="margin-left: 5%; margin-top: 2%">THÔNG TIN ĐỀ XUẤT</h4>
     <hr style="margin-bottom: 2%; margin-left: 5%; width: 80%" />
     <div class="row" style="display: flex">
       <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 request">
@@ -185,6 +201,63 @@
         </div>
       </div>
     </div>
+
+    <el-dialog
+      :visible.sync="declineRequestDialogVisible"
+      width="50%"
+      title="Ghi chú"
+      left
+    >
+      <el-form
+        id="formCreate"
+        :model="requestStatus"
+        :rules="noteRules"
+        ref="requestStatus"
+        label-width="200px"
+        class="demo-ruleForm"
+      >
+        <div class="row" style="margin-top: 15px">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <el-form-item label="Nhập ghi chú" prop="note">
+              <el-input
+                type="textarea"
+                v-model="requestStatus.note"
+                name="requestContent"
+                autocomplete="off"
+              ></el-input>
+            </el-form-item>
+          </div>
+        </div>
+        <div class="row" style="display: flex; justify-content: flex-end">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+            <div style="bottom: 40px">
+              <el-form-item>
+                <el-button
+                  class="btn btn-outline-danger"
+                  type="primary"
+                  style="width: 90%"
+                  @click="cancelDeclineRequestForm('requestStatus')"
+                  >Hủy</el-button
+                >
+              </el-form-item>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+            <div style="bottom: 40px">
+              <el-form-item>
+                <el-button
+                  class="btn btn-success"
+                  type="primary"
+                  style="width: 90%"
+                  @click="declineRequest('requestStatus')"
+                  >Lưu</el-button
+                >
+              </el-form-item>
+            </div>
+          </div>
+        </div>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -204,6 +277,10 @@ export default {
       handleTime: "",
       type: "",
       id: "",
+      requestStatus: {
+        status: "",
+        note: "",
+      },
       accept: false,
       status: "",
       request: {},
@@ -217,6 +294,8 @@ export default {
         gender: 0,
       },
       imageUrl: "",
+      declineRequestDialogVisible: false,
+      requestId: "",
     };
   },
   methods: {
@@ -269,6 +348,53 @@ export default {
           this.logout();
           console.log(e);
         });
+    },
+
+    acceptRequest(id) {
+      this.requestStatus.status = 2;
+      RequestService.changeStatus(id, this.requestStatus).then(() => {
+        this.$notify.success({
+          message: "Yêu cầu đã được chấp nhận",
+          title: "Success",
+          timer: 2000,
+          timerProgressBar: true,
+        });
+        this.getUser(id);
+      });
+    },
+
+    declineRequest(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.declineRequestDialogVisible = false;
+          this.requestStatus.status = 3;
+          RequestService.changeStatus(this.requestId, this.requestStatus).then(
+            () => {
+              this.$notify.success({
+                message: "Yêu cầu đã bị từ chối",
+                title: "Success",
+                timer: 2000,
+                timerProgressBar: true,
+              });
+              this.getUser(this.requestId);
+            }
+          );
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+
+    showDeclineRequestDialog(id) {
+      this.requestId = id;
+      this.requestStatus.note = "Đề xuất của bạn bị từ chối!";
+      this.declineRequestDialogVisible = true;
+    },
+
+    cancelDeclineRequestForm(formName) {
+      this.$refs[formName].resetFields();
+      this.declineRequestDialogVisible = false;
     },
 
     submitForm(formName) {
@@ -403,12 +529,12 @@ export default {
   margin-left: 22%;
 }
 
-.request-detail .btn {
+/* .request-detail .btn {
   border-radius: 15px;
   color: white;
   width: 20%;
   margin-top: 100px;
   margin-left: 49%;
   background-color: #75c4c0;
-}
+} */
 </style>

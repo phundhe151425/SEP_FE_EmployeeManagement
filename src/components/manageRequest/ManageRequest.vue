@@ -100,56 +100,21 @@
             </div>
           </el-col>
           <el-col :md="6" :lg="6" :xl="6">
-            <div class="grid-content" style="margin-bottom: 20px">
-              <span>Tạo đề xuất</span> &ensp;
-              <el-select
-                v-model="requestCategoryId"
-                @change="showCreateRequestDialog(requestCategoryId)"
-                placeholder="Chọn mục đề xuất nghỉ"
-              >
-                <el-option
-                  v-for="item in requestCategories"
-                  :key="item.id"
-                  :label="item.requestCategoryName"
-                  :value="item.id"
-                >
-                </el-option>
-              </el-select>
+            <div style="text-align: right">
+              <el-dropdown split-button type="danger">
+                Tạo đề xuất
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item
+                    v-for="(item, index) in requestCategories"
+                    :key="index"
+                    @click.native="chooseCategory(item.id)"
+                  >
+                    {{ item.requestCategoryName }}</el-dropdown-item
+                  >
+                </el-dropdown-menu>
+              </el-dropdown>
             </div>
           </el-col>
-          <!-- <el-col :md="6" :lg="6" :xl="6">
-            <span>Tạo đề xuất</span> &ensp;
-            <ul class="list-group">
-              <li
-                class="list-group-item"
-                v-for="(requestCategory, index) in requestCategories"
-                :key="index"
-                @click="setActiveTutorial(tutorial, index)"
-              >
-                {{ tutorial.productName }}
-              </li>
-            </ul>
-          </el-col> -->
-
-          <!-- <el-col :md="6" :lg="6" :xl="6" class="div-buttons">
-            <div class="grid-content div-buttons">
-              <import-excel
-                class="text-start buttons btn-import"
-                header="Thêm ngày nghỉ"
-                format="1"
-                @getData="getData"
-                style="margin-right: 10px"
-              />
-              <el-button
-                class="buttons btn-add"
-                type="danger"
-                style=""
-                round
-                @click="showCreateRequestDialog"
-                ><i class="el-icon-plus"></i> Tạo đề xuất
-              </el-button>
-            </div>
-          </el-col> -->
         </el-row>
 
         <br />
@@ -177,12 +142,12 @@
               align="center"
               width="100px"
             ></el-table-column>
-            <el-table-column label="Đề xuất" v-slot:="data" align="center">
+            <el-table-column label="Loại đề xuất" v-slot:="data" align="center">
               <router-link
                 style="text-decoration: none; color: black; font-weight: bold"
                 :to="'/request/' + type + '/' + data.row.id"
               >
-                {{ data.row.requestTitle }}</router-link
+                {{ data.row.requestType.requestTypeName }}</router-link
               >
             </el-table-column>
             <el-table-column
@@ -222,7 +187,7 @@
                 <button
                   style="margin-right: 10px"
                   class="btn-action"
-                  @click="showAcceptRequestDialog(data.row.id)"
+                  @click="acceptRequest(data.row.id)"
                 >
                   <i class="el-icon-check" style="width: 30px"></i>
                 </button>
@@ -238,7 +203,7 @@
                 <button
                   style="margin-right: 10px"
                   class="btn-action"
-                  @click="showAcceptRequestDialog(data.row.id)"
+                  @click="acceptRequest(data.row.id)"
                   disabled
                 >
                   <i class="el-icon-check" style="width: 30px"></i>
@@ -268,64 +233,6 @@
     </div>
 
     <el-dialog
-      :visible.sync="acceptRequestDialogVisible"
-      width="50%"
-      title="Ghi chú"
-      left
-    >
-      <el-form
-        id="formCreate"
-        :model="requestStatus"
-        :rules="noteRules"
-        ref="requestStatus"
-        label-width="200px"
-        class="demo-ruleForm"
-      >
-        <div class="row" style="margin-top: 15px">
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <el-form-item label="Nhập ghi chú" prop="note">
-              <el-input
-                type="textarea"
-                v-model="requestStatus.note"
-                name="requestContent"
-                autocomplete="off"
-                maxlength="50"
-              ></el-input>
-            </el-form-item>
-          </div>
-        </div>
-        <div class="row" style="display: flex; justify-content: flex-end">
-          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
-            <div style="bottom: 40px">
-              <el-form-item>
-                <el-button
-                  class="btn btn-outline-danger"
-                  type="primary"
-                  style="width: 90%"
-                  @click="cancelEditForm('requestStatus')"
-                  >Hủy</el-button
-                >
-              </el-form-item>
-            </div>
-          </div>
-          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
-            <div style="bottom: 40px">
-              <el-form-item>
-                <el-button
-                  class="btn btn-success"
-                  type="primary"
-                  style="width: 90%"
-                  @click="acceptRequest('requestStatus')"
-                  >Lưu</el-button
-                >
-              </el-form-item>
-            </div>
-          </div>
-        </div>
-      </el-form>
-    </el-dialog>
-
-    <el-dialog
       :visible.sync="declineRequestDialogVisible"
       width="50%"
       title="Ghi chú"
@@ -347,7 +254,6 @@
                 v-model="requestStatus.note"
                 name="requestContent"
                 autocomplete="off"
-                maxlength="50"
               ></el-input>
             </el-form-item>
           </div>
@@ -393,6 +299,7 @@
     >
       <el-form
         id="formCreate"
+        v-if="createRequestDialogVisible"
         :model="ruleForm"
         :rules="rules"
         ref="ruleForm"
@@ -406,7 +313,6 @@
                 v-model="name"
                 name="name"
                 autocomplete="off"
-                maxlength="50"
                 :disabled="true"
               ></el-input>
             </el-form-item>
@@ -417,20 +323,7 @@
                 v-model="department"
                 name="department"
                 autocomplete="off"
-                maxlength="50"
                 :disabled="true"
-              ></el-input>
-            </el-form-item>
-          </div>
-        </div>
-        <div class="row" style="margin-top: 15px">
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <el-form-item label="Nhập tiêu đề" prop="requestTitle" ref="title">
-              <el-input
-                v-model="ruleForm.requestTitle"
-                name="requestTitle"
-                autocomplete="off"
-                maxlength="50"
               ></el-input>
             </el-form-item>
           </div>
@@ -456,6 +349,19 @@
         </div>
         <div v-if="isPersonalWork == true">
           <div class="row" style="margin-top: 15px">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <el-form-item label="Nhập số ngày nghỉ" prop="numberRestDay" hidden>
+                <el-input-number
+                  v-model="ruleForm.numberRestDay"
+                  controls-position="right"
+                  @change="handleChange('ruleForm')"
+                  :step="0.5"
+                  :min="0"
+                ></el-input-number>
+              </el-form-item>
+            </div>
+          </div>
+          <div class="row" style="margin-top: 15px">
             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
               <el-form-item label="Nghỉ từ" required>
                 <el-form-item prop="startDate">
@@ -467,8 +373,7 @@
                     name="startDate"
                     placeholder="Chọn ngày"
                     style="width: 100%"
-                    @change="setDateTime"
-                    clearable="false"
+                    :picker-options="pickerOptionStartDate"
                   ></el-date-picker>
                 </el-form-item>
               </el-form-item>
@@ -479,7 +384,6 @@
                   <el-time-picker
                     v-model="ruleForm.startTime"
                     placeholder="Chọn thời gian"
-                    readonly=""
                   >
                   </el-time-picker>
                 </el-form-item>
@@ -498,7 +402,7 @@
                     value-format="yyyy-MM-dd"
                     placeholder="Chọn ngày"
                     style="width: 100%"
-                    readonly=""
+                    :picker-options="pickerOptionEndDate"
                   ></el-date-picker>
                 </el-form-item>
               </el-form-item>
@@ -509,7 +413,6 @@
                   <el-time-picker
                     v-model="ruleForm.endTime"
                     placeholder="Chọn thời gian"
-                    readonly=""
                   >
                   </el-time-picker>
                 </el-form-item>
@@ -517,12 +420,12 @@
             </div>
           </div>
         </div>
-        <div v-else-if="isRest == true">
+        <div v-else-if="isRest">
           <div class="row" style="margin-top: 15px">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
               <el-form-item label="Nhập số ngày nghỉ" prop="numberRestDay">
                 <el-input-number
-                  v-model="numberRestDay"
+                  v-model="ruleForm.numberRestDay"
                   controls-position="right"
                   @change="handleChange('ruleForm')"
                   :step="0.5"
@@ -531,66 +434,8 @@
               </el-form-item>
             </div>
           </div>
-          <div v-if="isRestByDay">
-            <div class="row" style="margin-top: 15px">
-              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                <el-form-item label="Nghỉ từ" required>
-                  <el-form-item prop="startDate">
-                    <el-date-picker
-                      type="date"
-                      v-model="ruleForm.startDate"
-                      format="dd/MM/yyyy"
-                      value-format="yyyy-MM-dd"
-                      name="startDate"
-                      placeholder="Chọn ngày"
-                      style="width: 100%"
-                    ></el-date-picker>
-                  </el-form-item>
-                </el-form-item>
-              </div>
-              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                <el-form-item label="Thời gian" required>
-                  <el-form-item prop="startTime">
-                    <el-time-picker
-                      v-model="ruleForm.startTime"
-                      placeholder="Chọn thời gian"
-                    >
-                    </el-time-picker>
-                  </el-form-item>
-                </el-form-item>
-              </div>
-            </div>
-            <div class="row" style="margin-top: 15px">
-              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                <el-form-item label="Nghỉ đến">
-                  <el-form-item prop="endDate">
-                    <el-date-picker
-                      type="date"
-                      v-model="ruleForm.endDate"
-                      name="endDate"
-                      format="dd/MM/yyyy"
-                      value-format="yyyy-MM-dd"
-                      placeholder="Chọn ngày"
-                      style="width: 100%"
-                    ></el-date-picker>
-                  </el-form-item>
-                </el-form-item>
-              </div>
-              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                <el-form-item label="Thời gian" required>
-                  <el-form-item prop="endTime">
-                    <el-time-picker
-                      v-model="ruleForm.endTime"
-                      placeholder="Chọn thời gian"
-                    >
-                    </el-time-picker>
-                  </el-form-item>
-                </el-form-item>
-              </div>
-            </div>
-          </div>
 
-          <div v-else-if="isRestBySlot">
+          <div v-if="isRestBySlot">
             <div class="row" style="margin-top: 15px">
               <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                 <el-form-item label="Chọn ngày nghỉ" required>
@@ -604,23 +449,7 @@
                       placeholder="Chọn ngày"
                       style="width: 100%"
                       @change="setDateTime"
-                      clearable="false"
-                    ></el-date-picker>
-                  </el-form-item>
-                </el-form-item>
-              </div>
-              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                <el-form-item label="Nghỉ đến" required hidden>
-                  <el-form-item prop="endDate">
-                    <el-date-picker
-                      type="date"
-                      v-model="ruleForm.endDate"
-                      name="endDate"
-                      format="dd/MM/yyyy"
-                      value-format="yyyy-MM-dd"
-                      placeholder="Chọn ngày"
-                      style="width: 100%"
-                      readonly=""
+                      :picker-options="pickerOptionStartDate"
                     ></el-date-picker>
                   </el-form-item>
                 </el-form-item>
@@ -630,7 +459,7 @@
               <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <el-form-item label="Chọn ca nghỉ" prop="slotId">
                   <el-select
-                    v-model="slotId"
+                    v-model="ruleForm.slotId"
                     @change="setDateTime"
                     placeholder="Chọn ca nghỉ"
                   >
@@ -672,6 +501,85 @@
               </div>
             </div>
           </div>
+          <div v-if="isRestByDay">
+            <div class="row" style="margin-top: 15px">
+              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                <el-form-item label="Nghỉ từ" required>
+                  <el-form-item prop="startDate">
+                    <el-date-picker
+                      type="date"
+                      v-model="ruleForm.startDate"
+                      format="dd/MM/yyyy"
+                      value-format="yyyy-MM-dd"
+                      name="startDate"
+                      placeholder="Chọn ngày"
+                      style="width: 100%"
+                      :picker-options="pickerOptionStartDate"
+                    ></el-date-picker>
+                  </el-form-item>
+                </el-form-item>
+              </div>
+
+              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                <el-form-item label="Thời gian" required>
+                  <el-form-item prop="startTime">
+                    <el-time-picker
+                      v-model="ruleForm.startTime"
+                      placeholder="Chọn thời gian"
+                    >
+                    </el-time-picker>
+                  </el-form-item>
+                </el-form-item>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <el-form-item label="Chọn ca nghỉ" prop="slotId" hidden>
+                  <el-select
+                    v-model="ruleForm.slotId"
+                    placeholder="Chọn ca nghỉ"
+                  >
+                    <el-option
+                      v-for="item in slots"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.id"
+                    >
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </div>
+            </div>
+            <div class="row" style="margin-top: 15px">
+              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                <el-form-item label="Nghỉ đến" required>
+                  <el-form-item prop="endDate">
+                    <el-date-picker
+                      type="date"
+                      v-model="ruleForm.endDate"
+                      name="endDate"
+                      format="dd/MM/yyyy"
+                      value-format="yyyy-MM-dd"
+                      placeholder="Chọn ngày"
+                      style="width: 100%"
+                      :picker-options="pickerOptionEndDate"
+                    ></el-date-picker>
+                  </el-form-item>
+                </el-form-item>
+              </div>
+              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                <el-form-item label="Thời gian" required>
+                  <el-form-item prop="endTime">
+                    <el-time-picker
+                      v-model="ruleForm.endTime"
+                      placeholder="Chọn thời gian"
+                    >
+                    </el-time-picker>
+                  </el-form-item>
+                </el-form-item>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="row" style="margin-top: 15px">
@@ -682,7 +590,6 @@
                 v-model="ruleForm.requestContent"
                 name="requestContent"
                 autocomplete="off"
-                maxlength="50"
               ></el-input>
             </el-form-item>
           </div>
@@ -727,6 +634,7 @@
       <el-form
         id="formCreate"
         :model="ruleForm"
+        v-if="createOTRequestDialogVisible"
         :rules="rules"
         ref="ruleForm"
         label-width="200px"
@@ -739,7 +647,6 @@
                 v-model="name"
                 name="name"
                 autocomplete="off"
-                maxlength="50"
                 :disabled="true"
               ></el-input>
             </el-form-item>
@@ -750,20 +657,7 @@
                 v-model="department"
                 name="department"
                 autocomplete="off"
-                maxlength="50"
                 :disabled="true"
-              ></el-input>
-            </el-form-item>
-          </div>
-        </div>
-        <div class="row" style="margin-top: 15px">
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <el-form-item label="Nhập tiêu đề" prop="requestTitle" ref="title">
-              <el-input
-                v-model="ruleForm.requestTitle"
-                name="requestTitle"
-                autocomplete="off"
-                maxlength="50"
               ></el-input>
             </el-form-item>
           </div>
@@ -787,67 +681,51 @@
             </el-form-item>
           </div>
         </div>
-
-        <div class="row" style="margin-top: 15px">
-          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-            <el-form-item label="Ngày làm thêm giờ" required>
-              <el-form-item prop="startDate">
-                <el-date-picker
-                  type="date"
-                  v-model="ruleForm.startDate"
-                  format="dd/MM/yyyy"
-                  value-format="yyyy-MM-dd"
-                  name="startDate"
-                  placeholder="Chọn ngày"
-                  style="width: 100%"
-                  @change="setDateTime"
-                  clearable="false"
-                ></el-date-picker>
+        <div v-if="isOT">
+          <div class="row" style="margin-top: 15px">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+              <el-form-item label="Ngày làm thêm giờ" required>
+                <el-form-item prop="startDate">
+                  <el-date-picker
+                    type="date"
+                    v-model="ruleForm.startDate"
+                    format="dd/MM/yyyy"
+                    value-format="yyyy-MM-dd"
+                    name="startDate"
+                    placeholder="Chọn ngày"
+                    style="width: 100%"
+                    @change="setDateTime"
+                    :picker-options="pickerOptionOTBeforeDate"
+                  ></el-date-picker>
+                </el-form-item>
               </el-form-item>
-            </el-form-item>
+            </div>
           </div>
-          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-            <el-form-item label="Nghỉ đến" required hidden>
-              <el-form-item prop="endDate">
-                <el-date-picker
-                  type="date"
-                  v-model="ruleForm.endDate"
-                  name="endDate"
-                  format="dd/MM/yyyy"
-                  value-format="yyyy-MM-dd"
-                  placeholder="Chọn ngày"
-                  style="width: 100%"
-                  readonly=""
-                ></el-date-picker>
+          <div class="row" style="margin-top: 15px">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+              <el-form-item label="Thời gian bắt đầu" required>
+                <el-form-item prop="startTime">
+                  <el-time-picker
+                    v-model="ruleForm.startTime"
+                    placeholder="Chọn thời gian"
+                  >
+                  </el-time-picker>
+                </el-form-item>
               </el-form-item>
-            </el-form-item>
-          </div>
-        </div>
-        <div class="row" style="margin-top: 15px">
-          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-            <el-form-item label="Thời gian bắt đầu" required>
-              <el-form-item prop="startTime">
-                <el-time-picker
-                  v-model="ruleForm.startTime"
-                  placeholder="Chọn thời gian"
-                >
-                </el-time-picker>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+              <el-form-item label="Thời gian kết thúc" required>
+                <el-form-item prop="endTime">
+                  <el-time-picker
+                    v-model="ruleForm.endTime"
+                    placeholder="Chọn thời gian"
+                  >
+                  </el-time-picker>
+                </el-form-item>
               </el-form-item>
-            </el-form-item>
-          </div>
-          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-            <el-form-item label="Thời gian kết thúc" required>
-              <el-form-item prop="endTime">
-                <el-time-picker
-                  v-model="ruleForm.endTime"
-                  placeholder="Chọn thời gian"
-                >
-                </el-time-picker>
-              </el-form-item>
-            </el-form-item>
+            </div>
           </div>
         </div>
-
         <div class="row" style="margin-top: 15px">
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <el-form-item label="Nhập nội dung" prop="requestContent">
@@ -901,6 +779,7 @@
         id="formCreate"
         :model="ruleForm"
         :rules="rules"
+        v-if="createTimeKeepingRequestDialogVisible"
         ref="ruleForm"
         label-width="200px"
         class="demo-ruleForm"
@@ -912,7 +791,6 @@
                 v-model="name"
                 name="name"
                 autocomplete="off"
-                maxlength="50"
                 :disabled="true"
               ></el-input>
             </el-form-item>
@@ -923,20 +801,7 @@
                 v-model="department"
                 name="department"
                 autocomplete="off"
-                maxlength="50"
                 :disabled="true"
-              ></el-input>
-            </el-form-item>
-          </div>
-        </div>
-        <div class="row" style="margin-top: 15px">
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <el-form-item label="Nhập tiêu đề" prop="requestTitle" ref="title">
-              <el-input
-                v-model="ruleForm.requestTitle"
-                name="requestTitle"
-                autocomplete="off"
-                maxlength="50"
               ></el-input>
             </el-form-item>
           </div>
@@ -946,7 +811,7 @@
             <el-form-item label="Chọn loại đề xuất" prop="requestTypeId">
               <el-select
                 v-model="ruleForm.requestTypeId"
-                @change="selectType(ruleForm.requestTypeId, 'ruleForm')"
+                @change="selectType(ruleForm.requestTypeId)"
                 placeholder="Chọn loại đề xuất nghỉ"
               >
                 <el-option
@@ -974,23 +839,6 @@
                     placeholder="Chọn ngày"
                     style="width: 100%"
                     @change="setDateTime"
-                    clearable="false"
-                  ></el-date-picker>
-                </el-form-item>
-              </el-form-item>
-            </div>
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-              <el-form-item label="Nghỉ đến" required hidden>
-                <el-form-item prop="endDate">
-                  <el-date-picker
-                    type="date"
-                    v-model="ruleForm.endDate"
-                    name="endDate"
-                    format="dd/MM/yyyy"
-                    value-format="yyyy-MM-dd"
-                    placeholder="Chọn ngày"
-                    style="width: 100%"
-                    readonly=""
                   ></el-date-picker>
                 </el-form-item>
               </el-form-item>
@@ -998,9 +846,9 @@
           </div>
           <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-              <el-form-item label="Chọn ca" prop="slotId">
+              <el-form-item label="Chọn ca">
                 <el-select
-                  v-model="slotId"
+                  v-model="ruleForm.slotId"
                   @change="setDateTime"
                   placeholder="Chọn ca"
                 >
@@ -1055,19 +903,27 @@
                     name="startDate"
                     placeholder="Chọn ngày"
                     style="width: 100%"
-                    @change="setDateTime"
-                    clearable="false"
+                    :picker-options="pickerOptionStartDate"
                   ></el-date-picker>
                 </el-form-item>
               </el-form-item>
             </div>
             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-              <el-form-item label="Chọn ca" prop="slotIdStart" required>
-                <el-select
-                  v-model="slotIdStart"
-                  @change="setDateTime"
-                  placeholder="Chọn ca"
-                >
+              <el-form-item label="Thời gian" required>
+                <el-form-item prop="startTime">
+                  <el-time-picker
+                    v-model="ruleForm.startTime"
+                    placeholder="Chọn thời gian"
+                  >
+                  </el-time-picker>
+                </el-form-item>
+              </el-form-item>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <el-form-item label="Chọn ca nghỉ" prop="slotId" hidden>
+                <el-select v-model="ruleForm.slotId" placeholder="Chọn ca nghỉ">
                   <el-option
                     v-for="item in slots"
                     :key="item.id"
@@ -1091,25 +947,20 @@
                     value-format="yyyy-MM-dd"
                     placeholder="Chọn ngày"
                     style="width: 100%"
+                    :picker-options="pickerOptionEndDate"
                   ></el-date-picker>
                 </el-form-item>
               </el-form-item>
             </div>
             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-              <el-form-item label="Chọn ca" prop="slotIdEnd" required>
-                <el-select
-                  v-model="slotIdEnd"
-                  @change="setDateTime"
-                  placeholder="Chọn ca"
-                >
-                  <el-option
-                    v-for="item in slots"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id"
+              <el-form-item label="Thời gian" required>
+                <el-form-item prop="endTime">
+                  <el-time-picker
+                    v-model="ruleForm.endTime"
+                    placeholder="Chọn thời gian"
                   >
-                  </el-option>
-                </el-select>
+                  </el-time-picker>
+                </el-form-item>
               </el-form-item>
             </div>
           </div>
@@ -1169,36 +1020,45 @@ export default {
   data() {
     var date = new Date();
     var currentYear = date.getFullYear();
-    var currentMonth = date.getMonth();
-    var startDate = new Date(currentYear, currentMonth, 1);
+    var currentMonth = date.getMonth() + 1;
+    var startDate = new Date(currentYear, date.getMonth(), 1);
 
     const get_day_of_month = (year, month) => {
       return new Date(year, month, 0).getDate();
     };
     var lastDateOfMonth = get_day_of_month(currentYear, currentMonth);
 
-    var endDate = new Date(currentYear, currentMonth, lastDateOfMonth + 1);
+    var endDate = new Date(currentYear, date.getMonth(), lastDateOfMonth);
 
-    // var validateEndDate = (rule, value, callback) => {
-    //   if (value < this.ruleForm.startDate) {
-    //     callback(
-    //       new Error("Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu!")
-    //     );
-    //   } else {
-    //     callback();
-    //   }
-    // };
+    var validateEndDate = (rule, value, callback) => {
+      if (this.ruleForm.startDate == null || this.ruleForm.startDate == "") {
+        this.ruleForm.endDate = "";
+        callback(new Error("Vui lòng nhập ngày bắt đầu!"));
+      } else {
+        callback();
+      }
+    };
 
-    // var validateStartDate = (rule, value, callback) => {
-    //   var startHolidayDate = new Date(value);
-    //   if (startHolidayDate < date) {
-    //     callback(
-    //       new Error("Vui lòng không chọn ngày hiện tại và ngày đã qua!")
-    //     );
-    //   } else {
-    //     callback();
-    //   }
-    // };
+    var validateStartDate = (rule, value, callback) => {
+      if (
+        (this.ruleForm.startDate != null || this.ruleForm.startDate != "") &&
+        (this.ruleForm.endDate == null || this.ruleForm.endDate == "")
+      ) {
+        this.$refs["ruleForm"].fields
+          .find((f) => f.prop == "endDate")
+          .resetField();
+      } else {
+        callback();
+      }
+    };
+
+     var validateNumberRestDay = (rule, value, callback) => {
+      if (this.ruleForm.numberRestDay < 0.5) {
+        callback(new Error("Số ngày nghỉ lớn hơn hoặc bằng 0.5!"));
+      } else {
+        callback();
+      }
+    };
 
     return {
       requestCategoryId: "",
@@ -1224,12 +1084,12 @@ export default {
       isRestByDay: false,
       isRestBySlot: false,
       isRest: false,
+      isOT: false,
+      isOTBefore: false,
       isForgetTimeKeeping: false,
       isWorkFromHome: false,
       isBusinessTravel: false,
       numberRestDay: 0,
-      slotIdStart: "",
-      slotIdEnd: "",
       slotId: "",
       slots: [
         {
@@ -1279,28 +1139,18 @@ export default {
         ],
       },
       ruleForm: {
+        slotId: "",
         endDate: "",
-        requestTitle: "",
+        requestTitle: null,
         requestContent: "",
         startDate: "",
         requestTypeId: "",
         startTime: "",
         endTime: "",
+        numberRestDay: "",
       },
+
       rules: {
-        requestTitle: [
-          {
-            required: true,
-            message: "Vui lòng nhập tên tiêu đề!",
-            trigger: "blur",
-          },
-          {
-            min: 3,
-            max: 100,
-            message: "Tên tiêu đề từ 3 đến 100 kí tự",
-            trigger: "blur",
-          },
-        ],
         requestTypeId: [
           {
             required: true,
@@ -1327,7 +1177,7 @@ export default {
             message: "Vui lòng nhập ngày bắt đầu nghỉ!",
             trigger: "blur",
           },
-          // { validator: validateStartDate, trigger: "blur" },
+          { validator: validateStartDate, trigger: "blur" },
         ],
         startTime: [
           {
@@ -1350,7 +1200,22 @@ export default {
             message: "Vui lòng nhập ngày kết thúc nghỉ!",
             trigger: "blur",
           },
-          // { validator: validateEndDate, trigger: "blur" },
+          { validator: validateEndDate, trigger: "blur" },
+        ],
+        slotId: [
+          {
+            required: true,
+            message: "Vui lòng chọn ca!",
+            trigger: "blur",
+          },
+        ],
+        numberRestDay: [
+          {
+            required: true,
+            message: "Vui lòng chọn số ngày nghỉ!",
+            trigger: "blur",
+          },
+          { validator: validateNumberRestDay, trigger: "change" },
         ],
       },
       page: 0,
@@ -1359,7 +1224,6 @@ export default {
       date: "",
       totalItems: 0,
       fit: "fill",
-      acceptRequestDialogVisible: false,
       createRequestDialogVisible: false,
       createOTRequestDialogVisible: false,
       createTimeKeepingRequestDialogVisible: false,
@@ -1372,149 +1236,32 @@ export default {
     this.endDate = moment(String(this.endDate)).format("yyyy-MM-DD");
     this.getData();
     this.getAllDepartment();
-    // this.getAllRequestType();
     this.getAllRequestCategory();
     this.name = this.$store.state.auth.user.fullName;
     this.department = this.$store.state.auth.user.departmentName;
-    // this.getAllYear();
+  },
+
+  computed: {
+    pickerOptionStartDate() {
+      return {
+        disabledDate: this.disableOneDayAgoStartDate,
+      };
+    },
+    pickerOptionEndDate() {
+      return {
+        disabledDate: this.disableOneDayAgoEndDate,
+      };
+    },
+    pickerOptionOTBeforeDate() {
+      return {
+        disabledDate: this.disableOneDayAgoDate,
+      };
+    },
   },
   methods: {
-    acceptRequest(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.requestStatus.status = 2;
-          RequestService.changeStatus(this.requestId, this.requestStatus).then(
-            () => {
-              this.acceptRequestDialogVisible = false;
-              this.$notify.success({
-                message: "Yêu cầu đã được chấp nhận",
-                title: "Success",
-                timer: 2000,
-                timerProgressBar: true,
-              });
-              this.getData();
-            }
-          );
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
-
-    declineRequest(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.declineRequestDialogVisible = false;
-          this.requestStatus.status = 3;
-          RequestService.changeStatus(this.requestId, this.requestStatus).then(
-            () => {
-              this.$notify.success({
-                message: "Yêu cầu đã bị từ chối",
-                title: "Success",
-                timer: 2000,
-                timerProgressBar: true,
-              });
-              this.getData();
-            }
-          );
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
-
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.ruleForm.startTime = moment(
-            String(this.ruleForm.startTime)
-          ).format("HH:mm:ss");
-          this.ruleForm.endTime = moment(String(this.ruleForm.endTime)).format(
-            "HH:mm:ss"
-          );
-          RequestService.save(this.ruleForm).then(() => {
-            this.createRequestDialogVisible = false;
-            this.createOTRequestDialogVisible = false;
-            this.createTimeKeepingRequestDialogVisible = false;
-            this.$notify.success({
-              message: "Tạo đề xuất thành công",
-              title: "Success",
-              timer: 2000,
-              timerProgressBar: true,
-            });
-            this.getData();
-          });
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
-
-    cancelCreateForm(formName) {
-      this.$refs[formName].resetFields();
-      this.createRequestDialogVisible = false;
-      this.createOTRequestDialogVisible = false;
-      this.createTimeKeepingRequestDialogVisible = false;
-      this.isForgetTimeKeeping = false;
-      this.isRest = false;
-      this.isRestBySlot = false;
-      this.isRestByDay = false;
-      this.isWorkFromHome = false;
-      this.isBusinessTravel = false;
-      this.isPersonalWork = false;
-    },
-
-    cancelEditForm(formName) {
-      this.$refs[formName].resetFields();
-      this.acceptRequestDialogVisible = false;
-    },
-
-    cancelDeclineRequestForm(formName) {
-      this.$refs[formName].resetFields();
-      this.declineRequestDialogVisible = false;
-    },
-
-    showCreateRequestDialog(categotyId) {
-      RequestService.getRequestTypes(categotyId)
-        .then((response) => {
-          this.requestTypes = response.data.content;
-        })
-        .catch((e) => {
-          this.logout();
-          console.log(e);
-        });
-      this.acceptRequestDialogVisible = false;
-      this.deleteHolidayDialogVisible = false;
-      if (categotyId == 1) {
-        this.createRequestDialogVisible = true;
-      } else if (categotyId == 2) {
-        this.createOTRequestDialogVisible = true;
-      } else if (categotyId == 3) {
-        this.createTimeKeepingRequestDialogVisible = true;
-      }
-    },
-
-    showAcceptRequestDialog(id) {
-      this.requestId = id;
-      this.requestStatus.note = "Đề xuất của bạn được chấp thuận!";
-      this.createRequestDialogVisible = false;
-      this.acceptRequestDialogVisible = true;
-      this.deleteHolidayDialogVisible = false;
-      this.ruleForm = {};
-    },
-
-    showDeclineRequestDialog(id) {
-      this.requestId = id;
-      this.requestStatus.note = "Đề xuất của bạn bị từ chối!";
-      this.createRequestDialogVisible = false;
-      this.declineRequestDialogVisible = true;
-      this.deleteHolidayDialogVisible = false;
-      this.ruleForm = {};
-    },
     getData() {
+      console.log(this.startDate);
+       console.log(this.endDate);
       if (this.$store.state.auth.user.roles[0] === "ROLE_MODERATOR") {
         this.isModerator = true;
         this.departmentOfModerator = this.$store.state.auth.user.departmentName;
@@ -1558,161 +1305,6 @@ export default {
         });
     },
 
-    // getRequestTypes(categotyId) {
-    //   RequestService.getRequestTypes(categotyId).then((response) => {
-    //     this.requestTypes = response.data.content;
-    //   });
-    // },
-    handleChange(formName) {
-      if (this.numberRestDay < 1 && this.numberRestDay > 0) {
-        this.isRestBySlot = true;
-        this.isRestByDay = false;
-        this.isWorkFromHome = false;
-        this.isBusinessTravel = false;
-        this.isPersonalWork = false;
-        this.clearField(formName);
-        this.$refs[formName].fields
-          .find((f) => f.prop == "slotId")
-          .resetField();
-      } else if (this.numberRestDay >= 1) {
-        this.isRestBySlot = false;
-        this.isRestByDay = true;
-        this.isWorkFromHome = false;
-        this.isBusinessTravel = false;
-        this.isPersonalWork = false;
-        this.clearField(formName);
-      } else {
-        this.isRestBySlot = false;
-        this.isRestByDay = false;
-        this.isWorkFromHome = false;
-        this.isBusinessTravel = false;
-        this.isPersonalWork = false;
-      }
-    },
-
-    selectType(typeId, formName) {
-      if (typeId == 5 || typeId == 6 || typeId == 7) {
-        this.isPersonalWork = true;
-        this.isRest = false;
-        this.isRestBySlot = false;
-        this.isRestByDay = false;
-        this.isWorkFromHome = false;
-        this.isBusinessTravel = false;
-      } else if (typeId == 1 || typeId == 2) {
-        this.isPersonalWork = false;
-        this.isRest = true;
-        this.numberRestDay = 0;
-        this.isRestBySlot = false;
-        this.isRestByDay = false;
-        this.isWorkFromHome = false;
-        this.isBusinessTravel = false;
-      } else if (typeId == 4) {
-        this.isForgetTimeKeeping = true;
-        this.isRest = false;
-        this.isRestBySlot = false;
-        this.isRestByDay = false;
-        this.isWorkFromHome = false;
-        this.isBusinessTravel = false;
-      } else if (typeId == 8) {
-        this.isForgetTimeKeeping = false;
-        this.isRest = false;
-        this.isRestBySlot = false;
-        this.isRestByDay = false;
-        this.isWorkFromHome = true;
-        this.isBusinessTravel = false;
-      } else if (typeId == 10) {
-        this.isForgetTimeKeeping = false;
-        this.isRest = false;
-        this.isRestBySlot = false;
-        this.isRestByDay = false;
-        this.isWorkFromHome = false;
-        this.isBusinessTravel = true;
-      }
-      this.clearField(formName);
-
-      this.$refs[formName].fields.find((f) => f.prop == "slotId").resetField();
-    },
-
-    clearField(formName) {
-      this.$refs[formName].fields
-        .find((f) => f.prop == "startDate")
-        .resetField();
-      this.$refs[formName].fields.find((f) => f.prop == "endDate").resetField();
-      this.$refs[formName].fields.find((f) => f.prop == "endTime").resetField();
-      this.$refs[formName].fields
-        .find((f) => f.prop == "startTime")
-        .resetField();
-      // this.$refs[formName].fields.find((f) => f.prop == "slotId").resetField();
-    },
-
-    setDateTime() {
-      if (this.isPersonalWork) {
-        const date = new Date(this.ruleForm.startDate);
-        const date1 = new Date(this.ruleForm.startDate);
-        date1.setHours(8, 30, 0, 0);
-        this.ruleForm.startTime = date1;
-
-        if (this.ruleForm.requestTypeId != 7) {
-          date.setDate(date.getDate() + 2);
-        }
-        this.ruleForm.endDate = date;
-        this.ruleForm.endDate.setHours(18, 0, 0, 0);
-        this.ruleForm.endTime = this.ruleForm.endDate;
-      }
-      //  else if (this.isRestByDay) {
-      //   const date = new Date(this.ruleForm.startDate);
-      //   date.setHours(0, 0, 0, 0);
-      //   this.ruleForm.startTime = date;
-      //   const date1 = new Date(this.ruleForm.endDate);
-      //   date1.setHours(23, 59, 59, 0);
-      //   this.ruleForm.endTime = date1;
-      // }
-      else if (
-        this.isRestBySlot ||
-        this.createOTRequestDialogVisible ||
-        this.isForgetTimeKeeping
-      ) {
-        const date = new Date(this.ruleForm.startDate);
-        this.ruleForm.endDate = date;
-        const date1 = new Date(this.ruleForm.endDate);
-        if (this.slotId == 1) {
-          date.setHours(8, 30, 0, 0);
-          date1.setHours(12, 0, 0, 0);
-          this.ruleForm.startTime = date;
-          this.ruleForm.endTime = date1;
-        } else if (this.slotId == 2) {
-          date.setHours(13, 0, 0, 0);
-          date1.setHours(18, 0, 0, 0);
-          this.ruleForm.startTime = date;
-          this.ruleForm.endTime = date1;
-        }
-      } else if (this.isWorkFromHome || this.isBusinessTravel) {
-        const date = new Date(this.ruleForm.startDate);
-        const date1 = new Date(this.ruleForm.endDate);
-        if (this.slotIdStart == 1 && this.slotIdEnd == 1) {
-          date.setHours(8, 30, 0, 0);
-          date1.setHours(12, 0, 0, 0);
-          this.ruleForm.startTime = date;
-          this.ruleForm.endTime = date1;
-        } else if (this.slotIdStart == 1 && this.slotIdEnd == 2) {
-          date.setHours(8, 30, 0, 0);
-          date1.setHours(18, 0, 0, 0);
-          this.ruleForm.startTime = date;
-          this.ruleForm.endTime = date1;
-        } else if (this.slotIdStart == 2 && this.slotIdEnd == 2) {
-          date.setHours(13, 0, 0, 0);
-          date1.setHours(18, 0, 0, 0);
-          this.ruleForm.startTime = date;
-          this.ruleForm.endTime = date1;
-        } else if (this.slotIdStart == 2 && this.slotIdEnd == 1) {
-          date.setHours(13, 0, 0, 0);
-          date1.setHours(12, 0, 0, 0);
-          this.ruleForm.startTime = date;
-          this.ruleForm.endTime = date1;
-        }
-      }
-    },
-
     getAllRequestCategory() {
       RequestService.getRequestCategories()
         .then((response) => {
@@ -1722,6 +1314,287 @@ export default {
           this.logout();
           console.log(e);
         });
+    },
+
+    acceptRequest(id) {
+      this.requestStatus.status = 2;
+      RequestService.changeStatus(id, this.requestStatus).then(() => {
+        this.$notify.success({
+          message: "Yêu cầu đã được chấp nhận",
+          title: "Success",
+          timer: 2000,
+          timerProgressBar: true,
+        });
+        this.getData();
+      });
+    },
+
+    declineRequest(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.declineRequestDialogVisible = false;
+          this.requestStatus.status = 3;
+          RequestService.changeStatus(this.requestId, this.requestStatus).then(
+            () => {
+              this.$notify.success({
+                message: "Yêu cầu đã bị từ chối",
+                title: "Success",
+                timer: 2000,
+                timerProgressBar: true,
+              });
+              this.getData();
+            }
+          );
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.ruleForm.startTime = moment(
+            String(this.ruleForm.startTime)
+          ).format("HH:mm:ss");
+          this.ruleForm.endTime = moment(String(this.ruleForm.endTime)).format(
+            "HH:mm:ss"
+          );
+          var request = {
+            endDate: this.ruleForm.endDate,
+            requestTitle: null,
+            requestContent: this.ruleForm.requestContent,
+            startDate: this.ruleForm.startDate,
+            requestTypeId: this.ruleForm.requestTypeId,
+            startTime: this.ruleForm.startTime,
+            endTime: this.ruleForm.endTime,
+          };
+          RequestService.save(request).then(() => {
+            this.createRequestDialogVisible = false;
+            this.createOTRequestDialogVisible = false;
+            this.createTimeKeepingRequestDialogVisible = false;
+            this.$notify.success({
+              message: "Tạo đề xuất thành công",
+              title: "Success",
+              timer: 2000,
+              timerProgressBar: true,
+            });
+            this.getData();
+          });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+
+    cancelCreateForm() {
+      this.clearField();
+      this.ruleForm.requestTypeId = "";
+      this.createRequestDialogVisible = false;
+      this.createOTRequestDialogVisible = false;
+      this.createTimeKeepingRequestDialogVisible = false;
+    },
+
+    cancelDeclineRequestForm(formName) {
+      this.$refs[formName].resetFields();
+      this.declineRequestDialogVisible = false;
+    },
+
+    chooseCategory(categotyId) {
+      RequestService.getRequestTypes(categotyId)
+        .then((response) => {
+          this.requestTypes = response.data.content;
+        })
+        .catch((e) => {
+          this.logout();
+          console.log(e);
+        });
+      this.isOT = false;
+      this.isRest = false;
+      this.isPersonalWork = false;
+      this.isForgetTimeKeeping = false;
+      this.ruleForm.numberRestDay = 0;
+      this.isRestBySlot = false;
+      this.isRestByDay = false;
+      this.isWorkFromHome = false;
+      this.isBusinessTravel = false;
+      this.ruleForm.slotId = "";
+      this.ruleForm.requestTypeId = "";
+      this.clearField();
+      if (categotyId == 1) {
+        this.createRequestDialogVisible = true;
+        this.createOTRequestDialogVisible = false;
+        this.createTimeKeepingRequestDialogVisible = false;
+      } else if (categotyId == 2) {
+        this.createOTRequestDialogVisible = true;
+        this.createRequestDialogVisible = false;
+        this.isOT = true;
+        this.createTimeKeepingRequestDialogVisible = false;
+      } else if (categotyId == 3) {
+        this.createTimeKeepingRequestDialogVisible = true;
+        this.createRequestDialogVisible = false;
+        this.createOTRequestDialogVisible = false;
+      }
+    },
+
+    showDeclineRequestDialog(id) {
+      this.requestId = id;
+      this.requestStatus.note = "Đề xuất của bạn bị từ chối!";
+      this.declineRequestDialogVisible = true;
+      this.createRequestDialogVisible = false;
+      this.createOTRequestDialogVisible = false;
+      this.createTimeKeepingRequestDialogVisible = false;
+    },
+
+    handleChange() {
+      this.clearField();
+      this.ruleForm.slotId = "";
+      if (this.ruleForm.numberRestDay >= 1) {
+        this.ruleForm.slotId = 1;
+        this.isRestBySlot = false;
+        this.isRestByDay = true;
+        this.resetField();
+      } else if (
+        this.ruleForm.numberRestDay < 1 &&
+        this.ruleForm.numberRestDay > 0
+      ) {
+        this.isRestBySlot = true;
+        this.isRestByDay = false;
+        this.resetField();
+      } else {
+        this.isRestBySlot = false;
+        this.isRestByDay = false;
+      }
+    },
+
+    selectType(typeId) {
+      this.clearField();
+      this.isOTBefore = false;
+      if (typeId == 5) {
+        this.isPersonalWork = true;
+        this.isRest = false;
+        this.isRestBySlot = false;
+        this.isRestByDay = false;
+      } else if (typeId == 1 || typeId == 2) {
+        this.isRest = true;
+        this.isPersonalWork = false;
+        this.ruleForm.numberRestDay = 0;
+        this.isRestBySlot = false;
+        this.isRestByDay = false;
+        this.ruleForm.slotId = "";
+      } else if (typeId == 3) {
+        this.isOTBefore = true;
+      } else if (typeId == 4) {
+        this.isForgetTimeKeeping = true;
+        this.isWorkFromHome = false;
+        this.isBusinessTravel = false;
+        this.ruleForm.slotId = "";
+        this.resetField();
+      } else if (typeId == 8) {
+        this.isForgetTimeKeeping = false;
+        this.isBusinessTravel = false;
+        this.isWorkFromHome = true;
+        this.ruleForm.slotId = 1;
+        this.resetField();
+      } else if (typeId == 10) {
+        this.isForgetTimeKeeping = false;
+        this.isWorkFromHome = false;
+        this.isBusinessTravel = true;
+        this.ruleForm.slotId = 1;
+        this.resetField();
+      }
+    },
+
+    resetField() {
+      this.$refs["ruleForm"].fields
+        .find((f) => f.prop == "startDate")
+        .resetField();
+      this.$refs["ruleForm"].fields
+        .find((f) => f.prop == "endDate")
+        .resetField();
+      this.$refs["ruleForm"].fields
+        .find((f) => f.prop == "startTime")
+        .resetField();
+      this.$refs["ruleForm"].fields
+        .find((f) => f.prop == "endTime")
+        .resetField();
+      this.$refs["ruleForm"].fields
+        .find((f) => f.prop == "requestContent")
+        .resetField();
+    },
+
+    clearField() {
+      this.ruleForm.startDate = "";
+      this.ruleForm.endDate = "";
+      this.ruleForm.startTime = "";
+      this.ruleForm.endTime = "";
+      this.ruleForm.requestContent = "";
+    },
+
+    setDateTime() {
+      // if (this.isPersonalWork) {
+      //   const date = new Date(this.ruleForm.startDate);
+      //   const date1 = new Date(this.ruleForm.startDate);
+      //   date1.setHours(8, 30, 0, 0);
+      //   this.ruleForm.startTime = date1;
+
+      //   if (this.ruleForm.requestTypeId != 7) {
+      //     date.setDate(date.getDate() + 2);
+      //   }
+      //   this.ruleForm.endDate = date;
+      //   this.ruleForm.endDate.setHours(18, 0, 0, 0);
+      //   this.ruleForm.endTime = this.ruleForm.endDate;
+      // }
+      //  else if (this.isRestByDay) {
+      //   const date = new Date(this.ruleForm.startDate);
+      //   date.setHours(0, 0, 0, 0);
+      //   this.ruleForm.startTime = date;
+      //   const date1 = new Date(this.ruleForm.endDate);
+      //   date1.setHours(23, 59, 59, 0);
+      //   this.ruleForm.endTime = date1;
+      // }
+      if (
+        this.isRestBySlot ||
+        this.createOTRequestDialogVisible ||
+        this.isForgetTimeKeeping
+      ) {
+        const date = new Date(this.ruleForm.startDate);
+        this.ruleForm.endDate = date;
+        const date1 = new Date(this.ruleForm.endDate);
+        if (this.ruleForm.slotId == 1) {
+          date.setHours(8, 30, 0, 0);
+          date1.setHours(12, 0, 0, 0);
+          this.ruleForm.startTime = date;
+          this.ruleForm.endTime = date1;
+        } else if (this.ruleForm.slotId == 2) {
+          date.setHours(13, 0, 0, 0);
+          date1.setHours(18, 0, 0, 0);
+          this.ruleForm.startTime = date;
+          this.ruleForm.endTime = date1;
+        }
+      }
+    },
+
+    disableOneDayAgoStartDate(date) {
+      const startWork = new Date();
+      startWork.setDate(startWork.getDate() - 1);
+      return date < startWork;
+    },
+
+    disableOneDayAgoEndDate(date) {
+      const startWork = new Date(this.ruleForm.startDate);
+      startWork.setDate(startWork.getDate() - 1);
+      return date < startWork;
+    },
+
+    disableOneDayAgoDate(date) {
+      if (this.isOTBefore) {
+        const startWork = new Date();
+        startWork.setDate(startWork.getDate() - 1);
+        return date < startWork;
+      }
     },
 
     logout() {
