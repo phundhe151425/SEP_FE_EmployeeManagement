@@ -57,7 +57,7 @@
     <h4 style="margin-left: 5%; margin-top: 2%">THÔNG TIN ĐỀ XUẤT</h4>
     <hr style="margin-bottom: 2%; margin-left: 5%; width: 80%" />
     <div class="row" style="display: flex">
-      <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 request">
+      <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 request1">
         <div class="infor">
           <label class="label" for="Nhân viên">Nhân viên: </label>
           <span class="detail">{{ request.user.fullName }}</span>
@@ -95,7 +95,7 @@
         </div>
         <div v-else-if="isForgetTimeKeeping">
           <div class="infor">
-            <label class="label" for="">Ngày quên chấm công: </label
+            <label class="label" for="">Ngày quên: </label
             ><span class="detail">{{ request.startDate }}</span>
           </div>
           <div class="infor">
@@ -135,7 +135,7 @@
         </div>
 
         <div class="infor1">
-          <label class="label" style="margin-right: 13%" for=""
+          <label class="label"  for=""
             >Nội dung đề xuất:
           </label>
           <p class="detail">{{ request.requestContent }}</p>
@@ -319,19 +319,19 @@ export default {
           this.request.startDate = moment(
             String(this.request.startDate)
           ).format("DD/MM/yyyy");
-          if (this.request.requestTypeId == 3) {
+          if (this.request.requestTypeId == 4 || this.request.requestTypeId == 5) {
             this.isOT = true;
             this.isForgetTimeKeeping = false;
             this.isWorkFromHome = false;
             this.isBusinessTravel = false;
-          } else if (this.request.requestTypeId == 4) {
+          } else if (this.request.requestTypeId == 6) {
             this.isOT = false;
             this.isForgetTimeKeeping = true;
             this.isWorkFromHome = false;
             this.isBusinessTravel = false;
           } else if (
-            this.request.requestTypeId == 8 ||
-            this.request.requestTypeId == 10
+            this.request.requestTypeId == 7 ||
+            this.request.requestTypeId == 8
           ) {
             this.isWorkFromHome = true;
             this.isBusinessTravel = true;
@@ -471,24 +471,34 @@ export default {
 }
 
 .request-detail .infor {
-  width: 65%;
+
   margin-bottom: 5%;
 }
 
 .request-detail .infor1 {
   display: flex;
-  width: 65%;
   margin-bottom: 5%;
 }
+
+.request-detail .request1 .label {
+  width: 25%;
+  /* border: solid 1px black; */
+  font-weight: bold;
+  font-size: 18px;
+}
+.request-detail .infor1 .label{
+   width: 38%;
+}
+
 .request-detail .label {
-  width: 50%;
+  width: 32%;
   /* border: solid 1px black; */
   font-weight: bold;
   font-size: 18px;
 }
 
 .request-detail .detail {
-  width: 70%;
+  width: 80%;
   /* font-weight: 10; */
   font-size: 18px;
 }

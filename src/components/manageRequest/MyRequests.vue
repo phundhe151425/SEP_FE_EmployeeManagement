@@ -1,6 +1,6 @@
 <template>
   <div class="manage-request">
-    <h3>Quản lý đề xuất</h3>
+    <h3>Đề xuất của tôi</h3>
     <hr style="margin-bottom: 5%" />
     <div style="padding-bottom: 20px">
       <div className="" style="width: 100%; margin: auto">
@@ -41,32 +41,6 @@
           </el-col>
         </el-row>
         <el-row :gutter="20">
-          <el-col :md="6" :lg="6" :xl="6" v-if="isModerator == false">
-            <div class="grid-content" style="margin-bottom: 20px">
-              <span>Phòng ban</span> &ensp;
-              <el-select
-                v-model="departmentId"
-                @change="getData"
-                placeholder="Chọn Phòng ban"
-              >
-                <el-option value="" label="Tất cả các phòng ban"></el-option>
-                <el-option
-                  v-for="item in departments"
-                  :key="item.department"
-                  :label="item.name"
-                  :value="item.id"
-                >
-                </el-option>
-              </el-select>
-            </div>
-          </el-col>
-
-          <el-col :md="6" :lg="6" :xl="6" v-else>
-            <div class="grid-content" style="margin-bottom: 20px">
-              <span>Phòng ban</span> &ensp;
-              <span>{{ departmentOfModerator }}</span>
-            </div>
-          </el-col>
 
           <el-col :md="6" :lg="6" :xl="6">
             <div class="grid-content" style="margin-bottom: 20px">
@@ -99,8 +73,8 @@
               />
             </div>
           </el-col>
-          <el-col :md="6" :lg="6" :xl="6">
-            <div style="text-align: right">
+          <el-col :md="6" :lg="6" :xl="6"  class="div-buttons">
+            <div class="div-buttons">
               <el-dropdown split-button type="danger">
                 Tạo đề xuất
                 <el-dropdown-menu slot="dropdown">
@@ -1451,7 +1425,7 @@ export default {
     selectType(typeId) {
       this.clearField();
       this.isOTBefore = false;
-      if (typeId == 5) {
+      if (typeId == 3) {
         this.isPersonalWork = true;
         this.isRest = false;
         this.isRestBySlot = false;
@@ -1463,21 +1437,21 @@ export default {
         this.isRestBySlot = false;
         this.isRestByDay = false;
         this.ruleForm.slotId = "";
-      } else if (typeId == 3) {
-        this.isOTBefore = true;
       } else if (typeId == 4) {
+        this.isOTBefore = true;
+      } else if (typeId == 6) {
         this.isForgetTimeKeeping = true;
         this.isWorkFromHome = false;
         this.isBusinessTravel = false;
         this.ruleForm.slotId = "";
         this.resetField();
-      } else if (typeId == 8) {
+      } else if (typeId == 7) {
         this.isForgetTimeKeeping = false;
         this.isBusinessTravel = false;
         this.isWorkFromHome = true;
         this.ruleForm.slotId = 1;
         this.resetField();
-      } else if (typeId == 10) {
+      } else if (typeId == 8) {
         this.isForgetTimeKeeping = false;
         this.isWorkFromHome = false;
         this.isBusinessTravel = true;

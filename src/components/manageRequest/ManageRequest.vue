@@ -99,8 +99,8 @@
               />
             </div>
           </el-col>
-          <el-col :md="6" :lg="6" :xl="6">
-            <div style="text-align: right">
+          <el-col :md="6" :lg="6" :xl="6" class="div-buttons">
+            <div class="div-buttons">
               <el-dropdown split-button type="danger">
                 Tạo đề xuất
                 <el-dropdown-menu slot="dropdown">
@@ -1141,7 +1141,7 @@ export default {
       ruleForm: {
         slotId: "",
         endDate: "",
-        requestTitle: null,
+        requestTitle: "",
         requestContent: "",
         startDate: "",
         requestTypeId: "",
@@ -1361,15 +1361,19 @@ export default {
           this.ruleForm.endTime = moment(String(this.ruleForm.endTime)).format(
             "HH:mm:ss"
           );
+          this.ruleForm.endDate = moment(
+                String(this.ruleForm.endDate )
+              ).format("yyyy-MM-DD");
           var request = {
             endDate: this.ruleForm.endDate,
-            requestTitle: null,
+            requestTitle: "",
             requestContent: this.ruleForm.requestContent,
             startDate: this.ruleForm.startDate,
             requestTypeId: this.ruleForm.requestTypeId,
             startTime: this.ruleForm.startTime,
             endTime: this.ruleForm.endTime,
           };
+          console.log(request)
           RequestService.save(request).then(() => {
             this.createRequestDialogVisible = false;
             this.createOTRequestDialogVisible = false;
@@ -1472,7 +1476,7 @@ export default {
     selectType(typeId) {
       this.clearField();
       this.isOTBefore = false;
-      if (typeId == 5) {
+      if (typeId == 3) {
         this.isPersonalWork = true;
         this.isRest = false;
         this.isRestBySlot = false;
@@ -1484,21 +1488,21 @@ export default {
         this.isRestBySlot = false;
         this.isRestByDay = false;
         this.ruleForm.slotId = "";
-      } else if (typeId == 3) {
-        this.isOTBefore = true;
       } else if (typeId == 4) {
+        this.isOTBefore = true;
+      } else if (typeId == 6) {
         this.isForgetTimeKeeping = true;
         this.isWorkFromHome = false;
         this.isBusinessTravel = false;
         this.ruleForm.slotId = "";
         this.resetField();
-      } else if (typeId == 8) {
+      } else if (typeId == 7) {
         this.isForgetTimeKeeping = false;
         this.isBusinessTravel = false;
         this.isWorkFromHome = true;
         this.ruleForm.slotId = 1;
         this.resetField();
-      } else if (typeId == 10) {
+      } else if (typeId == 8) {
         this.isForgetTimeKeeping = false;
         this.isWorkFromHome = false;
         this.isBusinessTravel = true;
@@ -1563,6 +1567,7 @@ export default {
         const date = new Date(this.ruleForm.startDate);
         this.ruleForm.endDate = date;
         const date1 = new Date(this.ruleForm.endDate);
+
         if (this.ruleForm.slotId == 1) {
           date.setHours(8, 30, 0, 0);
           date1.setHours(12, 0, 0, 0);
