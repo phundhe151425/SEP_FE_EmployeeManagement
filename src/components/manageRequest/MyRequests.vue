@@ -1313,7 +1313,7 @@ export default {
           );
           var request = {
             endDate: this.ruleForm.endDate,
-            requestTitle: null,
+            requestTitle: "",
             requestContent: this.ruleForm.requestContent,
             startDate: this.ruleForm.startDate,
             requestTypeId: this.ruleForm.requestTypeId,
