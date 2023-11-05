@@ -174,11 +174,11 @@
                 </router-link>
               </a>
             </li>
-            <li class="nav-item" v-if="isAdmin">
+            <li class="nav-item" v-if="currentUser">
               <a class="nav-link">
-                <router-link to="/manageTimeKeeping" class="nav-link sel">
+                <router-link to="/statisticTimeKeeping" class="nav-link sel">
                   <i class="el-icon-school"></i>
-                  Quản lý chấm công
+                  Thống kê chấm công
                 </router-link>
               </a>
             </li>

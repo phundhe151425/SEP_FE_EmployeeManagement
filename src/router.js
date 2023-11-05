@@ -93,8 +93,8 @@ const router = new Router({
             component: () => import("./components/logInLateOutEarly/LogInLateOutEarlyUser.vue"),
         },
         {
-            path: "/manageTimeKeeping",
-            component: () => import("./components/manageTimeKeeping/ManageTimeKeeping.vue"),
+            path: "/statisticTimeKeeping",
+            component: () => import("./components/statisticTimeKeeping/StatisticTimeKeeping.vue"),
         }
 
     ],
@@ -115,7 +115,8 @@ router.beforeEach((to, from, next) => {
         "/request",
         "/changePassword",
         "/myRequest",
-        "/editProfile"
+        "/editProfile",
+        "/manageTimeKeeping"
     ];
     const adminPages = [
         "/logCheckAdmin",
@@ -125,7 +126,7 @@ router.beforeEach((to, from, next) => {
         "/managePosition",
         "/manageDepartment",
         "/manageRequest",
-        "/manageTimeKeeping"
+        
     ];
     const managePages = [
         "/logCheckMod",

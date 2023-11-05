@@ -13,6 +13,13 @@ class TimeKeepingService {
         +"&size="+size+"&departmentId="+departmentId+"&from="+from+"&to="+to,{headers: authHeader()});
     }
 
+    getListAttendanceByUser(page, size, from, to) {
+        return httpCommon.get("/auth/attendance/get-list-attendance-by-user-id?page="+page
+        +"&size="+size+"&from="+from+"&to="+to,{headers: authHeader()});
+    }
+
+    
+
     changeStatus(id, data){
         return axios.post(BASE_URL +`/auth/request/update-status-request/${id}`, data,{headers: authHeader()});
     }
@@ -21,10 +28,7 @@ class TimeKeepingService {
         return httpCommon.get(`/auth/request/get-request-by-id/${id}`,{headers: authHeader()});
     }
 
-    getListRequestByUser(page, size, search, status, from, to) {
-        return httpCommon.get("/auth/request/get-list-request-by-user-id?page="+page
-        +"&size="+size+"&search="+search +"&status="+ status+"&from="+from+"&to="+to,{headers: authHeader()});
-    }
+   
 
     getRequestTypes(categoryId) {
         return axios.get( BASE_URL+"/auth/request-type/get-list-request-type-by-category-id?categoryId="+categoryId
