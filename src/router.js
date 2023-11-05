@@ -116,7 +116,7 @@ router.beforeEach((to, from, next) => {
         "/changePassword",
         "/myRequest",
         "/editProfile",
-        "/manageTimeKeeping"
+        "/statisticTimeKeeping"
     ];
     const adminPages = [
         "/logCheckAdmin",

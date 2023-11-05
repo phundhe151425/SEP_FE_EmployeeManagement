@@ -366,14 +366,13 @@ export default {
     this.value1[1] = moment(String(this.value1[1])).format("yyyy-MM-DD");
     this.value2[0] = moment(String(this.value2[0])).format("yyyy-MM-DD");
     this.value2[1] = moment(String(this.value2[1])).format("yyyy-MM-DD");
-    if (
-      this.$store.state.auth.user.roles[0] === "ROLE_ADMIN" ||
-      this.$store.state.auth.user.roles[0] === "ROLE_MODERATOR"
-    ) {
+    if (this.$store.state.auth.user.roles[0] === "ROLE_ADMIN") {
       this.getData();
       this.getAllDepartment();
       this.isAdmin = true;
+    } else if (this.$store.state.auth.user.roles[0] === "ROLE_MODERATOR") {
       this.isModerator = true;
+      this.getData();
     } else {
       this.getDataAttendanceByUser();
     }
