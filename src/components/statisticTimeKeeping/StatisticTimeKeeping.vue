@@ -353,7 +353,7 @@ export default {
       startDate: startDate,
       endDate: endDate,
       page: 0,
-      pageSize: 5,
+      pageSize: 10,
       search: "",
       date: "",
       totalItems: 0,
@@ -373,9 +373,9 @@ export default {
     } else if (this.$store.state.auth.user.roles[0] === "ROLE_MODERATOR") {
       this.isModerator = true;
       this.getData();
-    } else {
+    } 
       this.getDataAttendanceByUser();
-    }
+    
     this.name = this.$store.state.auth.user.fullName;
     this.department = this.$store.state.auth.user.departmentName;
   },
@@ -464,9 +464,11 @@ export default {
 
     handleClick(tab) {
       if (tab.name == "first") {
+        this.page = 0;
         this.getData();
         this.getAllDepartment();
       } else {
+        this.page = 0;
         this.getDataAttendanceByUser();
       }
     },
