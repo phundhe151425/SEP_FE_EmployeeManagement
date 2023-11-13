@@ -1,15 +1,14 @@
 import httpCommon from "@/http-common";
 import { BASE_URL } from "@/http-common";
 import axios from 'axios';
-// import authHeader from "@/services/auth-header";
-
+import authHeader from "@/services/auth-header";
 class UserService {
     saveUser(data) {
         let dataForm = new FormData(data)
         return httpCommon.post("/user/create", dataForm);
     }
     getData(page, size, departId, search, status) {
-        return httpCommon.get( "/user/data?page="+page+"&size="+size+"&departmentId="+departId+"&search="+search+"&status="+status );
+        return httpCommon.get( "/user/data?page="+page+"&size="+size+"&departmentId="+departId+"&search="+search+"&status="+status, authHeader());
     }
     profile(id){
         return httpCommon.get("/user/profile/"+ id);

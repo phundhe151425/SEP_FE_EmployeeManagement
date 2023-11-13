@@ -13,6 +13,11 @@ class AuthService {
             .then(response => {
                 if (response.data.token) {
                     localStorage.setItem('user', JSON.stringify(response.data));
+                    sessionStorage.setItem('user', JSON.stringify(response.data));
+                    console.log("sessionStorage")
+                    console.log(JSON.parse(sessionStorage.getItem('user')))
+                    console.log("localStorage")
+                    console.log(JSON.parse(localStorage.getItem('user')))
                 }
 
                 return response.data;
@@ -21,6 +26,7 @@ class AuthService {
 
     logout() {
         localStorage.removeItem('user');
+        sessionStorage.removeItem('user');
     }
 
 

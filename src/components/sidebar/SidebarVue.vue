@@ -185,7 +185,7 @@
                                 </router-link>
                             </a>
                         </li>
-                            <li class="nav-item" v-if="isAdmin">
+                        <li class="nav-item" v-if="isAdmin">
                             <a class="nav-link active" aria-current="page" href="/profile">
                                 <router-link to="/managePosition" class="nav-link sel">
                                     <font-awesome-icon icon="home"/>
@@ -193,7 +193,14 @@
                                 </router-link>
                             </a>
                         </li>
-
+                        <li class="nav-item" v-if="isAdmin || isModerator">
+                            <a class="nav-link active" aria-current="page" href="/profile">
+                                <router-link to="/report" class="nav-link sel">
+                                    <font-awesome-icon icon="home"/>
+                                    Báo cáo chấm công
+                                </router-link>
+                            </a>
+                        </li>
 
 
                     </ul>
@@ -211,7 +218,7 @@ export default {
     },
     props: {},
     created() {
-    this.getUser()
+    // this.getUser()
     },
     computed: {
         currentUser() {

@@ -80,6 +80,10 @@ const router = new Router({
             path: "/inLateOutEarlyUser",
             component: () => import("./components/logInLateOutEarly/LogInLateOutEarlyUser.vue"),
         },
+        {
+            path: "/report",
+            component: () => import("./components/report/ReportSalary.vue"),
+        },
 
     ],
 });
@@ -104,10 +108,12 @@ router.beforeEach((to, from, next) => {
         "/manageHoliday",
         "/managePosition",
         "/manageDepartment",
+        "/report",
     ];
     const managePages = [
         "/logCheckMod",
-        "/inLateOutEarlyMod"
+        "/inLateOutEarlyMod",
+        "/report",
     ];
     const authRequired = !publicPages.includes(to.path);
     const loggedIn = localStorage.getItem("user");
