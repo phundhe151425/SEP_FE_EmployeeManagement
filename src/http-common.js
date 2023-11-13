@@ -1,5 +1,4 @@
 import axios from "axios";
-
 export const BASE_URL = 'http://localhost:2000/api'; // url backend
 
 export const jsonAPI = axios.create({
@@ -16,7 +15,6 @@ export default axios.create({
     headers: {
         enctype: "multipart/form-data",
         "Content-type": 'application/octet-stream',
-
         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         processData: false,
     }
