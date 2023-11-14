@@ -152,6 +152,14 @@
             </li>
             <li class="nav-item" v-if="currentUser">
               <a class="nav-link">
+                <router-link to="/statisticTimeKeeping" class="nav-link sel">
+                  <i class="el-icon-view"></i>
+                  Thống kê chấm công
+                </router-link>
+              </a>
+            </li>
+            <li class="nav-item" v-if="currentUser">
+              <a class="nav-link">
                 <router-link to="/inLateOutEarlyUser" class="nav-link sel">
                   <i class="el-icon-school"></i>
                   Đến muộn/ Về sớm cá nhân
@@ -174,26 +182,19 @@
                 </router-link>
               </a>
             </li>
-            <li class="nav-item" v-if="currentUser">
-              <a class="nav-link">
-                <router-link to="/statisticTimeKeeping" class="nav-link sel">
-                  <i class="el-icon-school"></i>
-                  Thống kê chấm công
-                </router-link>
-              </a>
-            </li>
+
             <li class="nav-item" v-if="isAdmin">
-              <a class="nav-link active" aria-current="page" href="/profile">
+              <a class="nav-link active" aria-current="page">
                 <router-link to="/manageHoliday" class="nav-link sel">
-                  <font-awesome-icon icon="home" />
+                  <i class="el-icon-tickets"></i>
                   Quản lý ngày nghỉ
                 </router-link>
               </a>
             </li>
             <li class="nav-item" v-if="isAdmin">
-              <a class="nav-link active" aria-current="page" href="/profile">
+              <a class="nav-link active" aria-current="page">
                 <router-link to="/manageDepartment" class="nav-link sel">
-                  <font-awesome-icon icon="home" />
+                  <i class="el-icon-tickets"></i>
                   Quản lý phòng ban
                 </router-link>
               </a>
@@ -201,7 +202,7 @@
             <li class="nav-item" v-if="isAdmin">
               <a class="nav-link active" aria-current="page">
                 <router-link to="/managePosition" class="nav-link sel">
-                  <font-awesome-icon icon="home" />
+                  <i class="el-icon-tickets"></i>
                   Quản lý chức vụ
                 </router-link>
               </a>
@@ -209,7 +210,7 @@
             <li class="nav-item" v-if="isAdmin || isModerator">
               <a class="nav-link active" aria-current="page">
                 <router-link to="/manageRequest" class="nav-link sel">
-                  <font-awesome-icon icon="home" />
+                  <i class="el-icon-tickets"></i>
                   Quản lý đề xuất
                 </router-link>
               </a>
@@ -217,7 +218,7 @@
             <li class="nav-item" v-if="currentUser">
               <a class="nav-link active" aria-current="page">
                 <router-link to="/myRequest" class="nav-link sel">
-                  <font-awesome-icon icon="home" />
+                  <i class="el-icon-tickets"></i>
                   Đề xuất của tôi
                 </router-link>
               </a>

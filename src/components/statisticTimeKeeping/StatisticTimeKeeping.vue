@@ -373,9 +373,9 @@ export default {
     } else if (this.$store.state.auth.user.roles[0] === "ROLE_MODERATOR") {
       this.isModerator = true;
       this.getData();
-    } 
+    }
       this.getDataAttendanceByUser();
-    
+
     this.name = this.$store.state.auth.user.fullName;
     this.department = this.$store.state.auth.user.departmentName;
   },
@@ -438,7 +438,8 @@ export default {
           this.totalItems = response.data.totalElements;
         })
         .catch((e) => {
-          this.logout();
+          if(this.isAdmin == false && this.isModerator == false){
+          this.logout();}
           console.log(e);
         });
     },
@@ -449,7 +450,6 @@ export default {
           this.departments = response.data;
         })
         .catch((e) => {
-          this.logout();
           console.log(e);
         });
     },
@@ -475,7 +475,7 @@ export default {
 
     logout() {
       this.$store.dispatch("auth/logout");
-      window.location.replace("http://localhost:2001/login");
+      this.$router.push("/login");
       localStorage.removeItem("user");
     },
 

@@ -109,16 +109,6 @@
               >
                 <i class="el-icon-delete" style="width: 30px"></i>
               </button>
-
-              <button v-if="data.row.status == 1" class="btn-action">
-                <!--                                @click="changeStatus(-->
-                <!--                                data.row.id,-->
-                <!--                                data.row.fullName,-->
-                <!--                                data.row.status) "-->
-                <i class="el-icon-unlock" style="width: 30px"></i>
-              </button>
-
-              <!--          </div>-->
             </el-table-column>
           </el-table>
         </div>
@@ -155,14 +145,13 @@
                 v-model="ruleForm.positionName"
                 name="positionName"
                 autocomplete="off"
-                maxlength="50"
               ></el-input>
             </el-form-item>
           </div>
         </div>
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <el-form-item label="Phân quyền" prop="role">
+            <el-form-item label="Phân quyền" prop="roleId">
               <el-select
                 v-model="ruleForm.roleId"
                 @change="getData"
@@ -232,14 +221,13 @@
                 v-model="ruleForm.positionName"
                 name="positionName"
                 autocomplete="off"
-                maxlength="50"
               ></el-input>
             </el-form-item>
           </div>
         </div>
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <el-form-item label="Phân quyền" prop="role">
+            <el-form-item label="Phân quyền" prop="roleId">
               <el-select
                 v-model="ruleForm.roleId"
                 @change="getData"
@@ -365,6 +353,13 @@ export default {
             trigger: "blur",
           },
         ],
+        roleId: [
+          {
+            required: true,
+            message: "Vui lòng chọn quyền!",
+            trigger: "change",
+          },
+        ],
       },
       positions: [],
       page: 0,
@@ -394,7 +389,7 @@ export default {
             this.createPositionDialogVisible = false;
             this.deletePositionDialogVisible = false;
             this.$notify.success({
-              message: "Tạo chức vụ thành công",
+              message: "Tạo chức vụ thành công!",
               title: "Success",
               timer: 2000,
               timerProgressBar: true,
@@ -422,7 +417,7 @@ export default {
               this.createPositionDialogVisible = false;
               this.deletePositionDialogVisible = false;
               this.$notify.success({
-                message: "Sửa thành công",
+                message: "Sửa chức vụ thành công!",
                 title: "Success",
                 timer: 2000,
                 timerProgressBar: true,
@@ -446,7 +441,7 @@ export default {
       this.createPositionDialogVisible = true;
       this.editPositionDialogVisible = false;
       this.deletePositionDialogVisible = false;
-      this.ruleForm = {};
+      this.ruleForm.positionName = "";
     },
 
     showEditPositionDialog(id) {
@@ -459,7 +454,6 @@ export default {
           console.log(response.data);
           this.ruleForm.positionName = response.data.name;
           this.ruleForm.roleId = response.data.role[0].id;
-
         })
         .catch((e) => {
           console.log(e);
@@ -490,7 +484,7 @@ export default {
           this.createPositionDialogVisible = false;
           this.deletePositionDialogVisible = false;
           this.$notify.success({
-            message: "Xóa thành công",
+            message: "Xóa chức vụ thành công!",
             title: "Success",
             timer: 2000,
             timerProgressBar: true,
@@ -502,7 +496,7 @@ export default {
           this.createPositionDialogVisible = false;
           this.deletePositionDialogVisible = false;
           this.$notify.error({
-            message: "Không thể xóa chức vụ!",
+            message: "Không thể xóa chức vụ này vì đã được sử dụng!",
             title: "Failed",
             timer: 2000,
             timerProgressBar: true,
@@ -513,8 +507,8 @@ export default {
     },
 
     getData() {
-      PositionService.getPositions(this.page, this.pageSize, this.search).then(
-        (response) => {
+      PositionService.getPositions(this.page, this.pageSize, this.search)
+        .then((response) => {
           this.positions = response.data.content;
           for (const key in this.positions) {
             if (Object.hasOwnProperty.call(this.positions, key)) {
@@ -525,8 +519,11 @@ export default {
           }
           this.page = response.data.pageable.pageNumber;
           this.totalItems = response.data.totalElements;
-        }
-      );
+        })
+        .catch((e) => {
+          this.logout();
+          console.log(e);
+        });
     },
 
     // getAllYear() {
@@ -536,10 +533,21 @@ export default {
     // },
 
     getAllRole() {
-      PositionService.getRoles(1, 5, "").then((response) => {
-        console.log(response.data);
-        this.roles = response.data.content;
-      });
+      PositionService.getRoles(1, 5, "")
+        .then((response) => {
+          console.log(response.data);
+          this.roles = response.data.content;
+        })
+        .catch((e) => {
+          this.logout();
+          console.log(e);
+        });
+    },
+
+    logout() {
+      this.$store.dispatch("auth/logout");
+      this.$router.push("/login");
+      localStorage.removeItem("user");
     },
 
     handlePageChange(value) {
@@ -609,24 +617,6 @@ export default {
   border: none;
   border-radius: 5px;
   padding: 6px 36px;
-}
-
-.el-table .tt1 {
-  cursor: default;
-  color: black;
-  background-color: #75c4c0;
-  border: none;
-  border-radius: 5px;
-  padding: 3px 20px;
-}
-
-.el-table .tt2 {
-  cursor: default;
-  color: black;
-  background-color: #ed9696;
-  border: none;
-  border-radius: 5px;
-  padding: 3px 20px;
 }
 
 .el-table .btn-action {
@@ -702,7 +692,7 @@ input:checked + .slider:before {
 }
 
 /* Rounded sliders */
-.slider.round {
+.manage-position .slider.round {
   border-radius: 34px;
 }
 
@@ -710,7 +700,7 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-.loading {
+.manage-position .loading {
   position: absolute;
   z-index: 1;
   width: 100%;
@@ -721,68 +711,68 @@ input:checked + .slider:before {
   /* background: rgba(0, 0, 0, 0.479); */
 }
 
-.loading img {
+.manage-position .loading img {
   width: 25rem;
 }
 
 @media only screen and (min-width: 150px) {
-  .el-col-md-6 {
+  .manage-position .el-col-md-6 {
     width: 108%;
   }
 
-  .buttons {
+  .manage-position .buttons {
     text-align: left;
   }
 }
 
 @media only screen and (min-width: 992px) {
-  .el-col-md-6 {
+  .manage-position .el-col-md-6 {
     width: 100%;
   }
 
-  .buttons {
+  .manage-position .buttons {
     text-align: left;
   }
 }
 
 @media only screen and (min-width: 1440px) {
-  .el-col-md-6 {
+  .manage-position .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-position .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-position .div-buttons {
     float: right;
   }
 }
 
 @media only screen and (min-width: 1689px) {
-  .el-col-md-6 {
+  .manage-position .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-position .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-position .div-buttons {
     float: right;
   }
 }
 
 @media only screen and (min-width: 1920px) {
-  .el-col-md-6 {
+  .manage-position .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-position .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-position .div-buttons {
     float: right;
   }
 }

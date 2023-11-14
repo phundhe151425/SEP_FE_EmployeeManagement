@@ -1332,7 +1332,6 @@ export default {
           this.departments = response.data;
         })
         .catch((e) => {
-          this.logout();
           console.log(e);
         });
     },
@@ -1343,7 +1342,6 @@ export default {
           this.requestCategories = response.data.content;
         })
         .catch((e) => {
-          this.logout();
           console.log(e);
         });
     },
@@ -1662,7 +1660,7 @@ export default {
 
     logout() {
       this.$store.dispatch("auth/logout");
-      window.location.replace("http://localhost:2001/login");
+     this.$router.push("/login");
       localStorage.removeItem("user");
     },
     handlePageChange(value) {

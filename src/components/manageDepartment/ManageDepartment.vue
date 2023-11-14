@@ -5,25 +5,6 @@
     <div style="padding-bottom: 20px">
       <div className="" style="width: 100%; margin: auto">
         <el-row :gutter="20">
-          <!-- <el-col :md="6" :lg="6" :xl="6">
-            <div class="grid-content" style="margin-bottom: 20px">
-              <span>Năm</span> &ensp;
-              <el-select
-                v-model="year"
-                @change="getData"
-                placeholder="Chọn Phòng ban"
-              >
-                <el-option
-                  v-for="item in years"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                >
-                </el-option>
-              </el-select>
-            </div>
-          </el-col> -->
-
           <el-col :md="6" :lg="6" :xl="6" style="margin-bottom: 20px">
             <div class="grid-content">
               <span style="">Tìm kiếm</span> &ensp;
@@ -109,16 +90,6 @@
               >
                 <i class="el-icon-delete" style="width: 30px"></i>
               </button>
-
-              <button v-if="data.row.status == 1" class="btn-action">
-                <!--                                @click="changeStatus(-->
-                <!--                                data.row.id,-->
-                <!--                                data.row.fullName,-->
-                <!--                                data.row.status) "-->
-                <i class="el-icon-unlock" style="width: 30px"></i>
-              </button>
-
-              <!--          </div>-->
             </el-table-column>
           </el-table>
         </div>
@@ -155,7 +126,6 @@
                 v-model="ruleForm.name"
                 name="positionName"
                 autocomplete="off"
-                maxlength="50"
               ></el-input>
             </el-form-item>
           </div>
@@ -213,7 +183,6 @@
                 v-model="ruleForm.name"
                 name="positionName"
                 autocomplete="off"
-                maxlength="50"
               ></el-input>
             </el-form-item>
           </div>
@@ -318,10 +287,10 @@ export default {
             message: "Vui lòng nhập tên phòng ban!",
             trigger: "blur",
           },
-            {
+          {
             min: 1,
-            max: 100,
-            message: "Tên phòng ban từ 1 đến 100 kí tự",
+            max: 255,
+            message: "Tên phòng ban từ 1 đến 255 kí tự",
             trigger: "blur",
           },
         ],
@@ -349,9 +318,11 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           DepartmentService.save(this.ruleForm).then(() => {
-            this.createPositionDialogVisible = false;
+            this.createDepartmentDialogVisible = false;
+            this.editDepartmentDialogVisible = false;
+            this.deleteDepartmentDialogVisible = false;
             this.$notify.success({
-              message: "Tạo chức vụ thành công",
+              message: "Tạo phòng ban thành công!",
               title: "Success",
               timer: 2000,
               timerProgressBar: true,
@@ -381,7 +352,7 @@ export default {
             this.editDepartmentDialogVisible = false;
             this.deleteDepartmentDialogVisible = false;
             this.$notify.success({
-              message: "Sửa thành công",
+              message: "Sửa phòng ban thành công!",
               title: "Success",
               timer: 2000,
               timerProgressBar: true,
@@ -403,7 +374,7 @@ export default {
       this.createDepartmentDialogVisible = true;
       this.editDepartmentDialogVisible = false;
       this.deleteDepartmentDialogVisible = false;
-      this.ruleForm = {};
+      this.ruleForm.name = "";
     },
 
     showEditDepartmentDialog(id) {
@@ -443,7 +414,7 @@ export default {
           this.createDepartmentDialogVisible = false;
           this.deleteDepartmentDialogVisible = false;
           this.$notify.success({
-            message: "Xóa thành công",
+            message: "Xóa phòng ban thành công!",
             title: "Success",
             timer: 2000,
             timerProgressBar: true,
@@ -455,7 +426,7 @@ export default {
           this.createDepartmentDialogVisible = false;
           this.deleteDepartmentDialogVisible = false;
           this.$notify.error({
-            message: "Không thể xóa phòng ban!",
+            message: "Không thể xóa phòng này vì đã được sử dụng!",
             title: "Failed",
             timer: 2000,
             timerProgressBar: true,
@@ -466,22 +437,23 @@ export default {
     },
 
     getData() {
-      DepartmentService.getDepartments(
-        this.page,
-        this.pageSize,
-        this.search
-      ).then((response) => {
-        this.departments = response.data.content;
-        for (const key in this.departments) {
-          if (Object.hasOwnProperty.call(this.departments, key)) {
-            this.departments[key].createdDate = moment(
-              String(this.departments[key].createdDate)
-            ).format("DD/MM/yyyy");
+      DepartmentService.getDepartments(this.page, this.pageSize, this.search)
+        .then((response) => {
+          this.departments = response.data.content;
+          for (const key in this.departments) {
+            if (Object.hasOwnProperty.call(this.departments, key)) {
+              this.departments[key].createdDate = moment(
+                String(this.departments[key].createdDate)
+              ).format("DD/MM/yyyy");
+            }
           }
-        }
-        this.page = response.data.pageable.pageNumber;
-        this.totalItems = response.data.totalElements;
-      });
+          this.page = response.data.pageable.pageNumber;
+          this.totalItems = response.data.totalElements;
+        })
+        .catch((e) => {
+          this.logout();
+          console.log(e);
+        });
     },
 
     // getAllYear() {
@@ -489,8 +461,11 @@ export default {
     //     this.years = response.data;
     //   });
     // },
-
-
+    logout() {
+      this.$store.dispatch("auth/logout");
+      this.$router.push("/login");
+      localStorage.removeItem("user");
+    },
 
     handlePageChange(value) {
       this.page = value - 1;

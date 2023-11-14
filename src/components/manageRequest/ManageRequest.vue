@@ -1194,9 +1194,9 @@ export default {
             trigger: "blur",
           },
           {
-            min: 3,
+            min: 1,
             max: 255,
-            message: "Nội dung ghi chú từ 3 đến 255 kí tự",
+            message: "Nội dung ghi chú từ 1 đến 255 kí tự",
             trigger: "blur",
           },
         ],
@@ -1236,9 +1236,9 @@ export default {
             trigger: "blur",
           },
           {
-            min: 3,
+            min: 1,
             max: 255,
-            message: "Nội dung từ 3 đến 255 kí tự",
+            message: "Nội dung từ 1 đến 255 kí tự",
             trigger: "blur",
           },
         ],
@@ -1385,7 +1385,6 @@ export default {
           this.departments = response.data;
         })
         .catch((e) => {
-          this.logout();
           console.log(e);
         });
     },
@@ -1396,7 +1395,6 @@ export default {
           this.requestCategories = response.data.content;
         })
         .catch((e) => {
-          this.logout();
           console.log(e);
         });
     },
@@ -1719,7 +1717,7 @@ export default {
 
     logout() {
       this.$store.dispatch("auth/logout");
-      window.location.replace("http://localhost:2001/login");
+       this.$router.push("/login");
       localStorage.removeItem("user");
     },
     handlePageChange(value) {

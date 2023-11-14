@@ -41,6 +41,8 @@
                     placeholder="Pick a date"
                     v-model="ruleForm.birthDay"
                     style="width: 100%"
+                    format="dd/MM/yyyy"
+                    :clearable="false"
                   ></el-date-picker>
                 </el-form-item>
               </el-form-item>
@@ -85,7 +87,7 @@ export default {
     };
     var checkAddress = (rule, value, callback) => {
       var re =
-        /^[\sa-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s\\W|_]+$/;
+        /^[\sa-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸ\\s\\W|,-_]+$/;
       if (re.test(value) == false) {
         callback(new Error("Vui lòng nhập đúng định dạng địa chỉ"));
       } else {
@@ -113,8 +115,9 @@ export default {
             trigger: "blur",
           },
           {
-            min: 3,
-            message: "Tên có tối thiểu 3 chữ cái",
+            min: 1,
+            max: 200,
+            message: "Họ tên từ 1 đến 200 kí tự!",
             trigger: "blur",
           },
           {
@@ -128,6 +131,12 @@ export default {
             message: "Vui lòng nhập số điện thoại!",
             trigger: "blur",
           },
+           {
+            min: 1,
+            max: 11,
+            message: "Số điện thoại từ 1 đến 11 kí tự!",
+            trigger: "blur",
+          },
           {
             validator: checkPhone,
             trigger: "blur",
@@ -137,6 +146,12 @@ export default {
           {
             required: true,
             message: "Vui lòng nhập địa chỉ",
+            trigger: "blur",
+          },
+          {
+            min: 1,
+            max: 255,
+            message: "Địa chỉ từ 1 đến 255 kí tự!",
             trigger: "blur",
           },
           {
@@ -248,7 +263,6 @@ export default {
 .edit-profile .left .el-form-item__error {
   margin-left: 22%;
 }
-
 
 .edit-profile .btn {
   border-radius: 15px;
