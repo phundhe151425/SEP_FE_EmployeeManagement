@@ -63,7 +63,7 @@ const router = new Router({
             path: "/myRequest",
             component: () => import("./components/manageRequest/MyRequests.vue"),
         },
-        
+
         {
             path: "/calendar",
             component: () => import("./components/calendar/calendarReport.vue"),
@@ -91,6 +91,10 @@ const router = new Router({
         {
             path: "/inLateOutEarlyUser",
             component: () => import("./components/logInLateOutEarly/LogInLateOutEarlyUser.vue"),
+        },
+        {
+            path: "/report",
+            component: () => import("./components/report/ReportSalary.vue"),
         },
         {
             path: "/statisticTimeKeeping",
@@ -125,13 +129,16 @@ router.beforeEach((to, from, next) => {
         "/manageHoliday",
         "/managePosition",
         "/manageDepartment",
+        "/report",
         "/manageRequest",
-        
+
     ];
     const managePages = [
         "/logCheckMod",
         "/inLateOutEarlyMod",
         "/manageRequest",
+        "/inLateOutEarlyMod",
+        "/report",
     ];
     const authRequired = !publicPages.includes(to.path);
     const loggedIn = localStorage.getItem("user");
