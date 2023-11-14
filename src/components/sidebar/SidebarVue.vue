@@ -260,7 +260,7 @@ export default {
   methods: {
     logOut() {
       this.$store.dispatch("auth/logout");
-      window.location.replace("http://localhost:2001/login");
+      window.location.replace("/login");
     },
   },
 };

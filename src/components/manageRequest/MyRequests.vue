@@ -1660,7 +1660,7 @@ export default {
 
     logout() {
       this.$store.dispatch("auth/logout");
-     this.$router.push("/login");
+     window.location.replace("/login");
       localStorage.removeItem("user");
     },
     handlePageChange(value) {
