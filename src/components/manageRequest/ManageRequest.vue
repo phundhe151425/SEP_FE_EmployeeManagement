@@ -6,7 +6,7 @@
       <div className="" style="width: 100%; margin: auto">
         <el-row :gutter="20">
           <el-col :md="6" :lg="6" :xl="6" style="margin-bottom: 20px">
-            <div class="grid-content">
+            <div class="">
               <span style="">Từ ngày</span> &ensp;
 
               <el-date-picker
@@ -25,7 +25,7 @@
           </el-col>
 
           <el-col :md="6" :lg="6" :xl="6" style="margin-bottom: 20px">
-            <div class="grid-content">
+            <div class="">
               <span style="">Đến ngày</span> &ensp;
 
               <el-date-picker
@@ -45,7 +45,7 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :md="6" :lg="6" :xl="6" v-if="isModerator == false">
-            <div class="grid-content" style="margin-bottom: 20px">
+            <div class="" style="margin-bottom: 20px">
               <span>Phòng ban</span> &ensp;
               <el-select
                 v-model="departmentId"
@@ -65,14 +65,14 @@
           </el-col>
 
           <el-col :md="6" :lg="6" :xl="6" v-else>
-            <div class="grid-content" style="margin-bottom: 20px">
+            <div class="" style="margin-bottom: 20px">
               <span>Phòng ban</span> &ensp;
               <span>{{ departmentOfModerator }}</span>
             </div>
           </el-col>
 
           <el-col :md="6" :lg="6" :xl="6">
-            <div class="grid-content" style="margin-bottom: 20px">
+            <div class="" style="margin-bottom: 20px">
               <span>Trạng thái</span> &ensp;
               <el-select
                 v-model="status"
@@ -91,7 +91,7 @@
           </el-col>
 
           <el-col :md="6" :lg="6" :xl="6" style="margin-bottom: 20px">
-            <div class="grid-content">
+            <div class="">
               <span style="">Tìm kiếm</span> &ensp;
               <el-input
                 v-model="search"
@@ -1819,26 +1819,26 @@ export default {
   border-radius: 5px;
   padding: 3px 20px;
 }
-.el-table .btn-action {
+.manage-request .el-table .btn-action {
   border: none;
   padding: 5px 5px;
   background-color: #f8cbad;
   border-radius: 5px;
 }
 
-.el-table .btn-action:hover {
+.manage-request .el-table .btn-action:hover {
   border: none;
   padding: 5px 5px;
   background-color: #f4e4d4;
   border-radius: 5px;
 }
 
-.el-table--enable-row-hover .el-table__body tr:hover > td {
+.manage-request .el-table--enable-row-hover .el-table__body tr:hover > td {
   background-color: #c9f5eb !important;
 }
 
 /* The switch - the box around the slider */
-.switch {
+.manage-request .switch {
   position: relative;
   display: inline-block;
   width: 60px;
@@ -1846,14 +1846,14 @@ export default {
 }
 
 /* Hide default HTML checkbox */
-.switch input {
+.manage-request .switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
 /* The slider */
-.slider {
+.manage-request .slider {
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -1865,7 +1865,7 @@ export default {
   transition: 0.4s;
 }
 
-.slider:before {
+.manage-request .slider:before {
   position: absolute;
   content: "";
   height: 26px;
@@ -1877,30 +1877,30 @@ export default {
   transition: 0.4s;
 }
 
-input:checked + .slider {
+.manage-request input:checked + .slider {
   background-color: #2196f3;
 }
 
-input:focus + .slider {
+.manage-request input:focus + .slider {
   box-shadow: 0 0 1px #2196f3;
 }
 
-input:checked + .slider:before {
+.manage-request input:checked + .slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
 }
 
 /* Rounded sliders */
-.slider.round {
+.manage-request .slider.round {
   border-radius: 34px;
 }
 
-.slider.round:before {
+.manage-request .slider.round:before {
   border-radius: 50%;
 }
 
-.loading {
+.manage-request .loading {
   position: absolute;
   z-index: 1;
   width: 100%;
@@ -1911,68 +1911,68 @@ input:checked + .slider:before {
   /* background: rgba(0, 0, 0, 0.479); */
 }
 
-.loading img {
+.manage-request .loading img {
   width: 25rem;
 }
 
 @media only screen and (min-width: 150px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 108%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: left;
   }
 }
 
 @media only screen and (min-width: 992px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 100%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: left;
   }
 }
 
 @media only screen and (min-width: 1440px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-request .div-buttons {
     float: right;
   }
 }
 
 @media only screen and (min-width: 1689px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-request .div-buttons {
     float: right;
   }
 }
 
 @media only screen and (min-width: 1920px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-request .div-buttons {
     float: right;
   }
 }

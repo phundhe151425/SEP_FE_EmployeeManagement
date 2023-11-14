@@ -709,7 +709,6 @@
                   <el-time-picker
                     v-model="ruleForm.startTime"
                     placeholder="Chọn thời gian"
-                     
                   >
                   </el-time-picker>
                 </el-form-item>
@@ -917,7 +916,7 @@
                   <el-time-picker
                     v-model="ruleForm.startTime"
                     placeholder="Chọn thời gian"
-                     :picker-options="{
+                    :picker-options="{
                       selectableRange: '8:30:00 - 18:00:00',
                     }"
                   >
@@ -1660,7 +1659,7 @@ export default {
 
     logout() {
       this.$store.dispatch("auth/logout");
-     window.location.replace("/login");
+      window.location.replace("/login");
       localStorage.removeItem("user");
     },
     handlePageChange(value) {
@@ -1859,63 +1858,63 @@ input:checked + .slider:before {
 }
 
 @media only screen and (min-width: 150px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 108%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: left;
   }
 }
 
 @media only screen and (min-width: 992px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 100%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: left;
   }
 }
 
 @media only screen and (min-width: 1440px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-request .div-buttons {
     float: right;
   }
 }
 
 @media only screen and (min-width: 1689px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-request .div-buttons {
     float: right;
   }
 }
 
 @media only screen and (min-width: 1920px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-request .div-buttons {
     float: right;
   }
 }

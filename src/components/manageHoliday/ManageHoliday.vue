@@ -863,63 +863,63 @@ input:checked + .slider:before {
 }
 
 @media only screen and (min-width: 150px) {
-  .el-col-md-6 {
+  .manage-holiday .el-col-md-6 {
     width: 108%;
   }
 
-  .buttons {
+  .manage-holiday .buttons {
     text-align: left;
   }
 }
 
 @media only screen and (min-width: 992px) {
-  .el-col-md-6 {
+  .manage-holiday .el-col-md-6 {
     width: 100%;
   }
 
-  .buttons {
+  .manage-holiday .buttons {
     text-align: left;
   }
 }
 
 @media only screen and (min-width: 1440px) {
-  .el-col-md-6 {
+  .manage-holiday .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-holiday .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-holiday .div-buttons {
     float: right;
   }
 }
 
 @media only screen and (min-width: 1689px) {
-  .el-col-md-6 {
+  .manage-holiday .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-holiday .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-holiday .div-buttons {
     float: right;
   }
 }
 
 @media only screen and (min-width: 1920px) {
-  .el-col-md-6 {
+  .manage-holiday .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-holiday .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-holiday .div-buttons {
     float: right;
   }
 }
