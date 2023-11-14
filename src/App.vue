@@ -1,7 +1,7 @@
 <template>
   <div id="app">
       <SidebarVue />
-      <div class="container-fluid" style="">
+      <div class="container-fluid" style="margin-top: 100px">
         <DialogCreateUser></DialogCreateUser>
           <router-view/>
       </div>
