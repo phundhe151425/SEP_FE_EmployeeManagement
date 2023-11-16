@@ -38,7 +38,6 @@
           </el-col>
           <el-col :md="6" :lg="6" :xl="6" class="div-buttons">
             <div class="grid-content div-buttons">
-             
               <el-button
                 class="buttons btn-add"
                 type="danger"
@@ -246,19 +245,23 @@
           </div>
         </div>
         <div class="row">
-      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <el-form-item label="Chọn nhân viên" prop="selectedOption">
-          <el-select v-model="valueSelect" placeholder="Chọn" @change="handleUserChange">
-            <el-option
-              v-for="item in selectedOption"
-              :key="item.id"
-              :label="item.fullName"
-              :value="item.id"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-      </div>
-    </div>
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <el-form-item label="Chọn nhân viên" prop="selectedOption">
+              <el-select
+                v-model="valueSelect"
+                placeholder="Chọn"
+                @change="handleUserChange"
+              >
+                <el-option
+                  v-for="item in selectedOption"
+                  :key="item.id"
+                  :label="item.fullName"
+                  :value="item.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+        </div>
         <div class="row" style="display: flex; justify-content: flex-end">
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
             <div style="bottom: 40px">
@@ -280,7 +283,7 @@
                   class="btn btn-success"
                   type="primary"
                   style="width: 90%"
-                  @click="submitForm('ruleForm')"
+                  @click="submitForm()"
                   >Lưu</el-button
                 >
               </el-form-item>
@@ -351,8 +354,8 @@ export default {
       search: "",
       date: "",
       totalItems: 0,
-      selectedOption:[],
-      valueSelect:"",
+      selectedOption: [],
+      valueSelect: "",
       ruleForm: {
         contractName: "",
         contractFile: null,
@@ -390,56 +393,57 @@ export default {
   created() {
     this.getData();
     this.getEmployee();
-
   },
   methods: {
-    // submitForm() {
-    //   // this.$refs[formName].validate((valid) => {
-    //   //   if (valid) {
+    submitForm() {
+      //   // this.$refs[formName].validate((valid) => {
+      //   //   if (valid) {
 
-    //   const formData = new FormData();
-    //   formData.append("contractName", this.ruleForm.contractName);
-    //   formData.append("contractFile", this.ruleForm.contractFile);
-    //   formData.append("userId", this.ruleForm.userId);
+      console.log("123456");
+      console.log(this.ruleForm.contractName);
+      console.log(this.ruleForm.contractFile);
+      console.log(this.ruleForm.userId);
+      let dataObject = {};
+      dataObject.contractName = this.ruleForm.contractName;
+      dataObject.userId = Number(this.ruleForm.userId);     
+      ContractService.save(dataObject,this.ruleForm.contractFile ).then(() => {
+        this.createContractDialogVisible = false;
+        this.$notify.success({
+          message: "Tạo hợp đồng thành công",
+          title: "Thành công",
+          timer: 2000,
+          timerProgressBar: true,
+        });
+        this.getData();
+      });
+      //   } else {
+      //     console.log("error submit!!");
+      //     return false;
+      //   }
+      // });
+    },
 
-    //       ContractService.save(formData).then(() => {
+    // submitForm(formName) {
+    //   this.$refs[formName].validate((valid) => {
+    //     if (valid) {
+    //       ContractService.save(this.ruleForm).then(() => {
+    //         this.editContractDialogVisible = false;
     //         this.createContractDialogVisible = false;
+    //         this.deleteContractDialogVisible = false;
     //         this.$notify.success({
-    //           message: "Tạo hợp dồng thành công",
+    //           message: "Tạo hop dong thành công",
     //           title: "Success",
     //           timer: 2000,
     //           timerProgressBar: true,
     //         });
     //         this.getData();
     //       });
-    //   //   } else {
-    //   //     console.log("error submit!!");
-    //   //     return false;
-    //   //   }
-    //   // });
+    //     } else {
+    //       console.log("error submit!!");
+    //       return false;
+    //     }
+    //   });
     // },
-
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          ContractService.save(this.ruleForm).then(() => {
-            this.editContractDialogVisible = false;
-            this.createContractDialogVisible = false;
-            this.deleteContractDialogVisible = false;
-            this.$notify.success({
-              message: "Tạo hop dong thành công",
-              title: "Success",
-              timer: 2000,
-              timerProgressBar: true,
-            });
-            this.getData();
-          });
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
 
     cancelCreateForm(formName) {
       this.$refs[formName].resetFields();
@@ -479,7 +483,7 @@ export default {
       this.createContractDialogVisible = true;
       this.editContractDialogVisible = false;
       this.deleteContractDialogVisible = false;
-      console.log("abc")
+      console.log("abc");
       //this.ruleForm = {};
     },
 
@@ -586,30 +590,28 @@ export default {
       this.page = value - 1;
       this.getData();
     },
-    getEmployee(){
-      ContractService.getEmployee().then(
-        (response) => {
-          console.log(response.data);       
-          this.selectedOption = response.data;  
-          console.log(this.selectedOption)
-        }
-      );
+    getEmployee() {
+      ContractService.getEmployee().then((response) => {
+        console.log(response.data);
+        this.selectedOption = response.data;
+        console.log(this.selectedOption);
+      });
     },
     handleFileChange(event) {
       const fileInput = event.target;
       if (fileInput.files.length > 0) {
         // Lấy tên của file và cập nhật vào ruleForm
-        this.ruleForm.contractFile = fileInput.files[0].name;
+        this.ruleForm.contractFile = fileInput.files[0];
       }
     },
 
-     handleUserChange() {
-    // Cập nhật giá trị userId trong ruleForm khi có sự thay đổi trong el-select
-    console.log("Selected user ID:", this.valueSelect);
-    this.ruleForm.userId = this.valueSelect;
-  },
+    handleUserChange() {
+      // Cập nhật giá trị userId trong ruleForm khi có sự thay đổi trong el-select
+      console.log("Selected user ID:", this.valueSelect);
+      this.ruleForm.userId = this.valueSelect;
+    },
 
-  tableRowClassName({ rowIndex }) {
+    tableRowClassName({ rowIndex }) {
       if (rowIndex % 2 === 1) {
         return "warning-row";
       } else if (rowIndex % 2 === 0) {
@@ -617,7 +619,6 @@ export default {
       }
       return "success-row";
     },
-
   },
 };
 </script>
@@ -626,14 +627,14 @@ export default {
 * {
   font-size: 16px;
 }
-.manage-department .el-form-item__label {
+.manage-contract .el-form-item__label {
   text-align: left;
 }
-.manage-department .el-form-item__content {
+.manage-contract .el-form-item__content {
   margin-left: 0px !important;
 }
 
-.manage-department .el-form-item {
+.manage-contract .el-form-item {
   display: flex;
   flex-direction: column;
 }
