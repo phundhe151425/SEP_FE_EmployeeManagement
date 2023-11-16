@@ -53,10 +53,23 @@ class ContractService {
     });
   }
 
-  updateContract(contractId, updatedContract) {
-    return axios.put(
+  async  updateContract(contractId, dataRequest,file) {
+
+    console.log("ok da chay api");
+    console.log(dataRequest);
+    console.log(file);
+    const json = JSON.stringify(dataRequest);
+    const blob = new Blob([json], {
+        type: 'application/json'
+    });
+    const formData = new FormData();
+    formData.append('createContractRequest', blob);
+    formData.append('contractFile', file);
+
+
+    return await axios.put(
       BASE_URL + `/contract/update/${contractId}`,
-      updatedContract,
+      formData,
       { headers: authHeader() }
     );
   }

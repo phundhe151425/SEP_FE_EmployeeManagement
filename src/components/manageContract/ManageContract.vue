@@ -405,8 +405,8 @@ export default {
       console.log(this.ruleForm.userId);
       let dataObject = {};
       dataObject.contractName = this.ruleForm.contractName;
-      dataObject.userId = Number(this.ruleForm.userId);     
-      ContractService.save(dataObject,this.ruleForm.contractFile ).then(() => {
+      dataObject.userId = Number(this.ruleForm.userId);
+      ContractService.save(dataObject, this.ruleForm.contractFile).then(() => {
         this.createContractDialogVisible = false;
         this.$notify.success({
           message: "Tạo hợp đồng thành công",
@@ -453,7 +453,10 @@ export default {
     submitEditForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          ContractService.updateContract(this.contractId, this.ruleForm).then(
+          let dataObject = {};
+          dataObject.contractName = this.ruleForm.contractName;
+          dataObject.userId = Number(this.ruleForm.userId);
+          ContractService.updateContract(this.contractId, dataObject,  this.ruleForm.contractFile).then(
             () => {
               this.createContractDialogVisible = false;
               this.editContractDialogVisible = false;
