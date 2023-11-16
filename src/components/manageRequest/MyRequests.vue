@@ -1519,10 +1519,25 @@ export default {
       this.isOTBefore = false;
       switch (typeId) {
         case 1:
+          if (this.$store.state.auth.user.dayoff <= 0) {
+            this.$notify.error({
+              message: "Bạn đã hết xin nghỉ có phép!",
+              title: "Failed",
+              timer: 2000,
+              timerProgressBar: true,
+            });
+          } else {
+            this.isRest = true;
+            this.isPersonalWork = false;
+            this.ruleForm.restType = "";
+            this.isRestBySlot = false;
+            this.isRestByDay = false;
+            this.ruleForm.slotId = "";
+          }
+          break;
         case 2:
           this.isRest = true;
           this.isPersonalWork = false;
-          // this.ruleForm.numberRestDay = 0;
           this.ruleForm.restType = "";
           this.isRestBySlot = false;
           this.isRestByDay = false;

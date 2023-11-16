@@ -183,7 +183,7 @@
               </a>
             </li>
             <li class="nav-item" v-if="isAdmin">
-              <a class="nav-link active" aria-current="page" href="/profile">
+              <a class="nav-link active" aria-current="page">
                 <router-link to="/manageHoliday" class="nav-link sel">
                   <font-awesome-icon icon="home" />
                   Quản lý ngày nghỉ
@@ -191,7 +191,7 @@
               </a>
             </li>
             <li class="nav-item" v-if="isAdmin">
-              <a class="nav-link active" aria-current="page" href="/profile">
+              <a class="nav-link active" aria-current="page">
                 <router-link to="/manageDepartment" class="nav-link sel">
                   <font-awesome-icon icon="home" />
                   Quản lý phòng ban
@@ -199,7 +199,7 @@
               </a>
             </li>
             <li class="nav-item" v-if="isAdmin">
-              <a class="nav-link active" aria-current="page" href="/profile">
+              <a class="nav-link active" aria-current="page">
                 <router-link to="/managePosition" class="nav-link sel">
                   <font-awesome-icon icon="home" />
                   Quản lý chức vụ
@@ -223,7 +223,7 @@
               </a>
             </li>
             <li class="nav-item" v-if="isAdmin || isModerator">
-              <a class="nav-link active" aria-current="page" href="/profile">
+              <a class="nav-link active" aria-current="page">
                 <router-link to="/report" class="nav-link sel">
                   <font-awesome-icon icon="home" />
                   Báo cáo chấm công
@@ -267,7 +267,7 @@ export default {
   methods: {
     logOut() {
       this.$store.dispatch("auth/logout");
-      window.location.replace("http://localhost:2001/login");
+       window.location.replace("/login");
     },
   },
 };
