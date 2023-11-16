@@ -201,6 +201,14 @@
                                 </router-link>
                             </a>
                         </li>
+                      <li class="nav-item" v-if="isAdmin || isModerator">
+                        <a class="nav-link active" aria-current="page">
+                          <router-link to="/manageContract" class="nav-link sel">
+                            <font-awesome-icon icon="home" />
+                            Quản lý hợp đồng
+                          </router-link>
+                        </a>
+                      </li>
                         <li class="nav-item" v-if="currentUser">
                             <a class="nav-link active" aria-current="page">
                                 <router-link to="/myRequest" class="nav-link sel">
