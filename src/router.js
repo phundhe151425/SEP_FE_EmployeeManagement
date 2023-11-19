@@ -99,6 +99,10 @@ const router = new Router({
         {
             path: "/statisticTimeKeeping",
             component: () => import("./components/statisticTimeKeeping/StatisticTimeKeeping.vue"),
+        },
+        {
+            path: "/manageWorkingTime",
+            component: () => import("./components/manageWorkingTime/ManageWorkingTime.vue"),
         }
 
     ],
@@ -131,6 +135,7 @@ router.beforeEach((to, from, next) => {
         "/manageDepartment",
         "/report",
         "/manageRequest",
+        "/manageWorkingTime"
 
     ];
     const managePages = [

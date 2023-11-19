@@ -222,6 +222,14 @@
                 </router-link>
               </a>
             </li>
+            <li class="nav-item" v-if="isAdmin">
+              <a class="nav-link active" aria-current="page">
+                <router-link to="/manageWorkingTime" class="nav-link sel">
+                  <i class="el-icon-tickets"></i>
+                  Quản lý thời gian làm việc
+                </router-link>
+              </a>
+            </li>
             <li class="nav-item" v-if="isAdmin || isModerator">
               <a class="nav-link active" aria-current="page">
                 <router-link to="/report" class="nav-link sel">
@@ -267,7 +275,7 @@ export default {
   methods: {
     logOut() {
       this.$store.dispatch("auth/logout");
-       window.location.replace("/login");
+      window.location.replace("/login");
     },
   },
 };
