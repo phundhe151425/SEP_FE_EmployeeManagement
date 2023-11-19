@@ -48,6 +48,17 @@
               </el-button>
             </div>
           </el-col>
+          <el-col :md="6" :lg="6" :xl="6" class="div-buttons">
+            <!-- chon-dept -->
+            <el-select v-model="deptIdSelect" placeholder="Chọn một giá trị" @change="handleDeptChange">
+              <el-option
+                v-for="item in deptList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-col>
         </el-row>
         <br />
         <div>
@@ -246,6 +257,26 @@
         </div>
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <!-- modal select -->
+            <el-form-item label="Chọn phòng ban" prop="deptList">
+              <el-select
+                v-model="deptIdAdd"
+                placeholder="Chọn"
+                @change="handleDeptChangeAdd"
+              >
+                <el-option
+                  v-for="item in deptList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <!-- mode select -->
             <el-form-item label="Chọn nhân viên" prop="selectedOption">
               <el-select
                 v-model="valueSelect"
@@ -341,13 +372,18 @@
 // eslint-disable-next-line no-unused-vars
 import ContractService from "@/services/contract-service";
 import moment from "moment/moment";
+import departmentService from "@/services/department-service";
 
 export default {
   components: {},
   name: "ManageContract",
-  data() {//data-show
+  data() {
+    //data-show
     return {
       contracts: [], // Dữ liệu hợp đồng
+      deptList: [],
+      deptIdSelect:"",//o thanh search
+      deptIdAdd:"",// o dialog add
       contractId: "",
       page: 0,
       pageSize: 5,
@@ -392,7 +428,7 @@ export default {
   },
   created() {
     this.getData();
-    this.getEmployee();
+    
   },
   methods: {
     submitForm() {
@@ -450,26 +486,29 @@ export default {
       this.createContractDialogVisible = false;
     },
 
-    submitEditForm(formName) {// api-update
+    submitEditForm(formName) {
+      // api-update
       this.$refs[formName].validate((valid) => {
         if (valid) {
           let dataObject = {};
           dataObject.contractName = this.ruleForm.contractName;
           dataObject.userId = Number(this.ruleForm.userId);
-          ContractService.updateContract(this.contractId, dataObject,  this.ruleForm.contractFile).then(
-            () => {
-              this.createContractDialogVisible = false;
-              this.editContractDialogVisible = false;
-              this.deleteContractDialogVisible = false;
-              this.$notify.success({
-                message: "Sửa thành công",
-                title: "Success",
-                timer: 2000,
-                timerProgressBar: true,
-              });
-              this.getData();
-            }
-          );
+          ContractService.updateContract(
+            this.contractId,
+            dataObject,
+            this.ruleForm.contractFile
+          ).then(() => {
+            this.createContractDialogVisible = false;
+            this.editContractDialogVisible = false;
+            this.deleteContractDialogVisible = false;
+            this.$notify.success({
+              message: "Sửa thành công",
+              title: "Success",
+              timer: 2000,
+              timerProgressBar: true,
+            });
+            this.getData();
+          });
         } else {
           console.log("error submit!!");
           return false;
@@ -483,6 +522,7 @@ export default {
     },
 
     showCreateContractDialog() {
+      
       this.createContractDialogVisible = true;
       this.editContractDialogVisible = false;
       this.deleteContractDialogVisible = false;
@@ -495,14 +535,14 @@ export default {
       this.createContractDialogVisible = false;
       this.deleteContractDialogVisible = false;
       this.departmentId = id;
-        // api getById
+      // api getById
       ContractService.getContractByID(id)
         .then((response) => {
-          console.log(response.data.nameContract)
+          console.log(response.data.nameContract);
           this.ruleForm.contractName = response.data.nameContract;
           this.ruleForm.userId = response.data.user.id;
           this.contractId = response.data.id;
-          console.log(this.ruleForm.userId)
+          console.log(this.ruleForm.userId);
         })
         .catch((e) => {
           console.log(e);
@@ -577,7 +617,14 @@ export default {
         });
     },
     getData() {
-      ContractService.getContracts(this.page, this.pageSize, this.search).then(
+      // get deptList
+      departmentService.getAllDepartment().then((response) => {
+        console.log("tat ca phong ban");
+        console.log(response);
+        this.deptList = response.data;
+      });
+
+      ContractService.getContracts(this.page, this.pageSize, this.search, this.deptIdSelect).then(
         (response) => {
           this.contracts = response.data.content;
           console.log(response.data.content);
@@ -598,7 +645,7 @@ export default {
       this.getData();
     },
     getEmployee() {
-      ContractService.getEmployee().then((response) => {
+      ContractService.getEmployee(this.deptIdAdd).then((response) => {
         console.log(response.data);
         this.selectedOption = response.data;
         console.log(this.selectedOption);
@@ -616,6 +663,23 @@ export default {
       // Cập nhật giá trị userId trong ruleForm khi có sự thay đổi trong el-select
       console.log("Selected user ID:", this.valueSelect);
       this.ruleForm.userId = this.valueSelect;
+    },//handleDeptChange
+
+
+    handleDeptChange() {
+      // Cập nhật giá trị userId trong ruleForm khi có sự thay đổi trong el-select
+      console.log("Selected dept ID:", this.deptIdSelect);
+      //this.ruleForm.userId = this.valueSelect;
+      this.getData();
+    },
+
+
+     handleDeptChangeAdd() {
+      // Cập nhật giá trị userId trong ruleForm khi có sự thay đổi trong el-select
+      console.log("Selected dept ID:", this.deptIdAdd);
+      //this.ruleForm.userId = this.valueSelect;
+     // this.getData();
+      this.getEmployee();
     },
 
     tableRowClassName({ rowIndex }) {

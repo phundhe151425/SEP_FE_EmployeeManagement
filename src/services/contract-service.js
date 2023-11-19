@@ -13,7 +13,7 @@ class ContractService {
   getAllContract() {
     return axios.get(BASE_URL + "/contract/get-all", { headers: authHeader() });
   }
-  getContracts(page, size, search) {
+  getContracts(page, size, search,deptId) {
     return axios.get(
       BASE_URL +
         "/contract/data1?pageNo=" +
@@ -21,7 +21,9 @@ class ContractService {
         "&pageSize=" +
         size +
         "&search=" +
-        search,
+        search + 
+        "&deptId=" +
+        deptId,
       { headers: authHeader() }
     );
   }
@@ -89,8 +91,8 @@ class ContractService {
     return axios.delete(BASE_URL + "/contract/delete/" + contractId, config);
   }
 
-  getEmployee() {
-    return axios.get(BASE_URL + "/contract/employee-contact", {
+  getEmployee(deptIdAdd) {
+    return axios.get(BASE_URL + "/contract/employee-contact?deptId="+ deptIdAdd, {
       headers: authHeader(),
     });
   }
