@@ -345,7 +345,7 @@ import moment from "moment/moment";
 export default {
   components: {},
   name: "ManageContract",
-  data() {
+  data() {//data-show
     return {
       contracts: [], // Dữ liệu hợp đồng
       contractId: "",
@@ -398,7 +398,7 @@ export default {
     submitForm() {
       //   // this.$refs[formName].validate((valid) => {
       //   //   if (valid) {
-
+      // api create
       console.log("123456");
       console.log(this.ruleForm.contractName);
       console.log(this.ruleForm.contractFile);
@@ -450,7 +450,7 @@ export default {
       this.createContractDialogVisible = false;
     },
 
-    submitEditForm(formName) {
+    submitEditForm(formName) {// api-update
       this.$refs[formName].validate((valid) => {
         if (valid) {
           let dataObject = {};
@@ -495,10 +495,14 @@ export default {
       this.createContractDialogVisible = false;
       this.deleteContractDialogVisible = false;
       this.departmentId = id;
-
-      ContractService.getDepartment(id)
+        // api getById
+      ContractService.getContractByID(id)
         .then((response) => {
-          this.ruleForm.name = response.data.name;
+          console.log(response.data.nameContract)
+          this.ruleForm.contractName = response.data.nameContract;
+          this.ruleForm.userId = response.data.user.id;
+          this.contractId = response.data.id;
+          console.log(this.ruleForm.userId)
         })
         .catch((e) => {
           console.log(e);

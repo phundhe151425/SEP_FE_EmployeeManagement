@@ -32,6 +32,12 @@ class ContractService {
     });
   }
 
+ async getContractByID(id) {
+    return await axios.get(BASE_URL + `/contract/detail/${id}`, {
+      headers: authHeader(),
+    });
+  }
+
 
 
   async save(dataRequest, file) {
@@ -58,20 +64,21 @@ class ContractService {
     console.log("ok da chay api");
     console.log(dataRequest);
     console.log(file);
+    console.log(contractId);
     const json = JSON.stringify(dataRequest);
     const blob = new Blob([json], {
         type: 'application/json'
     });
     const formData = new FormData();
-    formData.append('createContractRequest', blob);
+    formData.append('updateContractRequest', blob);
     formData.append('contractFile', file);
 
 
     return await axios.put(
       BASE_URL + `/contract/update/${contractId}`,
-      formData,
-      { headers: authHeader() }
-    );
+      formData, {
+        headers: authHeaderFormData(),
+      });
   }
 
   deleteContract(contractId) {
