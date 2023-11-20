@@ -10,7 +10,7 @@
             >
                 <b-avatar  v-if="currentUser.userImage == null" class="mr-3"></b-avatar>
                 <b-avatar v-if="currentUser.userImage != null" class="mr-3"
-                          v-bind:src="`http://localhost:2000/api/file/avatar/` + currentUser.userImage"></b-avatar>
+                          v-bind:src="this.beUrl+`api/file/avatar/` + currentUser.userImage"></b-avatar>
                {{currentUser.username}}
             </a>
 
@@ -210,9 +210,13 @@
     </nav>
 </template>
 <script>
+import {FE_URL} from "@/http-common";
+import {BE_URL} from "@/http-common";
 export default {
     data() {
         return {
+            feUrl: FE_URL,
+            beUrl: BE_URL,
             logInUser: ''
         };
     },
@@ -242,7 +246,7 @@ export default {
 
         logOut() {
             this.$store.dispatch("auth/logout");
-            window.location.replace("http://localhost:2001/login");
+            window.location.replace(this.feUrl+"login");
         },
     },
 };

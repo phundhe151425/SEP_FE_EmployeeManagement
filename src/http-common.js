@@ -1,5 +1,7 @@
 import axios from "axios";
 export const BASE_URL = 'http://localhost:2000/api'; // url backend
+export const BE_URL = 'http://localhost:2000/';
+export const FE_URL = 'http://localhost:2001/';
 
 export const jsonAPI = axios.create({
     baseURL: BASE_URL,

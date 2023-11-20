@@ -4,7 +4,7 @@ import authHeader from "@/services/auth-header";
 
 class DepartmentService {
     getAllDepartment() {
-        return axios.get(BASE_URL + '/department/get-list');
+        return axios.get(BASE_URL + '/department/get-list',{headers: authHeader()});
     }
 
     getDepartments(page, size, search) {
