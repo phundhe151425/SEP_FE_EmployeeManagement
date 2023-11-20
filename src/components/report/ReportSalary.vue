@@ -692,6 +692,8 @@ export default {
                 let dataCall = [];
                 let data = respone.data;
                 for (let users of data) {
+                    console.log("data")
+                    console.log(users)
                     let signs = [];
                     for (let i = 1; i <= 31; i++) {
                         //get All LogDetail
@@ -699,8 +701,9 @@ export default {
                         for (let user of users.logDetail) {
                             let date = Number(user.dateLog.split("-")[2]);
                             dates.push(date);
-
                             if (date == i) {
+                                console.log("logDetail")
+                                console.log(user)
                                 if (user.signs == null)
                                     signs.push({
                                         sign: "_",

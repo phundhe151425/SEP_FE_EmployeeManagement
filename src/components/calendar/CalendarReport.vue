@@ -100,10 +100,11 @@
 <script>
 import NoteCalendar from "@/components/calendar/NoteCalendar.vue"
 import AttendanceService from "@/services/attendance-service";
+import NoteLog from "@/components/calendar/NoteLog.vue";
 
 export default {
-    name: "calendarReport",
-    components: {NoteCalendar},
+    name: "CalendarReport",
+    components: {NoteCalendar, NoteLog},
     data() {
         return {
             value: new Date(),
@@ -165,7 +166,7 @@ export default {
                         sign.name = log.signs.name
                     sign.timeIn = log.timeIn
                     sign.timeOut = log.timeOut
-                    // sign.note = log.noteLogSet
+                    sign.note = log.noteLogSet
                     if (sign.name.includes("H") && !sign.name.includes("_"))
                         sign.allDay = true
                     if (sign.name.includes("NT"))
