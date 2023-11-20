@@ -522,7 +522,7 @@ export default {
     },
 
     showCreateContractDialog() {
-      
+      this.getEmployee();
       this.createContractDialogVisible = true;
       this.editContractDialogVisible = false;
       this.deleteContractDialogVisible = false;
@@ -621,7 +621,10 @@ export default {
       departmentService.getAllDepartment().then((response) => {
         console.log("tat ca phong ban");
         console.log(response);
-        this.deptList = response.data;
+        this.deptList = [{
+          id: "",
+          name:"Tẩt cả phòng ban"
+        },...response.data];
       });
 
       ContractService.getContracts(this.page, this.pageSize, this.search, this.deptIdSelect).then(
