@@ -9,8 +9,8 @@ class WorkingTimeService {
         +"&pageSize="+size +"&search="+search,{headers: authHeader()});
     }
 
-    updateWorkingTime(id, startTime, endTime){
-        return axios.put(BASE_URL +`/auth/workingtime/${id}?startTime=`+startTime+`&endTime=`+endTime,{headers: authHeader()});
+    updateWorkingTime(id, data){
+        return axios.put(BASE_URL +`/auth/workingtime/${id}`,data,{headers: authHeader()});
     }
 
     getWorkingTimeById(id) {
