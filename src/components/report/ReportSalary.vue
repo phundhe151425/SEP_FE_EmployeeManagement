@@ -445,10 +445,12 @@
 // import ExcelService from "@/services/excel-service";
 import AttendanceService from "@/services/attendance-service";
 import DepartmentService from "@/services/department-service";
+import {FE_URL} from "@/http-common";
 export default {
     name: "ReportAdmin",
     data() {
         return {
+            feUrl: FE_URL,
             accountDepartment: "",
             users: [],
             checkNone: false,
@@ -669,6 +671,7 @@ export default {
                 })
                 .catch((e) => {
                     console.log(e);
+                    this.logOut()
                 })
         },
         getLog() {
@@ -753,6 +756,10 @@ export default {
                 }
             });
         },
+        logOut() {
+            this.$store.dispatch("auth/logout");
+            window.location.replace(this.feUrl + "login");
+        },
     },
     computed: {
         currentUser() {
@@ -770,6 +777,7 @@ export default {
             }
             return false;
         },
+
     },
     mounted() {
         this.getDepartment();
