@@ -1,7 +1,7 @@
 <template>
   <div class="manage-position">
-    <h3>Quản lý chức vụ</h3>
-    <hr style="margin-bottom: 5%" />
+    <h3 class="text-start" style="font-weight: bold">Quản lý chức vụ</h3>
+    <hr style="margin-bottom: 2%" />
     <div style="padding-bottom: 20px">
       <div className="" style="width: 100%; margin: auto">
         <el-row :gutter="20">
@@ -299,7 +299,7 @@
               <el-button
                 class="btn btn-success"
                 style="width: 100%"
-                @click="deleteHolidayDialogVisible = false"
+                @click="deletePositionDialogVisible = false"
                 >Huỷ</el-button
               >
             </el-form-item>

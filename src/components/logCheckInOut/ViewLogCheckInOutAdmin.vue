@@ -1,7 +1,8 @@
 <template>
     <div style="padding-bottom: 36px;">
         <div className="container" style="text-align: center; width: 90%;margin: auto">
-            <h2 class="text-start" style="font-weight: bold">Log Check-in/Check-out</h2>
+            <h3 class="text-start" style="font-weight: bold">Log Check-in/Check-out</h3>
+            <hr style="margin-bottom: 2%" />
             <br>
             <el-row :gutter="20">
                 <el-col :md="6" :lg="6" :xl="5" style="margin-bottom: 20px;">

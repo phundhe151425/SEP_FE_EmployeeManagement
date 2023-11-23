@@ -1,7 +1,7 @@
 <template>
   <div class="manage-department">
-    <h3>Quản lý phòng ban</h3>
-    <hr style="margin-bottom: 5%" />
+    <h3 class="text-start" style="font-weight: bold">Quản lý phòng ban</h3>
+    <hr style="margin-bottom: 2%" />
     <div style="padding-bottom: 20px">
       <div className="" style="width: 100%; margin: auto">
         <el-row :gutter="20">

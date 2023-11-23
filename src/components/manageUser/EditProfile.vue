@@ -161,7 +161,6 @@ export default {
         ],
         birthDay: [
           {
-            type: "date",
             required: true,
             message: "Vui lòng chọn ngày sinh",
             trigger: "blur",
@@ -190,8 +189,7 @@ export default {
 
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
-        this.dateFormat = this.ruleForm.birthDay.toLocaleDateString();
-        this.ruleForm.birthDay = moment(String(this.dateFormat)).format(
+        this.ruleForm.birthDay = moment(String(this.ruleForm.birthDay)).format(
           "yyyy-MM-DD"
         );
         if (valid) {

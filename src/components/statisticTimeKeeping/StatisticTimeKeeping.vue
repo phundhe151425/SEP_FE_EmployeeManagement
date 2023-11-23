@@ -1,6 +1,6 @@
 <template>
   <div class="manage-request">
-    <h3>Thống kê chấm công</h3>
+    <h3 class="text-start" style="font-weight: bold">Thống kê chấm công</h3>
     <div v-if="isAdmin || isModerator">
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="Toàn bộ" name="first">
