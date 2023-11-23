@@ -663,9 +663,13 @@ export default {
         //         });
         // },
         getDepartment() {
-            DepartmentService.getAllDepartment().then((response) => {
-                this.departments = response.data;
-            });
+            DepartmentService.getAllDepartment()
+                .then((response) => {
+                    this.departments = response.data;
+                })
+                .catch((e) => {
+                    console.log(e);
+                })
         },
         getLog() {
             if (this.showModeratorBoard) {
