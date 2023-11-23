@@ -99,14 +99,20 @@
             ></el-table-column>
 
             <el-table-column
-              label="Tên hợp đồng"
+              label="Loại hợp đồng"
               prop="contractName"
               align="center"
             ></el-table-column>
 
             <el-table-column
-              label="Hợp đồng"
-              prop="fileName"
+              label="Ngày bắt đầu"
+              prop="user.startWork"
+              align="center"
+            ></el-table-column>
+
+                       <el-table-column
+              label="Ngày kết thúc"
+              prop="user.endWork"
               align="center"
             ></el-table-column>
 
