@@ -112,6 +112,7 @@ router.beforeEach((to, from, next) => {
     const publicPages = [
         "/login",
         "/",
+        "/forgotPassword"
 
     ];
     const userPages = [
