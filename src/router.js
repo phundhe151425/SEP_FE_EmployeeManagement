@@ -66,7 +66,7 @@ const router = new Router({
 
         {
             path: "/calendar",
-            component: () => import("./components/calendar/calendarReport.vue"),
+            component: () => import("./components/calendar/CalendarReport.vue"),
         },
         {
             path: "/logCheckAdmin",
