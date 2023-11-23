@@ -5,25 +5,6 @@
     <div style="padding-bottom: 20px">
       <div className="" style="width: 100%; margin: auto">
         <el-row :gutter="20">
-          <!-- <el-col :md="6" :lg="6" :xl="6">
-            <div class="grid-content" style="margin-bottom: 20px">
-              <span>Năm</span> &ensp;
-              <el-select
-                v-model="year"
-                @change="getData"
-                placeholder="Chọn Phòng ban"
-              >
-                <el-option
-                  v-for="item in years"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                >
-                </el-option>
-              </el-select>
-            </div>
-          </el-col> -->
-
           <el-col :md="6" :lg="6" :xl="6" style="margin-bottom: 20px">
             <div class="grid-content">
               <span style="">Tìm kiếm</span> &ensp;
@@ -131,10 +112,10 @@
       left
     >
       <el-form
-        id="formCreate"
-        :model="ruleForm"
+        id="formEdit"
+        :model="positionEdit"
         :rules="rules"
-        ref="ruleForm"
+        ref="positionEdit"
         label-width="200px"
         class="demo-ruleForm"
       >
@@ -142,7 +123,7 @@
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <el-form-item label="Nhập tên chức vụ" prop="positionName">
               <el-input
-                v-model="ruleForm.positionName"
+                v-model="positionEdit.positionName"
                 name="positionName"
                 autocomplete="off"
               ></el-input>
@@ -153,7 +134,7 @@
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <el-form-item label="Phân quyền" prop="roleId">
               <el-select
-                v-model="ruleForm.roleId"
+                v-model="positionEdit.roleId"
                 @change="getData"
                 placeholder="Chọn quyền"
               >
@@ -177,7 +158,7 @@
                   class="btn btn-outline-danger"
                   type="primary"
                   style="width: 90%"
-                  @click="cancelEditForm('ruleForm')"
+                  @click="cancelEditForm('positionEdit')"
                   >Hủy</el-button
                 >
               </el-form-item>
@@ -190,7 +171,7 @@
                   class="btn btn-success"
                   type="primary"
                   style="width: 90%"
-                  @click="submitEditForm('ruleForm')"
+                  @click="submitEditForm('positionEdit')"
                   >Lưu</el-button
                 >
               </el-form-item>
@@ -208,9 +189,9 @@
     >
       <el-form
         id="formCreate"
-        :model="ruleForm"
+        :model="positionCreate"
         :rules="rules"
-        ref="ruleForm"
+        ref="positionCreate"
         label-width="200px"
         class="demo-ruleForm"
       >
@@ -218,7 +199,7 @@
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <el-form-item label="Nhập tên chức vụ" prop="positionName">
               <el-input
-                v-model="ruleForm.positionName"
+                v-model="positionCreate.positionName"
                 name="positionName"
                 autocomplete="off"
               ></el-input>
@@ -229,7 +210,7 @@
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <el-form-item label="Phân quyền" prop="roleId">
               <el-select
-                v-model="ruleForm.roleId"
+                v-model="positionCreate.roleId"
                 @change="getData"
                 placeholder="Chọn quyền"
               >
@@ -253,7 +234,7 @@
                   class="btn btn-outline-danger"
                   type="primary"
                   style="width: 90%"
-                  @click="cancelCreateForm('ruleForm')"
+                  @click="cancelCreateForm('positionCreate')"
                   >Hủy</el-button
                 >
               </el-form-item>
@@ -266,7 +247,7 @@
                   class="btn btn-success"
                   type="primary"
                   style="width: 90%"
-                  @click="submitForm('ruleForm')"
+                  @click="submitForm('positionCreate')"
                   >Lưu</el-button
                 >
               </el-form-item>
@@ -283,15 +264,15 @@
       left
     >
       <el-form
-        id="formCreate"
-        :model="ruleForm"
+        id="formDelete"
+        :model="positionDelete"
         :rules="rules"
-        ref="ruleForm"
+        ref="positionDelete"
         label-width="200px"
         class="demo-ruleForm"
       >
         <p style="text-align: center">Xác nhận xóa chức vụ</p>
-        <p style="text-align: center">{{ ruleForm.positionName }}</p>
+        <p style="text-align: center">{{ positionDelete.positionName }}</p>
 
         <div class="row" style="margin-top: 70px">
           <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -328,16 +309,19 @@ export default {
   components: {},
   name: "ManagePosition",
   data() {
-    var date = new Date();
-    var currentYear = date.getFullYear();
     return {
-      year: currentYear,
-      years: [],
-      roleId: "",
+      positionId: "",
       roles: [],
-      ruleForm: {
+      positionCreate: {
         positionName: "",
         roleId: "",
+      },
+      positionEdit: {
+        positionName: "",
+        roleId: "",
+      },
+      positionDelete: {
+        positionName: "",
       },
       rules: {
         positionName: [
@@ -376,7 +360,6 @@ export default {
 
   created() {
     this.getData();
-    // this.getAllYear();
     this.getAllRole();
   },
 
@@ -384,18 +367,22 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          PositionService.save(this.ruleForm).then(() => {
-            this.editPositionDialogVisible = false;
-            this.createPositionDialogVisible = false;
-            this.deletePositionDialogVisible = false;
-            this.$notify.success({
-              message: "Tạo chức vụ thành công!",
-              title: "Success",
-              timer: 2000,
-              timerProgressBar: true,
+          PositionService.save(this.positionCreate)
+            .then(() => {
+              this.createPositionDialogVisible = false;
+              this.$notify.success({
+                message: "Tạo chức vụ thành công!",
+                title: "Success",
+                timer: 2000,
+                timerProgressBar: true,
+              });
+              this.getData();
+            })
+            .catch((e) => {
+              if (e.response.status == 401) {
+                this.logout();
+              }
             });
-            this.getData();
-          });
         } else {
           console.log("error submit!!");
           return false;
@@ -411,11 +398,9 @@ export default {
     submitEditForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          PositionService.updatePosition(this.roleId, this.ruleForm).then(
-            () => {
+          PositionService.updatePosition(this.positionId, this.positionEdit)
+            .then(() => {
               this.editPositionDialogVisible = false;
-              this.createPositionDialogVisible = false;
-              this.deletePositionDialogVisible = false;
               this.$notify.success({
                 message: "Sửa chức vụ thành công!",
                 title: "Success",
@@ -423,8 +408,12 @@ export default {
                 timerProgressBar: true,
               });
               this.getData();
-            }
-          );
+            })
+            .catch((e) => {
+              if (e.response.status == 401) {
+                this.logout();
+              }
+            });
         } else {
           console.log("error submit!!");
           return false;
@@ -439,49 +428,61 @@ export default {
 
     showCreatePositionDialog() {
       this.createPositionDialogVisible = true;
+      this.$refs["positionCreate"].resetFields();
       this.editPositionDialogVisible = false;
       this.deletePositionDialogVisible = false;
-      this.ruleForm.positionName = "";
     },
 
     showEditPositionDialog(id) {
       this.editPositionDialogVisible = true;
+      setTimeout(() => {
+        this.$refs["positionEdit"].resetFields();
+      }, 5);
       this.createPositionDialogVisible = false;
       this.deletePositionDialogVisible = false;
-      this.roleId = id;
-      PositionService.getPosition(id)
-        .then((response) => {
-          console.log(response.data);
-          this.ruleForm.positionName = response.data.name;
-          this.ruleForm.roleId = response.data.role[0].id;
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      this.positionId = id;
+      setTimeout(() => {
+        PositionService.getPosition(id)
+          .then((response) => {
+            console.log(response.data);
+            this.positionEdit.positionName = response.data.name;
+            this.positionEdit.roleId = response.data.role[0].id;
+          })
+          .catch((e) => {
+            console.log(e);
+            if (e.response.status == 401) {
+              this.logout();
+            }
+          });
+      }, 10);
     },
 
     showDeletePositionDialog(id) {
       this.editPositionDialogVisible = false;
       this.createPositionDialogVisible = false;
       this.deletePositionDialogVisible = true;
-      this.roleId = id;
-
-      PositionService.getPosition(id)
-        .then((response) => {
-          this.ruleForm.positionName = response.data.name;
-          // this.ruleForm.roleId = response.data.role.id;
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      setTimeout(() => {
+        this.$refs["positionDelete"].resetFields();
+      }, 5);
+      this.positionId = id;
+      setTimeout(() => {
+        PositionService.getPosition(id)
+          .then((response) => {
+            this.positionDelete.positionName = response.data.name;
+          })
+          .catch((e) => {
+            console.log(e);
+            if (e.response.status == 401) {
+              this.logout();
+            }
+          });
+      }, 10);
     },
 
     acceptDelete() {
-      PositionService.deletePosition(this.roleId)
+      PositionService.deletePosition(this.positionId)
         .then((response) => {
           console.log(response.data);
-          this.editPositionDialogVisible = false;
-          this.createPositionDialogVisible = false;
           this.deletePositionDialogVisible = false;
           this.$notify.success({
             message: "Xóa chức vụ thành công!",
@@ -492,17 +493,19 @@ export default {
           this.getData();
         })
         .catch((e) => {
-          this.editPositionDialogVisible = false;
-          this.createPositionDialogVisible = false;
-          this.deletePositionDialogVisible = false;
-          this.$notify.error({
-            message: "Không thể xóa chức vụ này vì đã được sử dụng!",
-            title: "Failed",
-            timer: 2000,
-            timerProgressBar: true,
-          });
-          this.getData();
-          console.log(e);
+          if (e.response.status == 401) {
+            this.logout();
+          } else {
+            this.deletePositionDialogVisible = false;
+            this.$notify.error({
+              message: "Không thể xóa chức vụ này vì đã được sử dụng!",
+              title: "Failed",
+              timer: 2000,
+              timerProgressBar: true,
+            });
+            this.getData();
+          }
+          console.log(e.response.status);
         });
     },
 
@@ -521,25 +524,19 @@ export default {
           this.totalItems = response.data.totalElements;
         })
         .catch((e) => {
-          this.logout();
-          console.log(e);
+          if (e.response.status == 401) {
+            this.logout();
+          }
         });
     },
 
-    // getAllYear() {
-    //   HolidayService.getYears().then((response) => {
-    //     this.years = response.data;
-    //   });
-    // },
-
     getAllRole() {
-      PositionService.getRoles(1, 5, "")
+      PositionService.getRoles(1, 30, "")
         .then((response) => {
           console.log(response.data);
           this.roles = response.data.content;
         })
         .catch((e) => {
-          this.logout();
           console.log(e);
         });
     },

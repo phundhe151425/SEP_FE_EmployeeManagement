@@ -25,7 +25,7 @@
                 </li>
                 <li>
                     <a class="dropdown-item">
-                        <router-link to="/changepassword" class="nav-link">
+                        <router-link to="/changePassword" class="nav-link">
                             <i class="el-icon-refresh-left"></i>
                             Thay đổi mật khẩu
                         </router-link>
@@ -115,7 +115,7 @@
                         </li>
                         <li class="nav-item mb-1" v-if="currentUser">
                             <button class="nav-link sel btn-drop" aria-current="page"  data-bs-toggle="collapse" data-bs-target="#getting-started-collapse1" aria-expanded="false">
-                                <i class="el-icon-star-on"/> Cá nhân <i class="el-icon-arrow-left"/>
+                                <i class="el-icon-star-on"/> Cá nhân <i class="el-icon-arrow-right"/>
                             </button>
 
                             <div class="collapse" id="getting-started-collapse1">
@@ -150,7 +150,7 @@
 
                         <li class="nav-item mb-1" v-if="isAdmin || isModerator">
                             <button class="nav-link sel btn-drop" aria-current="page" data-bs-toggle="collapse" data-bs-target="#getting-started-collapse2" aria-expanded="false">
-                                <i class="el-icon-s-fold"/> Thông tin chấm công <i class="el-icon-arrow-left"/>
+                                <i class="el-icon-s-fold"/> Thông tin chấm công<i class="el-icon-arrow-right"/>
                             </button>
 
                             <div class="collapse" id="getting-started-collapse2">
@@ -214,7 +214,7 @@
 
                         <li class="nav-item mb-1" v-if="isAdmin || isModerator">
                             <button class="nav-link sel btn-drop" aria-current="page" data-bs-toggle="collapse" data-bs-target="#getting-started-collapse3" aria-expanded="false">
-                                <i class="el-icon-s-tools"/> Quản Lý <i class="el-icon-arrow-left"/>
+                                <i class="el-icon-s-tools"/> Quản Lý <i class="el-icon-arrow-right"/>
                             </button>
 
                             <div class="collapse" id="getting-started-collapse3">

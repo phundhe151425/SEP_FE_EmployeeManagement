@@ -112,10 +112,10 @@
       left
     >
       <el-form
-        id="formCreate"
-        :model="ruleForm"
+        id="formEdit"
+        :model="departmentEdit"
         :rules="rules"
-        ref="ruleForm"
+        ref="departmentEdit"
         label-width="200px"
         class="demo-ruleForm"
       >
@@ -123,8 +123,8 @@
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <el-form-item label="Nhập tên phòng ban" prop="name">
               <el-input
-                v-model="ruleForm.name"
-                name="positionName"
+                v-model="departmentEdit.name"
+                name="name"
                 autocomplete="off"
               ></el-input>
             </el-form-item>
@@ -139,7 +139,7 @@
                   class="btn btn-outline-danger"
                   type="primary"
                   style="width: 90%"
-                  @click="cancelEditForm('ruleForm')"
+                  @click="cancelEditForm('departmentEdit')"
                   >Hủy</el-button
                 >
               </el-form-item>
@@ -152,7 +152,7 @@
                   class="btn btn-success"
                   type="primary"
                   style="width: 90%"
-                  @click="submitEditForm('ruleForm')"
+                  @click="submitEditForm('departmentEdit')"
                   >Lưu</el-button
                 >
               </el-form-item>
@@ -170,9 +170,9 @@
     >
       <el-form
         id="formCreate"
-        :model="ruleForm"
+        :model="departmentCreate"
         :rules="rules"
-        ref="ruleForm"
+        ref="departmentCreate"
         label-width="200px"
         class="demo-ruleForm"
       >
@@ -180,7 +180,7 @@
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <el-form-item label="Nhập tên phòng ban" prop="name">
               <el-input
-                v-model="ruleForm.name"
+                v-model="departmentCreate.name"
                 name="positionName"
                 autocomplete="off"
               ></el-input>
@@ -195,7 +195,7 @@
                   class="btn btn-outline-danger"
                   type="primary"
                   style="width: 90%"
-                  @click="cancelCreateForm('ruleForm')"
+                  @click="cancelCreateForm('departmentCreate')"
                   >Hủy</el-button
                 >
               </el-form-item>
@@ -208,7 +208,7 @@
                   class="btn btn-success"
                   type="primary"
                   style="width: 90%"
-                  @click="submitForm('ruleForm')"
+                  @click="submitForm('departmentCreate')"
                   >Lưu</el-button
                 >
               </el-form-item>
@@ -225,15 +225,15 @@
       left
     >
       <el-form
-        id="formCreate"
-        :model="ruleForm"
+        id="formDelete"
+        :model="departmentDelete"
         :rules="rules"
-        ref="ruleForm"
+        ref="departmentDelete"
         label-width="200px"
         class="demo-ruleForm"
       >
         <p style="text-align: center">Xác nhận xóa phòng ban</p>
-        <p style="text-align: center">{{ ruleForm.name }}</p>
+        <p style="text-align: center">{{ departmentDelete.name }}</p>
 
         <div class="row" style="margin-top: 70px">
           <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -263,21 +263,24 @@
 </template>
 
 <script>
-// import HolidayService from "@/services/holiday-service";
 import DepartmentService from "@/services/department-service";
 import moment from "moment";
 export default {
   components: {},
   name: "ManageDepartment",
   data() {
-    var date = new Date();
-    var currentYear = date.getFullYear();
     return {
-      year: currentYear,
-      years: [],
       departmentId: "",
-      roles: [],
       ruleForm: {
+        name: "",
+      },
+      departmentCreate: {
+        name: "",
+      },
+      departmentEdit: {
+        name: "",
+      },
+      departmentDelete: {
         name: "",
       },
       rules: {
@@ -310,25 +313,28 @@ export default {
 
   created() {
     this.getData();
-    // this.getAllYear();
   },
 
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          DepartmentService.save(this.ruleForm).then(() => {
-            this.createDepartmentDialogVisible = false;
-            this.editDepartmentDialogVisible = false;
-            this.deleteDepartmentDialogVisible = false;
-            this.$notify.success({
-              message: "Tạo phòng ban thành công!",
-              title: "Success",
-              timer: 2000,
-              timerProgressBar: true,
+          DepartmentService.save(this.departmentCreate)
+            .then(() => {
+              this.createDepartmentDialogVisible = false;
+              this.$notify.success({
+                message: "Tạo phòng ban thành công!",
+                title: "Success",
+                timer: 2000,
+                timerProgressBar: true,
+              });
+              this.getData();
+            })
+            .catch((e) => {
+              if (e.response.status == 401) {
+                this.logout();
+              }
             });
-            this.getData();
-          });
         } else {
           console.log("error submit!!");
           return false;
@@ -346,19 +352,23 @@ export default {
         if (valid) {
           DepartmentService.updateDepartment(
             this.departmentId,
-            this.ruleForm
-          ).then(() => {
-            this.createDepartmentDialogVisible = false;
-            this.editDepartmentDialogVisible = false;
-            this.deleteDepartmentDialogVisible = false;
-            this.$notify.success({
-              message: "Sửa phòng ban thành công!",
-              title: "Success",
-              timer: 2000,
-              timerProgressBar: true,
+            this.departmentEdit
+          )
+            .then(() => {
+              this.editDepartmentDialogVisible = false;
+              this.$notify.success({
+                message: "Sửa phòng ban thành công!",
+                title: "Success",
+                timer: 2000,
+                timerProgressBar: true,
+              });
+              this.getData();
+            })
+            .catch((e) => {
+              if (e.response.status == 401) {
+                this.logout();
+              }
             });
-            this.getData();
-          });
         } else {
           return false;
         }
@@ -372,46 +382,57 @@ export default {
 
     showCreateDepartmentDialog() {
       this.createDepartmentDialogVisible = true;
+      this.$refs["departmentCreate"].resetFields();
       this.editDepartmentDialogVisible = false;
       this.deleteDepartmentDialogVisible = false;
-      this.ruleForm.name = "";
     },
 
     showEditDepartmentDialog(id) {
       this.editDepartmentDialogVisible = true;
+      setTimeout(() => {
+        this.$refs["departmentEdit"].resetFields();
+      }, 5);
       this.createDepartmentDialogVisible = false;
       this.deleteDepartmentDialogVisible = false;
       this.departmentId = id;
-      DepartmentService.getDepartment(id)
-        .then((response) => {
-          this.ruleForm.name = response.data.name;
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      setTimeout(() => {
+        DepartmentService.getDepartment(id)
+          .then((response) => {
+            this.departmentEdit.name = response.data.name;
+          })
+          .catch((e) => {
+            if (e.response.status == 401) {
+              this.logout();
+            }
+          });
+      }, 10);
     },
 
     showDeleteDepartmentDialog(id) {
       this.editDepartmentDialogVisible = false;
       this.createDepartmentDialogVisible = false;
       this.deleteDepartmentDialogVisible = true;
+      setTimeout(() => {
+        this.$refs["departmentDelete"].resetFields();
+      }, 5);
       this.departmentId = id;
-
-      DepartmentService.getDepartment(id)
-        .then((response) => {
-          this.ruleForm.name = response.data.name;
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      setTimeout(() => {
+        DepartmentService.getDepartment(id)
+          .then((response) => {
+            this.departmentDelete.name = response.data.name;
+          })
+          .catch((e) => {
+            if (e.response.status == 401) {
+              this.logout();
+            }
+          });
+      }, 10);
     },
 
     acceptDelete() {
       DepartmentService.deleteDepartment(this.departmentId)
         .then((response) => {
           console.log(response.data);
-          this.editDepartmentDialogVisible = false;
-          this.createDepartmentDialogVisible = false;
           this.deleteDepartmentDialogVisible = false;
           this.$notify.success({
             message: "Xóa phòng ban thành công!",
@@ -422,16 +443,18 @@ export default {
           this.getData();
         })
         .catch((e) => {
-          this.editDepartmentDialogVisible = false;
-          this.createDepartmentDialogVisible = false;
-          this.deleteDepartmentDialogVisible = false;
-          this.$notify.error({
-            message: "Không thể xóa phòng này vì đã được sử dụng!",
-            title: "Failed",
-            timer: 2000,
-            timerProgressBar: true,
-          });
-          this.getData();
+          if (e.response.status == 401) {
+            this.logout();
+          } else {
+            this.deleteDepartmentDialogVisible = false;
+            this.$notify.error({
+              message: "Không thể xóa phòng này vì đã được sử dụng!",
+              title: "Failed",
+              timer: 2000,
+              timerProgressBar: true,
+            });
+            this.getData();
+          }
           console.log(e);
         });
     },
@@ -451,16 +474,13 @@ export default {
           this.totalItems = response.data.totalElements;
         })
         .catch((e) => {
-          this.logout();
+          if (e.response.status == 401) {
+            this.logout();
+          }
           console.log(e);
         });
     },
 
-    // getAllYear() {
-    //   HolidayService.getYears().then((response) => {
-    //     this.years = response.data;
-    //   });
-    // },
     logout() {
       this.$store.dispatch("auth/logout");
       window.location.replace("/login");

@@ -113,7 +113,6 @@ router.beforeEach((to, from, next) => {
         "/login",
         "/",
         "/forgotPassword"
-
     ];
     const userPages = [
         "/calendar",
