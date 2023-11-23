@@ -1,7 +1,5 @@
 <template>
-  <html lang="en">
-    <body>
-      <div class="row">
+      <div class="row forot-pass">
         <div class="col-md-6">
           <img class="img" src="../../../public/authen.jpg" alt="" />
         </div>
@@ -48,8 +46,6 @@
           </div>
         </div>
       </div>
-    </body>
-  </html>
 </template>
 
 <script>
@@ -118,19 +114,19 @@ export default {
 </script>
 
 <style>
-.img {
+.forot-pass .img {
   width: 50%;
   margin-top: 15%;
   margin-left: 25%;
 }
 
-.form {
+.forot-pass .form {
   margin-left: 22%;
 }
-.el-form-item__label {
+.forot-pass .el-form-item__label {
   text-align: left;
 }
-.el-form-item {
+.forot-pass .el-form-item {
   display: flex;
   flex-direction: column;
 }
@@ -139,15 +135,15 @@ export default {
     margin-top: 10% !important;
 } */
 
-.el-form-item__content {
+.forot-pass .el-form-item__content {
   margin-left: 0px !important;
 }
 
-.el-input {
+.forot-pass .el-input {
   width: 70% !important;
 }
 
-.btn {
+.forot-pass .btn {
   border-radius: 15px;
   color: #75c4c0;
   width: 25%;
@@ -156,20 +152,20 @@ export default {
   border: #75c4c0 solid 0.5px;
 }
 
-.cont {
+.forot-pass .cont {
   width: 75%;
   border-radius: 15px;
   border: #75c4c0 solid 0.5px;
-  padding-bottom: 15%;
-  padding-top: 15%;
+  padding-bottom: 70px;
+  padding-top: 60px;
   margin-top: 5%;
 }
 
-.row {
+/* .row {
   margin-top: 5%;
-}
+} */
 
-.link {
+.forot-pass .link {
   color: #75c4c0;
   margin-left: 55%;
   font-size: 20px;
