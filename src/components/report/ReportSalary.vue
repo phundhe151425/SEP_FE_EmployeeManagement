@@ -5,18 +5,18 @@
         <div class="d-flex flex-row mt-3 ms-0">
             <div class="col-9">
                 <el-select
-                    v-if="showAdminBoard"
-                    class="mx-3 my-3"
-                    v-model="department"
-                    @change="getLog"
-                    placeholder="Chọn Phòng Ban"
+                        v-if="showAdminBoard"
+                        class="mx-3 my-3"
+                        v-model="department"
+                        @change="getLog"
+                        placeholder="Chọn Phòng Ban"
                 >
                     <el-option label="Tất cả" value="" selected></el-option>
                     <el-option
-                        v-for="(item, index) in departments"
-                        :key="index"
-                        :label="item.name"
-                        :value="item.id"
+                            v-for="(item, index) in departments"
+                            :key="index"
+                            :label="item.name"
+                            :value="item.id"
                     >
                     </el-option>
                 </el-select>
@@ -24,39 +24,39 @@
                 >Phòng {{ accountDepartment.name }}</span
                 >
                 <el-input
-                    class="mx-3 my-3"
-                    size="medium"
-                    placeholder="Tìm kiếm nhân viên"
-                    v-model="search"
-                    clearable
-                    @input="handelSearch"
-                    style="width: 200px"
+                        class="mx-3 my-3"
+                        size="medium"
+                        placeholder="Tìm kiếm nhân viên"
+                        v-model="search"
+                        clearable
+                        @input="handelSearch"
+                        style="width: 200px"
                 >
                 </el-input>
                 <el-select
-                    class="mx-3 my-3"
-                    v-model="currentMonth"
-                    @change="getLog"
-                    placeholder="Tháng"
+                        class="mx-3 my-3"
+                        v-model="currentMonth"
+                        @change="getLog"
+                        placeholder="Tháng"
                 >
                     <el-option
-                        v-for="item in 12"
-                        :key="item"
-                        :value="item"
-                        :label="`Tháng ` + item"
+                            v-for="item in 12"
+                            :key="item"
+                            :value="item"
+                            :label="`Tháng ` + item"
                     >
                         Tháng {{ item }}
                     </el-option>
                 </el-select>
                 <!--          <span class="demonstration">Year</span>-->
                 <el-date-picker
-                    @change="getLog"
-                    v-model="year"
-                    type="year"
-                    format="yyyy"
-                    value-format="yyyy"
-                    :editable="false"
-                    placeholder="Chọn năm" style="margin-right: 10px">
+                        @change="getLog"
+                        v-model="year"
+                        type="year"
+                        format="yyyy"
+                        value-format="yyyy"
+                        :editable="false"
+                        placeholder="Chọn năm" style="margin-right: 10px">
                     <!--                    <el-option-->
                     <!--                        v-for="item in 12"-->
                     <!--                        :key="item"-->
@@ -72,9 +72,9 @@
 
                 <el-tooltip placement="right" effect="light">
                     <el-button
-                        type="primary"
-                        class="el-icon-info el-button--info my-3"
-                        style="border-radius: 10px"
+                            type="primary"
+                            class="el-icon-info el-button--info my-3"
+                            style="border-radius: 10px"
                     >
                         Chú thích
                     </el-button
@@ -111,37 +111,37 @@
                                 </div>
                                 <div class="d-flex flex-row">
                                     <el-button
-                                        round
-                                        class="h-25 me-3"
-                                        style="background-color: #f8cbad"
+                                            round
+                                            class="h-25 me-3"
+                                            style="background-color: #f8cbad"
                                     ></el-button>
                                     <p><span style="font-weight: bold">NT</span>: Nghỉ tuần</p>
                                 </div>
                                 <div class="d-flex flex-row">
                                     <el-button
-                                        round
-                                        class="h-25 me-3"
-                                        style="background-color: #e24146"
+                                            round
+                                            class="h-25 me-3"
+                                            style="background-color: #e24146"
                                     ></el-button>
                                     <p>Chỉnh sửa</p>
                                 </div>
                                 <div class="d-flex flex-row">
                                     <el-button round class="h-25 me-3 position-relative">
                                         <svg
-                                            class="position-absolute top-0 end-0"
-                                            x="0px"
-                                            y="0px"
-                                            viewBox="0 0 512 512"
-                                            style="
+                                                class="position-absolute top-0 end-0"
+                                                x="0px"
+                                                y="0px"
+                                                viewBox="0 0 512 512"
+                                                style="
                         enable-background: new 0 0 512 512;
                         width: 10px;
                         fill: #a843a8ff;
                       "
-                                            xml:space="preserve"
+                                                xml:space="preserve"
                                         >
                       <g>
                         <polygon
-                            points="5.8,0.6 0,6.4 0,378.3 5.8,384 384,384 512,512 512,5.8 506.3,0 6.4,0 	"
+                                points="5.8,0.6 0,6.4 0,378.3 5.8,384 384,384 512,512 512,5.8 506.3,0 6.4,0 	"
                         />
                       </g>
                     </svg>
@@ -158,19 +158,19 @@
 
             <div class="col-3">
                 <el-button
-                    @click="exportExcel()"
-                    type="danger"
-                    class="el-icon-download float-end ms-3 my-3"
-                    round
+                        @click="exportExcel()"
+                        type="danger"
+                        class="el-icon-download float-end ms-3 my-3"
+                        round
                 >
                     Xuất File
                 </el-button>
                 <el-button
-                    v-if="showAdminBoard"
-                    v-b-modal="'save-modal'"
-                    type="primary"
-                    class="el-icon-edit-outline float-end my-3"
-                    round
+                        v-if="showAdminBoard"
+                        v-b-modal="'save-modal'"
+                        type="primary"
+                        class="el-icon-edit-outline float-end my-3"
+                        round
                 >
                     Cập nhật
                 </el-button>
@@ -178,8 +178,8 @@
         </div>
         <!--   BẢNG CHẤM CÔNG-->
         <div
-            class="table-responsive-xxl"
-            style="
+                class="table-responsive-xxl"
+                style="
         margin-top: 50px;
         background-color: white;
         width: 100%;
@@ -216,41 +216,41 @@
                     <td>{{ indexLog + 1 }}</td>
                     <td style="white-space: pre">{{ user.name }}</td>
                     <td
-                        v-b-modal="'my-modal'"
-                        class="fix text-center position-relative"
-                        :class="{
+                            v-b-modal="'my-modal'"
+                            class="fix text-center position-relative"
+                            :class="{
                 edited: log.status,
                 weekend: checkWeekend(index + 1) && !log.status,
               }"
-                        v-on:click="infoEdit(index, user.code, log.sign, log.reason)"
-                        v-for="(log, index) in user.log"
-                        :key="index"
+                            v-on:click="infoEdit(index, user.code, log.sign, log.reason)"
+                            v-for="(log, index) in user.log"
+                            :key="index"
                     >
                         {{ log.sign }}
                         <el-tooltip
-                            popper-class="reason-popper"
-                            v-if="log.reason != null"
-                            placement="right"
-                            effect="light"
+                                popper-class="reason-popper"
+                                v-if="log.reason != null"
+                                placement="right"
+                                effect="light"
                         >
                             <div slot="content">
                                 <div class="note-wrapper">{{ log.reason }}</div>
                             </div>
                             <svg
-                                class="position-absolute top-0 end-0"
-                                x="0px"
-                                y="0px"
-                                viewBox="0 0 512 512"
-                                style="
+                                    class="position-absolute top-0 end-0"
+                                    x="0px"
+                                    y="0px"
+                                    viewBox="0 0 512 512"
+                                    style="
                     enable-background: new 0 0 512 512;
                     width: 10px;
                     fill: #a843a8ff;
                   "
-                                xml:space="preserve"
+                                    xml:space="preserve"
                             >
                   <g>
                     <polygon
-                        points="5.8,0.6 0,6.4 0,378.3 5.8,384 384,384 512,512 512,5.8 506.3,0 6.4,0 	"
+                            points="5.8,0.6 0,6.4 0,378.3 5.8,384 384,384 512,512 512,5.8 506.3,0 6.4,0 	"
                     />
                   </g>
                 </svg>
@@ -258,9 +258,9 @@
                     </td>
                     <td class="text-center">{{ user.dayWork }}</td>
                     <td
-                        class="fix text-center"
-                        @click="infoDayEdit(user.dayEarn, user.code)"
-                        v-b-modal="'my-modal1'"
+                            class="fix text-center"
+                            @click="infoDayEdit(user.dayEarn, user.code)"
+                            v-b-modal="'my-modal1'"
                     >
                         {{ user.dayEarn }}
                     </td>
@@ -276,8 +276,8 @@
                 </tbody>
             </table>
             <table
-                v-if="showModeratorBoard"
-                class="table table-bordered align-middle"
+                    v-if="showModeratorBoard"
+                    class="table table-bordered align-middle"
             >
                 <thead style="background-color: #c2c2c2">
                 <tr>
@@ -303,36 +303,36 @@
                     <td>{{ indexLog + 1 }}</td>
                     <td style="white-space: pre">{{ user.name }}</td>
                     <td
-                        class="fix text-center position-relative"
-                        :class="{ weekend: checkWeekend(index + 1) }"
-                        v-for="(log, index) in user.log"
-                        :key="index"
+                            class="fix text-center position-relative"
+                            :class="{ weekend: checkWeekend(index + 1) }"
+                            v-for="(log, index) in user.log"
+                            :key="index"
                     >
                         {{ log.sign }}
                         <el-tooltip
-                            popper-class="reason-popper"
-                            v-if="log.reason != null"
-                            placement="right"
-                            effect="light"
+                                popper-class="reason-popper"
+                                v-if="log.reason != null"
+                                placement="right"
+                                effect="light"
                         >
                             <div slot="content">
                                 <div class="note-wrapper">{{ log.reason }}</div>
                             </div>
                             <svg
-                                class="position-absolute top-0 end-0"
-                                x="0px"
-                                y="0px"
-                                viewBox="0 0 512 512"
-                                style="
+                                    class="position-absolute top-0 end-0"
+                                    x="0px"
+                                    y="0px"
+                                    viewBox="0 0 512 512"
+                                    style="
                     enable-background: new 0 0 512 512;
                     width: 10px;
                     fill: #a843a8ff;
                   "
-                                xml:space="preserve"
+                                    xml:space="preserve"
                             >
                   <g>
                     <polygon
-                        points="5.8,0.6 0,6.4 0,378.3 5.8,384 384,384 512,512 512,5.8 506.3,0 6.4,0 	"
+                            points="5.8,0.6 0,6.4 0,378.3 5.8,384 384,384 512,512 512,5.8 506.3,0 6.4,0 	"
                     />
                   </g>
                 </svg>
@@ -362,26 +362,26 @@
                 </b-icon-x-circle-fill>
             </template>
             <b-form-radio
-                v-model="selected"
-                v-for="(sign, index) in signs"
-                :key="index"
-                :name="sign"
-                :value="sign"
+                    v-model="selected"
+                    v-for="(sign, index) in signs"
+                    :key="index"
+                    :name="sign"
+                    :value="sign"
             >{{ sign }}
             </b-form-radio
             >
             <div class="mt-2 my-2">Nhập lý do :</div>
             <b-form-input
-                v-model="currenReason"
-                size="sm"
-                autofocus
-                type="text"
+                    v-model="currenReason"
+                    size="sm"
+                    autofocus
+                    type="text"
             ></b-form-input>
             <template #modal-footer="{ ok }">
                 <b-button
-                    size="sm"
-                    variant="success"
-                    @click="handleEdit(dateEdit, codeEdit, selected, currenReason), ok()"
+                        size="sm"
+                        variant="success"
+                        @click="handleEdit(dateEdit, codeEdit, selected, currenReason), ok()"
                 >
                     OK
                 </b-button>
@@ -397,19 +397,19 @@
                 </b-icon-x-circle-fill>
             </template>
             <b-form-input
-                v-model="dayEarn"
-                size="sm"
-                min="0"
-                max="31"
-                type="number"
+                    v-model="dayEarn"
+                    size="sm"
+                    min="0"
+                    max="31"
+                    type="number"
             >{{ dayEarn }}
             </b-form-input
             >
             <template #modal-footer="{ ok }">
                 <b-button
-                    size="sm"
-                    variant="success"
-                    @click="handleDayEarn(dayEarn, codeEdit), ok()"
+                        size="sm"
+                        variant="success"
+                        @click="handleDayEarn(dayEarn, codeEdit), ok()"
                 >
                     OK
                 </b-button>
@@ -430,8 +430,8 @@
                 >
                 <b-button @click="ok()">Tiếp tục chỉnh sửa</b-button>
                 <b-button
-                    style="background-color: #75c4c0"
-                    @click="handelUpdate(), ok()"
+                        style="background-color: #75c4c0"
+                        @click="handelUpdate(), ok()"
                 >
                     Lưu
                 </b-button>
@@ -494,6 +494,7 @@ export default {
         },
         handleEdit(date, code, sign, reason) {
             for (let user of this.users) {
+                console.log(user.code)
                 if (user.code == code) {
                     if (
                         user.log[date].sign == sign &&
@@ -525,7 +526,7 @@ export default {
                             code: code,
                             sign: null,
                             reason: reason,
-                            codeAdminEdit: this.currentUser.user.code
+                            codeAdminEdit: this.currentUser.userCode
                         });
                     else
                         this.logsEdit.push({
@@ -533,7 +534,7 @@ export default {
                             code: code,
                             sign: sign,
                             reason: reason,
-                            codeAdminEdit: this.currentUser.user.code
+                            codeAdminEdit: this.currentUser.userCode
                         });
                 }
             }
@@ -548,31 +549,31 @@ export default {
             });
         },
         handelUpdate() {
-            // LogService.updateLog(this.logsEdit)
-            //     .then((respone) => {
-            //         console.log(respone);
-            //         this.$swal.fire({
-            //             title: "Cập nhật thành công",
-            //             type: "success",
-            //             icon: "success",
-            //             showCloseButton: true,
-            //         });
-            //         this.users.map((user) => {
-            //             user.log.map((sign) => {
-            //                 sign.status = false;
-            //             });
-            //         });
-            //         this.logsEdit = [];
-            //     })
-            //     .catch((error) => {
-            //         this.$swal.fire({
-            //             title: "Cập nhật thất bại",
-            //             type: "error",
-            //             text: error.response.data.message,
-            //             icon: "error",
-            //             showCloseButton: true,
-            //         });
-            //     });
+            AttendanceService.updateAttendance(this.logsEdit)
+                .then((respone) => {
+                    console.log(respone);
+                    this.$swal.fire({
+                        title: "Cập nhật thành công",
+                        type: "success",
+                        icon: "success",
+                        showCloseButton: true,
+                    });
+                    this.users.map((user) => {
+                        user.log.map((sign) => {
+                            sign.status = false;
+                        });
+                    });
+                    this.logsEdit = [];
+                })
+                .catch((error) => {
+                    this.$swal.fire({
+                        title: "Cập nhật thất bại",
+                        type: "error",
+                        text: error.response.data.message,
+                        icon: "error",
+                        showCloseButton: true,
+                    });
+                });
         },
         //CaculateDayWork
         caculateDayEarn(signs) {
@@ -690,12 +691,14 @@ export default {
             AttendanceService.getForReport(param).then((respone) => {
                 let dataCall = [];
                 let data = respone.data;
+                console.log("data")
+                console.log(respone.data)
                 for (let users of data) {
                     let signs = [];
                     for (let i = 1; i <= 31; i++) {
                         //get All LogDetail
                         let dates = [];
-                        for (let user of users.logDetail) {
+                        for (let user of users.attendances) {
                             let date = Number(user.dateLog.split("-")[2]);
                             dates.push(date);
 
@@ -705,14 +708,14 @@ export default {
                                         sign: "_",
                                         status: false,
                                         date: user.dateLog,
-                                        reason: user.reason,
+                                        reason: user.editReason,
                                     });
                                 else
                                     signs.push({
                                         sign: user.signs.name,
                                         status: false,
                                         date: user.dateLog,
-                                        reason: user.reason,
+                                        reason: user.editReason,
                                     });
                             }
                         }
