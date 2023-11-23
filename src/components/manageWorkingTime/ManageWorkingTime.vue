@@ -21,7 +21,7 @@
         <br />
         <div>
           <el-table
-            :data="holidays"
+            :data="workingTimes"
             height="700px"
             :header-cell-style="{
               background: '#D9D9D9',
@@ -85,9 +85,9 @@
     </div>
 
     <el-dialog
-      :visible.sync="editHolidayDialogVisible"
+      :visible.sync="editWorkingTimeDialogVisible"
       width="50%"
-      title="Sửa ngày nghi"
+      title="Sửa thời gian làm việc"
       left
     >
       <el-form
@@ -193,7 +193,7 @@ export default {
       year: currentYear,
       currentDate: date,
       years: [],
-      holidayId: "",
+      workingTimeId: "",
       ruleForm: {
         endTime: "",
         workingTimeName: "",
@@ -232,16 +232,14 @@ export default {
           { validator: validateEndDate, trigger: "blur" },
         ],
       },
-      holidays: [],
+      workingTimes: [],
       page: 0,
       pageSize: 5,
       search: "",
       date: "",
       totalItems: 0,
       fit: "fill",
-      editHolidayDialogVisible: false,
-      createHolidayDialogVisible: false,
-      deleteHolidayDialogVisible: false,
+      editWorkingTimeDialogVisible: false,
     };
   },
 
@@ -267,14 +265,12 @@ export default {
             "HH:mm:ss"
           );
           WorkingTimeService.updateWorkingTime(
-            this.holidayId,
-            this.ruleForm.startTime,
-            this.ruleForm.endTime
+            this.workingTimeId,
+            this.ruleForm
           ).then(() => {
-            this.createHolidayDialogVisible = false;
-            this.editHolidayDialogVisible = false;
+            this.editWorkingTimeDialogVisible = false;
             this.$notify.success({
-              message: "Sửa ngày nghỉ thành công!",
+              message: "Sửa thời gian thành công!",
               title: "Success",
               timer: 2000,
               timerProgressBar: true,
@@ -290,7 +286,7 @@ export default {
 
     cancelEditForm(formName) {
       this.$refs[formName].resetFields();
-      this.editHolidayDialogVisible = false;
+      this.editWorkingTimeDialogVisible = false;
     },
 
     showEditHolidayDialog(id) {
@@ -321,16 +317,14 @@ export default {
           console.log(e);
         });
 
-      this.editHolidayDialogVisible = true;
-      this.createHolidayDialogVisible = false;
-      this.deleteHolidayDialogVisible = false;
-      this.holidayId = id;
+      this.editWorkingTimeDialogVisible = true;
+      this.workingTimeId = id;
     },
 
     getData() {
       WorkingTimeService.getData(this.page, this.pageSize, this.search)
         .then((response) => {
-          this.holidays = response.data;
+          this.workingTimes = response.data;
           console.log(response);
 
           //   this.page = response.data.pageable.pageNumber;
