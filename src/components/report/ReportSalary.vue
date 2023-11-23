@@ -691,32 +691,31 @@ export default {
             AttendanceService.getForReport(param).then((respone) => {
                 let dataCall = [];
                 let data = respone.data;
+                console.log("data")
+                console.log(respone.data)
                 for (let users of data) {
-                    console.log("data")
-                    console.log(users)
                     let signs = [];
                     for (let i = 1; i <= 31; i++) {
                         //get All LogDetail
                         let dates = [];
-                        for (let user of users.logDetail) {
+                        for (let user of users.attendances) {
                             let date = Number(user.dateLog.split("-")[2]);
                             dates.push(date);
+
                             if (date == i) {
-                                console.log("logDetail")
-                                console.log(user)
                                 if (user.signs == null)
                                     signs.push({
                                         sign: "_",
                                         status: false,
                                         date: user.dateLog,
-                                        reason: user.reason,
+                                        reason: user.editReason,
                                     });
                                 else
                                     signs.push({
                                         sign: user.signs.name,
                                         status: false,
                                         date: user.dateLog,
-                                        reason: user.reason,
+                                        reason: user.editReason,
                                     });
                             }
                         }
