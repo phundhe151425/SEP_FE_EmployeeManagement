@@ -1,24 +1,11 @@
 <template>
   <div class="manage-holiday">
-    <h3 class="text-start" style="font-weight: bold">Quản lý thời gian làm việc</h3>
+    <h3 class="text-start" style="font-weight: bold">
+      Quản lý thời gian làm việc
+    </h3>
     <hr style="margin-bottom: 2%" />
     <div style="padding-bottom: 20px">
       <div className="" style="width: 100%; margin: auto">
-        <el-row :gutter="20">
-          <!-- <el-col :md="6" :lg="6" :xl="6" style="margin-bottom: 20px">
-            <div class="grid-content">
-              <span style="">Tìm kiếm</span> &ensp;
-              <el-input
-                v-model="search"
-                @input="getData"
-                size="medium"
-                placeholder="Tìm theo tên"
-                style="width: 200px; padding: 2px 0"
-              />
-            </div>
-          </el-col> -->
-        </el-row>
-        <br />
         <div>
           <el-table
             :data="workingTimes"
@@ -91,7 +78,7 @@
       left
     >
       <el-form
-        id="formCreate"
+        id="formEdit"
         :model="ruleForm"
         :rules="rules"
         ref="ruleForm"
@@ -176,10 +163,8 @@ import WorkingTimeService from "@/services/workingtime-service";
 import moment from "moment";
 export default {
   components: {},
-  name: "ManageHoliday",
+  name: "ManageWorkingTime",
   data() {
-    var date = new Date();
-    var currentYear = date.getFullYear();
     var validateEndDate = (rule, value, callback) => {
       if (this.ruleForm.startDate == "" && this.ruleForm.endDate != "") {
         this.ruleForm.endDate = "";
@@ -190,43 +175,24 @@ export default {
     };
 
     return {
-      year: currentYear,
-      currentDate: date,
-      years: [],
       workingTimeId: "",
       ruleForm: {
         endTime: "",
         workingTimeName: "",
         startTime: "",
       },
-      startHolidayDate: "",
-      endHolidayDate: "",
-
       rules: {
-        workingTimeName: [
-          {
-            required: true,
-            message: "Vui lòng nhập tên ngày nghỉ!",
-            trigger: "blur",
-          },
-          {
-            min: 1,
-            max: 100,
-            message: "Tên ngày nghỉ từ 1 đến 100 kí tự",
-            trigger: "blur",
-          },
-        ],
         startTime: [
           {
             required: true,
-            message: "Vui lòng nhập ngày bắt đầu kỳ nghỉ!",
+            message: "Vui lòng nhập thời gian bắt đầu!",
             trigger: "change",
           },
         ],
         endTime: [
           {
             required: true,
-            message: "Vui lòng nhập ngày kết thúc kỳ nghỉ!",
+            message: "Vui lòng nhập thời gian kết thúc!",
             trigger: "change",
           },
           { validator: validateEndDate, trigger: "blur" },
@@ -257,7 +223,6 @@ export default {
     submitEditForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log(this.ruleForm);
           this.ruleForm.startTime = moment(
             String(this.ruleForm.startTime)
           ).format("HH:mm:ss");
@@ -267,16 +232,22 @@ export default {
           WorkingTimeService.updateWorkingTime(
             this.workingTimeId,
             this.ruleForm
-          ).then(() => {
-            this.editWorkingTimeDialogVisible = false;
-            this.$notify.success({
-              message: "Sửa thời gian thành công!",
-              title: "Success",
-              timer: 2000,
-              timerProgressBar: true,
+          )
+            .then(() => {
+              this.editWorkingTimeDialogVisible = false;
+              this.$notify.success({
+                message: "Sửa thời gian thành công!",
+                title: "Success",
+                timer: 2000,
+                timerProgressBar: true,
+              });
+              this.getData();
+            })
+            .catch((e) => {
+              if (e.response.status == 401) {
+                this.logout();
+              }
             });
-            this.getData();
-          });
         } else {
           console.log("error submit!!");
           return false;
@@ -313,7 +284,9 @@ export default {
           this.ruleForm.endTime = date1;
         })
         .catch((e) => {
-          this.logout();
+          if (e.response.status == 401) {
+            this.logout();
+          }
           console.log(e);
         });
 
@@ -325,13 +298,14 @@ export default {
       WorkingTimeService.getData(this.page, this.pageSize, this.search)
         .then((response) => {
           this.workingTimes = response.data;
-          console.log(response);
 
           //   this.page = response.data.pageable.pageNumber;
           //   this.totalItems = response.data.totalElements;
         })
         .catch((e) => {
-          this.logout();
+          if (e.response.status == 401) {
+            this.logout();
+          }
           console.log(e);
         });
     },
@@ -341,14 +315,13 @@ export default {
       var min = startTime.getMinutes();
       startTime.setMinutes(min + 1);
       var timeString = moment(String(startTime)).format("HH:mm:ss");
-      console.log(timeString)
-      return timeString + " - 23:59:59" ;
+      return timeString + " - 23:59:59";
     },
 
     logout() {
-        this.$store.dispatch("auth/logout");
-        window.location.replace("/login");
-        localStorage.removeItem("user");
+      this.$store.dispatch("auth/logout");
+      window.location.replace("/login");
+      localStorage.removeItem("user");
     },
 
     handlePageChange(value) {
