@@ -248,6 +248,7 @@
                                      <li class="nav-item" v-if="isAdmin">
                         <a class="nav-link active" aria-current="page">
                           <router-link to="/manageContract" class="nav-link sel">
+                             <i class="el-icon-document"></i>
                             <font-awesome-icon icon="home" />
                             Quản lý hợp đồng
                           </router-link>
