@@ -1,12 +1,12 @@
 <template>
   <div class="manage-request">
-    <h3>Quản lý đề xuất</h3>
-    <hr style="margin-bottom: 5%" />
+    <h3 class="text-start" style="font-weight: bold">Quản lý đề xuất</h3>
+    <hr style="margin-bottom: 2%" />
     <div style="padding-bottom: 20px">
       <div className="" style="width: 100%; margin: auto">
         <el-row :gutter="20">
           <el-col :md="6" :lg="6" :xl="6" style="margin-bottom: 20px">
-            <div class="grid-content">
+            <div class="">
               <span style="">Từ ngày</span> &ensp;
 
               <el-date-picker
@@ -25,7 +25,7 @@
           </el-col>
 
           <el-col :md="6" :lg="6" :xl="6" style="margin-bottom: 20px">
-            <div class="grid-content">
+            <div class="">
               <span style="">Đến ngày</span> &ensp;
 
               <el-date-picker
@@ -45,7 +45,7 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :md="6" :lg="6" :xl="6" v-if="isModerator == false">
-            <div class="grid-content" style="margin-bottom: 20px">
+            <div class="" style="margin-bottom: 20px">
               <span>Phòng ban</span> &ensp;
               <el-select
                 v-model="departmentId"
@@ -65,14 +65,14 @@
           </el-col>
 
           <el-col :md="6" :lg="6" :xl="6" v-else>
-            <div class="grid-content" style="margin-bottom: 20px">
+            <div class="" style="margin-bottom: 20px">
               <span>Phòng ban</span> &ensp;
               <span>{{ departmentOfModerator }}</span>
             </div>
           </el-col>
 
           <el-col :md="6" :lg="6" :xl="6">
-            <div class="grid-content" style="margin-bottom: 20px">
+            <div class="" style="margin-bottom: 20px">
               <span>Trạng thái</span> &ensp;
               <el-select
                 v-model="status"
@@ -91,13 +91,13 @@
           </el-col>
 
           <el-col :md="6" :lg="6" :xl="6" style="margin-bottom: 20px">
-            <div class="grid-content">
+            <div class="">
               <span style="">Tìm kiếm</span> &ensp;
               <el-input
                 v-model="search"
                 @input="getData"
                 size="medium"
-                placeholder="Tìm theo tên"
+                placeholder="Tìm theo tên, mã nhân viên"
                 style="width: 200px; padding: 2px 0"
               />
             </div>
@@ -152,6 +152,12 @@
               >
                 {{ data.row.requestType.requestTypeName }}</router-link
               >
+            </el-table-column>
+            <el-table-column
+              label="Mã Nhân viên"
+              prop="user.userCode"
+              align="center"
+            >
             </el-table-column>
             <el-table-column
               label="Nhân viên"
@@ -399,6 +405,7 @@
                     name="startDate"
                     placeholder="Chọn ngày"
                     style="width: 100%"
+                    :clearable="false"
                     :picker-options="pickerOptionStartDate"
                   ></el-date-picker>
                 </el-form-item>
@@ -410,9 +417,8 @@
                   <el-time-picker
                     v-model="ruleForm.startTime"
                     placeholder="Chọn thời gian"
-                    :picker-options="{
-                      selectableRange: '8:30:00 - 18:00:00',
-                    }"
+                    :clearable="false"
+                    :picker-options="pickerOptionStartTime"
                   >
                   </el-time-picker>
                 </el-form-item>
@@ -431,6 +437,7 @@
                     value-format="yyyy-MM-dd"
                     placeholder="Chọn ngày"
                     style="width: 100%"
+                    :clearable="false"
                     :picker-options="pickerOptionEndDate"
                   ></el-date-picker>
                 </el-form-item>
@@ -442,6 +449,7 @@
                   <el-time-picker
                     v-model="ruleForm.endTime"
                     placeholder="Chọn thời gian"
+                    :clearable="false"
                     :picker-options="pickerOptionOtherTime"
                   >
                   </el-time-picker>
@@ -498,6 +506,7 @@
                       name="startDate"
                       placeholder="Chọn ngày"
                       style="width: 100%"
+                      :clearable="false"
                       @change="setDateTime"
                       :picker-options="pickerOptionStartDate"
                     ></el-date-picker>
@@ -563,6 +572,7 @@
                       value-format="yyyy-MM-dd"
                       name="startDate"
                       placeholder="Chọn ngày"
+                      :clearable="false"
                       style="width: 100%"
                       :picker-options="pickerOptionStartDate"
                     ></el-date-picker>
@@ -576,9 +586,8 @@
                     <el-time-picker
                       v-model="ruleForm.startTime"
                       placeholder="Chọn thời gian"
-                      :picker-options="{
-                        selectableRange: '8:30:00 - 18:00:00',
-                      }"
+                      :clearable="false"
+                      :picker-options="pickerOptionStartTime"
                     >
                     </el-time-picker>
                   </el-form-item>
@@ -614,6 +623,7 @@
                       format="dd/MM/yyyy"
                       value-format="yyyy-MM-dd"
                       placeholder="Chọn ngày"
+                      :clearable="false"
                       style="width: 100%"
                       :picker-options="pickerOptionEndDate"
                     ></el-date-picker>
@@ -626,6 +636,7 @@
                     <el-time-picker
                       v-model="ruleForm.endTime"
                       placeholder="Chọn thời gian"
+                      :clearable="false"
                       :picker-options="pickerOptionOtherTime"
                     >
                     </el-time-picker>
@@ -748,11 +759,21 @@
                     name="startDate"
                     placeholder="Chọn ngày"
                     style="width: 100%"
+                    :clearable="false"
                     @change="setDateTime"
                     :picker-options="pickerOptionOTBeforeDate"
                   ></el-date-picker>
                 </el-form-item>
               </el-form-item>
+            </div>
+          </div>
+          <div v-if="isWarning == true">
+            <div class="row" style="margin-top: 5px">
+              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                <div style="color: orange">
+                  Bạn chưa tạo đơn xin trước cho ngày này!
+                </div>
+              </div>
             </div>
           </div>
           <div class="row" style="margin-top: 15px">
@@ -762,6 +783,7 @@
                   <el-time-picker
                     v-model="ruleForm.startTime"
                     placeholder="Chọn thời gian"
+                    :clearable="false"
                   >
                   </el-time-picker>
                 </el-form-item>
@@ -773,6 +795,7 @@
                   <el-time-picker
                     v-model="ruleForm.endTime"
                     placeholder="Chọn thời gian"
+                    :clearable="false"
                     :picker-options="pickerOptionOTTime"
                   >
                   </el-time-picker>
@@ -892,6 +915,7 @@
                     value-format="yyyy-MM-dd"
                     name="startDate"
                     placeholder="Chọn ngày"
+                    :clearable="false"
                     style="width: 100%"
                     @change="setDateTime"
                   ></el-date-picker>
@@ -958,6 +982,7 @@
                     name="startDate"
                     placeholder="Chọn ngày"
                     style="width: 100%"
+                    :clearable="false"
                     :picker-options="pickerOptionStartDate"
                   ></el-date-picker>
                 </el-form-item>
@@ -969,9 +994,8 @@
                   <el-time-picker
                     v-model="ruleForm.startTime"
                     placeholder="Chọn thời gian"
-                    :picker-options="{
-                      selectableRange: '8:30:00 - 18:00:00',
-                    }"
+                    :clearable="false"
+                    :picker-options="pickerOptionStartTime"
                   >
                   </el-time-picker>
                 </el-form-item>
@@ -1005,6 +1029,7 @@
                     value-format="yyyy-MM-dd"
                     placeholder="Chọn ngày"
                     style="width: 100%"
+                    :clearable="false"
                     :picker-options="pickerOptionEndDate"
                   ></el-date-picker>
                 </el-form-item>
@@ -1016,6 +1041,7 @@
                   <el-time-picker
                     v-model="ruleForm.endTime"
                     placeholder="Chọn thời gian"
+                    :clearable="false"
                     :picker-options="pickerOptionOtherTime"
                   >
                   </el-time-picker>
@@ -1072,6 +1098,7 @@
 <script>
 import RequestService from "@/services/request-service";
 import DepartmentService from "@/services/department-service";
+import WorkingTimeService from "@/services/workingtime-service";
 import moment from "moment";
 export default {
   components: {},
@@ -1090,7 +1117,7 @@ export default {
     var endDate = new Date(currentYear, date.getMonth(), lastDateOfMonth);
 
     var validateEndDate = (rule, value, callback) => {
-      if (this.ruleForm.startDate == null || this.ruleForm.startDate == "") {
+      if (this.ruleForm.startDate == "" || this.ruleForm.startDate == null) {
         this.ruleForm.endDate = "";
         callback(new Error("Vui lòng nhập ngày bắt đầu!"));
       } else {
@@ -1100,11 +1127,46 @@ export default {
 
     var validateStartDate = (rule, value, callback) => {
       if (
-        (this.ruleForm.startDate != null || this.ruleForm.startDate != "") &&
-        (this.ruleForm.endDate == null || this.ruleForm.endDate == "")
+        (this.ruleForm.startDate != "" || this.ruleForm.startDate != null) &&
+        (this.ruleForm.endDate == "" || this.ruleForm.endDate == null)
       ) {
         this.$refs["ruleForm"].fields
           .find((f) => f.prop == "endDate")
+          .resetField();
+      } else {
+        callback();
+      }
+    };
+
+    var validateEndTime = (rule, value, callback) => {
+      if (
+        this.ruleForm.startDate == "" ||
+        this.ruleForm.endDate == "" ||
+        this.ruleForm.startDate == null ||
+        this.ruleForm.endDate == null
+      ) {
+        this.ruleForm.endTime = "";
+        callback(new Error("Vui lòng nhập ngày bắt đầu và ngày kết thúc!"));
+      } else if (this.ruleForm.startTime == "") {
+        this.ruleForm.endTime = "";
+        callback(new Error("Vui lòng nhập thời gian bắt đầu!"));
+      } else {
+        callback();
+      }
+    };
+
+    var validateStartTime = (rule, value, callback) => {
+      if (
+        this.ruleForm.startDate == "" ||
+        this.ruleForm.endDate == "" ||
+        this.ruleForm.startDate == null ||
+        this.ruleForm.endDate == null
+      ) {
+        this.ruleForm.startTime = "";
+        callback(new Error("Vui lòng nhập ngày bắt đầu và ngày kết thúc!"));
+      } else if (this.ruleForm.startTime != "" && this.ruleForm.endTime == "") {
+        this.$refs["ruleForm"].fields
+          .find((f) => f.prop == "endTime")
           .resetField();
       } else {
         callback();
@@ -1145,11 +1207,16 @@ export default {
       isRest: false,
       isOT: false,
       isOTBefore: false,
+      isOTAfter: false,
       isForgetTimeKeeping: false,
       isWorkFromHome: false,
       isBusinessTravel: false,
+      isWarning: false,
       // numberRestDay: 0,
+      startFullTime: "",
+      endFullTime: "",
       slotId: "",
+      listRequest: [],
       slots: [
         {
           id: 1,
@@ -1194,9 +1261,9 @@ export default {
             trigger: "blur",
           },
           {
-            min: 3,
+            min: 1,
             max: 255,
-            message: "Nội dung ghi chú từ 3 đến 255 kí tự",
+            message: "Nội dung ghi chú từ 1 đến 255 kí tự",
             trigger: "blur",
           },
         ],
@@ -1212,6 +1279,12 @@ export default {
         endTime: "",
         // numberRestDay: "",
         restType: "",
+      },
+      shift: {
+        workingTimeName: "",
+        id: "",
+        startTime: "",
+        endTime: "",
       },
 
       rules: {
@@ -1236,9 +1309,9 @@ export default {
             trigger: "blur",
           },
           {
-            min: 3,
+            min: 1,
             max: 255,
-            message: "Nội dung từ 3 đến 255 kí tự",
+            message: "Nội dung từ 1 đến 255 kí tự",
             trigger: "blur",
           },
         ],
@@ -1256,6 +1329,7 @@ export default {
             message: "Vui lòng nhập thời gian!",
             trigger: "blur",
           },
+          { validator: validateStartTime, trigger: "blur" },
         ],
 
         endTime: [
@@ -1264,6 +1338,7 @@ export default {
             message: "Vui lòng nhập thời gian!",
             trigger: "blur",
           },
+          { validator: validateEndTime, trigger: "blur" },
         ],
         endDate: [
           {
@@ -1308,6 +1383,7 @@ export default {
     this.getData();
     this.getAllDepartment();
     this.getAllRequestCategory();
+    this.getWoringTimeFullTime();
     this.name = this.$store.state.auth.user.fullName;
     this.department = this.$store.state.auth.user.departmentName;
   },
@@ -1333,7 +1409,11 @@ export default {
         disabledDate: this.disableOneDayAgoDate,
       };
     },
-
+    pickerOptionStartTime() {
+      return {
+        selectableRange: this.rangeStartTime(),
+      };
+    },
     pickerOptionOTTime() {
       return {
         selectableRange: this.rangeTime(),
@@ -1363,6 +1443,7 @@ export default {
       )
         .then((response) => {
           this.requests = response.data.content;
+          console.log(this.requests);
           for (const key in this.requests) {
             if (Object.hasOwnProperty.call(this.requests, key)) {
               this.requests[key].createdDate = moment(
@@ -1385,7 +1466,6 @@ export default {
           this.departments = response.data;
         })
         .catch((e) => {
-          this.logout();
           console.log(e);
         });
     },
@@ -1396,7 +1476,6 @@ export default {
           this.requestCategories = response.data.content;
         })
         .catch((e) => {
-          this.logout();
           console.log(e);
         });
     },
@@ -1500,9 +1579,12 @@ export default {
           console.log(e);
         });
       this.isOT = false;
+      this.isOTBefore = false;
+      this.isOTAfter = false;
       this.isRest = false;
       this.isPersonalWork = false;
       this.isForgetTimeKeeping = false;
+      this.isWarning = false;
       // this.ruleForm.numberRestDay = 0;
       this.ruleForm.restType = "";
       this.isRestBySlot = false;
@@ -1577,6 +1659,22 @@ export default {
       this.isOTBefore = false;
       switch (typeId) {
         case 1:
+          if (this.$store.state.auth.user.dayoff <= 0) {
+            this.$notify.error({
+              message: "Bạn đã hết xin nghỉ có phép!",
+              title: "Failed",
+              timer: 2000,
+              timerProgressBar: true,
+            });
+          } else {
+            this.isRest = true;
+            this.isPersonalWork = false;
+            this.ruleForm.restType = "";
+            this.isRestBySlot = false;
+            this.isRestByDay = false;
+            this.ruleForm.slotId = "";
+          }
+          break;
         case 2:
           this.isRest = true;
           this.isPersonalWork = false;
@@ -1595,6 +1693,13 @@ export default {
           break;
         case 4:
           this.isOTBefore = true;
+          this.isWarning = false;
+          this.isOTAfter = false;
+          break;
+        case 5:
+          this.isOTAfter = true;
+          this.isWarning = false;
+          this.isOTBefore = false;
           break;
         case 6:
           this.isForgetTimeKeeping = true;
@@ -1644,26 +1749,108 @@ export default {
       this.ruleForm.requestContent = "";
     },
 
+    getWoringTimeFullTime() {
+      WorkingTimeService.getWorkingTimeById(1).then((response) => {
+        this.startFullTime = response.data.startTime;
+        this.endFullTime = response.data.endTime;
+      });
+    },
+    getWoringTimeById(id) {
+      WorkingTimeService.getWorkingTimeById(id).then((response) => {
+        this.shift = response.data;
+      });
+    },
+    getDataByUser(startDate, endDate) {
+      RequestService.getListRequestByUser(0, 30, "", "", startDate, endDate)
+        .then((response) => {
+          this.listRequest = response.data.content;
+          console.log(this.listRequest);
+          for (const key in this.requests) {
+            if (Object.hasOwnProperty.call(this.requests, key)) {
+              this.requests[key].createdDate = moment(
+                String(this.requests[key].createdDate)
+              ).format("DD/MM/yyyy");
+            }
+          }
+        })
+        .catch((e) => {
+          // this.logout();
+          console.log(e);
+        });
+    },
+
     setDateTime() {
       if (
         this.isRestBySlot ||
         this.createOTRequestDialogVisible ||
         this.isForgetTimeKeeping
       ) {
-        const date = new Date(this.ruleForm.startDate);
+        var date = new Date(this.ruleForm.startDate);
         this.ruleForm.endDate = date;
-        const date1 = new Date(this.ruleForm.endDate);
-
+        var date1 = new Date(this.ruleForm.endDate);
+        if (this.isOTAfter == true) {
+          var count = 0;
+          var o = date.getDate();
+          date.setDate(o + 1);
+          date = moment(String(date)).format("yyyy-MM-DD");
+          this.getDataByUser(this.ruleForm.startDate, date);
+          setTimeout(() => {
+            for (const key in this.listRequest) {
+              if (Object.hasOwnProperty.call(this.listRequest, key)) {
+                if(this.listRequest[key].requestType.id == 4){
+                  count = count + 1;
+                }
+              }
+            }
+            if (count > 0) {
+              this.isWarning = false;
+            } else {
+              this.isWarning = true;
+            }
+          }, 50);
+        }
         if (this.ruleForm.slotId == 1) {
-          date.setHours(8, 30, 0, 0);
-          date1.setHours(12, 0, 0, 0);
-          this.ruleForm.startTime = date;
-          this.ruleForm.endTime = date1;
+          this.getWoringTimeById(2);
+          setTimeout(() => {
+            console.log(this.shift);
+            var startTime = this.shift.startTime;
+            var subStartTime = startTime.split(":");
+            date.setHours(
+              Number(subStartTime[0]),
+              Number(subStartTime[1]),
+              Number(subStartTime[2])
+            );
+            var endTime = this.shift.endTime;
+            var subEndTime = endTime.split(":");
+            date1.setHours(
+              Number(subEndTime[0]),
+              Number(subEndTime[1]),
+              Number(subEndTime[2])
+            );
+            this.ruleForm.startTime = date;
+            this.ruleForm.endTime = date1;
+          }, 50);
         } else if (this.ruleForm.slotId == 2) {
-          date.setHours(13, 0, 0, 0);
-          date1.setHours(18, 0, 0, 0);
-          this.ruleForm.startTime = date;
-          this.ruleForm.endTime = date1;
+          this.getWoringTimeById(3);
+          setTimeout(() => {
+            console.log(this.shift);
+            var startTime = this.shift.startTime;
+            var subStartTime = startTime.split(":");
+            date.setHours(
+              Number(subStartTime[0]),
+              Number(subStartTime[1]),
+              Number(subStartTime[2])
+            );
+            var endTime = this.shift.endTime;
+            var subEndTime = endTime.split(":");
+            date1.setHours(
+              Number(subEndTime[0]),
+              Number(subEndTime[1]),
+              Number(subEndTime[2])
+            );
+            this.ruleForm.startTime = date;
+            this.ruleForm.endTime = date1;
+          }, 50);
         }
       }
     },
@@ -1694,6 +1881,10 @@ export default {
       }
     },
 
+    rangeStartTime() {
+      return this.startFullTime + " - " + this.endFullTime;
+    },
+
     rangeTime() {
       const startTime = new Date(this.ruleForm.startTime);
       var min = startTime.getMinutes();
@@ -1703,23 +1894,27 @@ export default {
     },
 
     rangeOtherTime() {
-      const startDate = new Date(this.ruleForm.startDate);
-      const endDate = new Date(this.ruleForm.endDate);
-      var startDateString = moment(String(startDate)).format("DD/MM/yyyy");
-      var endDateString = moment(String(endDate)).format("DD/MM/yyyy");
-      if (startDateString === endDateString) {
-        const startTime = new Date(this.ruleForm.startTime);
-        var min = startTime.getMinutes();
-        startTime.setMinutes(min + 1);
-        var timeString = moment(String(startTime)).format("HH:mm:ss");
-        return timeString + " - 18:00:00";
+      if (this.ruleForm.startDate != "" && this.ruleForm.endDate != "") {
+        const startDate = new Date(this.ruleForm.startDate);
+        const endDate = new Date(this.ruleForm.endDate);
+        var startDateString = moment(String(startDate)).format("DD/MM/yyyy");
+        var endDateString = moment(String(endDate)).format("DD/MM/yyyy");
+        if (startDateString === endDateString) {
+          if (this.ruleForm.startTime != "") {
+            const startTime = new Date(this.ruleForm.startTime);
+            var min = startTime.getMinutes();
+            startTime.setMinutes(min + 1);
+            var timeString = moment(String(startTime)).format("HH:mm:ss");
+            return timeString + " - " + this.endFullTime;
+          }
+        }
       }
-      return "8:30:00 - 18:00:00";
+      return this.startFullTime + " - " + this.endFullTime;
     },
 
     logout() {
       this.$store.dispatch("auth/logout");
-      window.location.replace("http://localhost:2001/login");
+      window.location.replace("/login");
       localStorage.removeItem("user");
     },
     handlePageChange(value) {
@@ -1821,26 +2016,26 @@ export default {
   border-radius: 5px;
   padding: 3px 20px;
 }
-.el-table .btn-action {
+.manage-request .el-table .btn-action {
   border: none;
   padding: 5px 5px;
   background-color: #f8cbad;
   border-radius: 5px;
 }
 
-.el-table .btn-action:hover {
+.manage-request .el-table .btn-action:hover {
   border: none;
   padding: 5px 5px;
   background-color: #f4e4d4;
   border-radius: 5px;
 }
 
-.el-table--enable-row-hover .el-table__body tr:hover > td {
+.manage-request .el-table--enable-row-hover .el-table__body tr:hover > td {
   background-color: #c9f5eb !important;
 }
 
 /* The switch - the box around the slider */
-.switch {
+.manage-request .switch {
   position: relative;
   display: inline-block;
   width: 60px;
@@ -1848,14 +2043,14 @@ export default {
 }
 
 /* Hide default HTML checkbox */
-.switch input {
+.manage-request .switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
 /* The slider */
-.slider {
+.manage-request .slider {
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -1867,7 +2062,7 @@ export default {
   transition: 0.4s;
 }
 
-.slider:before {
+.manage-request .slider:before {
   position: absolute;
   content: "";
   height: 26px;
@@ -1879,30 +2074,30 @@ export default {
   transition: 0.4s;
 }
 
-input:checked + .slider {
+.manage-request input:checked + .slider {
   background-color: #2196f3;
 }
 
-input:focus + .slider {
+.manage-request input:focus + .slider {
   box-shadow: 0 0 1px #2196f3;
 }
 
-input:checked + .slider:before {
+.manage-request input:checked + .slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
 }
 
 /* Rounded sliders */
-.slider.round {
+.manage-request .slider.round {
   border-radius: 34px;
 }
 
-.slider.round:before {
+.manage-request .slider.round:before {
   border-radius: 50%;
 }
 
-.loading {
+.manage-request .loading {
   position: absolute;
   z-index: 1;
   width: 100%;
@@ -1913,68 +2108,68 @@ input:checked + .slider:before {
   /* background: rgba(0, 0, 0, 0.479); */
 }
 
-.loading img {
+.manage-request .loading img {
   width: 25rem;
 }
 
 @media only screen and (min-width: 150px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 108%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: left;
   }
 }
 
 @media only screen and (min-width: 992px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 100%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: left;
   }
 }
 
 @media only screen and (min-width: 1440px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-request .div-buttons {
     float: right;
   }
 }
 
 @media only screen and (min-width: 1689px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-request .div-buttons {
     float: right;
   }
 }
 
 @media only screen and (min-width: 1920px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-request .div-buttons {
     float: right;
   }
 }

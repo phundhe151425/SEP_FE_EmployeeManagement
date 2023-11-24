@@ -1,7 +1,7 @@
 <template>
   <div class="manage-request">
-    <h3>Đề xuất của tôi</h3>
-    <hr style="margin-bottom: 5%" />
+    <h3 class="text-start" style="font-weight: bold">Đề xuất của tôi</h3>
+    <hr style="margin-bottom: 2%" />
     <div style="padding-bottom: 20px">
       <div className="" style="width: 100%; margin: auto">
         <el-row :gutter="20">
@@ -63,7 +63,7 @@
             </div>
           </el-col>
 
-          <el-col :md="6" :lg="6" :xl="6" style="margin-bottom: 20px">
+          <!-- <el-col :md="6" :lg="6" :xl="6" style="margin-bottom: 20px">
             <div class="grid-content">
               <span style="">Tìm kiếm</span> &ensp;
               <el-input
@@ -74,7 +74,7 @@
                 style="width: 200px; padding: 2px 0"
               />
             </div>
-          </el-col>
+          </el-col> -->
           <el-col :md="6" :lg="6" :xl="6" class="div-buttons">
             <div class="div-buttons">
               <el-dropdown split-button type="danger">
@@ -125,6 +125,12 @@
               >
                 {{ data.row.requestType.requestTypeName }}</router-link
               >
+            </el-table-column>
+            <el-table-column
+              label="Mã Nhân viên"
+              prop="user.userCode"
+              align="center"
+            >
             </el-table-column>
             <el-table-column
               label="Nhân viên"
@@ -358,9 +364,7 @@
                   <el-time-picker
                     v-model="ruleForm.startTime"
                     placeholder="Chọn thời gian"
-                    :picker-options="{
-                      selectableRange: '8:30:00 - 18:00:00',
-                    }"
+                    :picker-options="pickerOptionStartTime"
                   >
                   </el-time-picker>
                 </el-form-item>
@@ -523,9 +527,7 @@
                     <el-time-picker
                       v-model="ruleForm.startTime"
                       placeholder="Chọn thời gian"
-                      :picker-options="{
-                        selectableRange: '8:30:00 - 18:00:00',
-                      }"
+                      :picker-options="pickerOptionStartTime"
                     >
                     </el-time-picker>
                   </el-form-item>
@@ -709,7 +711,6 @@
                   <el-time-picker
                     v-model="ruleForm.startTime"
                     placeholder="Chọn thời gian"
-                     
                   >
                   </el-time-picker>
                 </el-form-item>
@@ -917,9 +918,7 @@
                   <el-time-picker
                     v-model="ruleForm.startTime"
                     placeholder="Chọn thời gian"
-                     :picker-options="{
-                      selectableRange: '8:30:00 - 18:00:00',
-                    }"
+                    :picker-options="pickerOptionStartTime"
                   >
                   </el-time-picker>
                 </el-form-item>
@@ -1020,6 +1019,7 @@
 <script>
 import RequestService from "@/services/request-service";
 import DepartmentService from "@/services/department-service";
+import WorkingTimeService from "@/services/workingtime-service";
 import moment from "moment";
 export default {
   components: {},
@@ -1038,7 +1038,7 @@ export default {
     var endDate = new Date(currentYear, date.getMonth(), lastDateOfMonth);
 
     var validateEndDate = (rule, value, callback) => {
-      if (this.ruleForm.startDate == null || this.ruleForm.startDate == "") {
+      if (this.ruleForm.startDate == "" || this.ruleForm.startDate == null) {
         this.ruleForm.endDate = "";
         callback(new Error("Vui lòng nhập ngày bắt đầu!"));
       } else {
@@ -1048,11 +1048,46 @@ export default {
 
     var validateStartDate = (rule, value, callback) => {
       if (
-        (this.ruleForm.startDate != null || this.ruleForm.startDate != "") &&
-        (this.ruleForm.endDate == null || this.ruleForm.endDate == "")
+        (this.ruleForm.startDate != "" || this.ruleForm.startDate != null) &&
+        (this.ruleForm.endDate == "" || this.ruleForm.endDate == null)
       ) {
         this.$refs["ruleForm"].fields
           .find((f) => f.prop == "endDate")
+          .resetField();
+      } else {
+        callback();
+      }
+    };
+
+    var validateEndTime = (rule, value, callback) => {
+      if (
+        this.ruleForm.startDate == "" ||
+        this.ruleForm.endDate == "" ||
+        this.ruleForm.startDate == null ||
+        this.ruleForm.endDate == null
+      ) {
+        this.ruleForm.endTime = "";
+        callback(new Error("Vui lòng nhập ngày bắt đầu và ngày kết thúc!"));
+      } else if (this.ruleForm.startTime == "") {
+        this.ruleForm.endTime = "";
+        callback(new Error("Vui lòng nhập thời gian bắt đầu!"));
+      } else {
+        callback();
+      }
+    };
+
+    var validateStartTime = (rule, value, callback) => {
+      if (
+        this.ruleForm.startDate == "" ||
+        this.ruleForm.endDate == "" ||
+        this.ruleForm.startDate == null ||
+        this.ruleForm.endDate == null
+      ) {
+        this.ruleForm.startTime = "";
+        callback(new Error("Vui lòng nhập ngày bắt đầu và ngày kết thúc!"));
+      } else if (this.ruleForm.startTime != "" && this.ruleForm.endTime == "") {
+        this.$refs["ruleForm"].fields
+          .find((f) => f.prop == "endTime")
           .resetField();
       } else {
         callback();
@@ -1093,6 +1128,7 @@ export default {
       isRest: false,
       isOT: false,
       isOTBefore: false,
+      isOTAfter: false,
       isForgetTimeKeeping: false,
       isWorkFromHome: false,
       isBusinessTravel: false,
@@ -1142,9 +1178,9 @@ export default {
             trigger: "blur",
           },
           {
-            min: 3,
+            min: 1,
             max: 255,
-            message: "Nội dung ghi chú từ 3 đến 255 kí tự",
+            message: "Nội dung ghi chú từ 1 đến 255 kí tự",
             trigger: "blur",
           },
         ],
@@ -1159,6 +1195,8 @@ export default {
         startTime: "",
         endTime: "",
         // numberRestDay: "",
+        startFullTime: "",
+        endFullTime: "",
         restType: "",
       },
 
@@ -1185,9 +1223,9 @@ export default {
             trigger: "blur",
           },
           {
-            min: 3,
+            min: 1,
             max: 255,
-            message: "Nội dung từ 3 đến 255 kí tự",
+            message: "Nội dung từ 1 đến 255 kí tự",
             trigger: "blur",
           },
         ],
@@ -1205,6 +1243,7 @@ export default {
             message: "Vui lòng nhập thời gian!",
             trigger: "blur",
           },
+          { validator: validateStartTime, trigger: "blur" },
         ],
 
         endTime: [
@@ -1213,6 +1252,7 @@ export default {
             message: "Vui lòng nhập thời gian!",
             trigger: "blur",
           },
+          { validator: validateEndTime, trigger: "blur" },
         ],
         endDate: [
           {
@@ -1257,6 +1297,7 @@ export default {
     this.getData();
     this.getAllDepartment();
     this.getAllRequestCategory();
+    this.getWoringTimeFullTime();
     this.name = this.$store.state.auth.user.fullName;
     this.department = this.$store.state.auth.user.departmentName;
   },
@@ -1280,6 +1321,11 @@ export default {
     pickerOptionOTBeforeDate() {
       return {
         disabledDate: this.disableOneDayAgoDate,
+      };
+    },
+    pickerOptionStartTime() {
+      return {
+        selectableRange: this.rangeStartTime(),
       };
     },
     pickerOptionOTTime() {
@@ -1332,7 +1378,6 @@ export default {
           this.departments = response.data;
         })
         .catch((e) => {
-          this.logout();
           console.log(e);
         });
     },
@@ -1343,7 +1388,6 @@ export default {
           this.requestCategories = response.data.content;
         })
         .catch((e) => {
-          this.logout();
           console.log(e);
         });
     },
@@ -1450,8 +1494,10 @@ export default {
       this.isRest = false;
       this.isPersonalWork = false;
       this.isForgetTimeKeeping = false;
-      // this.ruleForm.numberRestDay = 0;
-      this.ruleForm.restType = "";
+      (this.isOTBefore = false),
+        (this.isOTAfter = false),
+        // this.ruleForm.numberRestDay = 0;
+        (this.ruleForm.restType = "");
       this.isRestBySlot = false;
       this.isRestByDay = false;
       this.isWorkFromHome = false;
@@ -1522,10 +1568,25 @@ export default {
       this.isOTBefore = false;
       switch (typeId) {
         case 1:
+          if (this.$store.state.auth.user.dayoff <= 0) {
+            this.$notify.error({
+              message: "Bạn đã hết xin nghỉ có phép!",
+              title: "Failed",
+              timer: 2000,
+              timerProgressBar: true,
+            });
+          } else {
+            this.isRest = true;
+            this.isPersonalWork = false;
+            this.ruleForm.restType = "";
+            this.isRestBySlot = false;
+            this.isRestByDay = false;
+            this.ruleForm.slotId = "";
+          }
+          break;
         case 2:
           this.isRest = true;
           this.isPersonalWork = false;
-          // this.ruleForm.numberRestDay = 0;
           this.ruleForm.restType = "";
           this.isRestBySlot = false;
           this.isRestByDay = false;
@@ -1540,6 +1601,13 @@ export default {
           break;
         case 4:
           this.isOTBefore = true;
+          this.isWarning = false;
+          this.isOTAfter = false;
+          break;
+        case 5:
+          this.isOTAfter = true;
+          this.isWarning = false;
+          this.isOTBefore = false;
           break;
         case 6:
           this.isForgetTimeKeeping = true;
@@ -1589,25 +1657,108 @@ export default {
       this.ruleForm.requestContent = "";
     },
 
+    getWoringTimeFullTime() {
+      WorkingTimeService.getWorkingTimeById(1).then((response) => {
+        this.startFullTime = response.data.startTime;
+        this.endFullTime = response.data.endTime;
+      });
+    },
+    getWoringTimeById(id) {
+      WorkingTimeService.getWorkingTimeById(id).then((response) => {
+        this.shift = response.data;
+      });
+    },
+
+    getDataByUser(startDate, endDate) {
+      RequestService.getListRequestByUser(0, 30, "", "", startDate, endDate)
+        .then((response) => {
+          this.listRequest = response.data.content;
+          console.log(this.listRequest);
+          for (const key in this.requests) {
+            if (Object.hasOwnProperty.call(this.requests, key)) {
+              this.requests[key].createdDate = moment(
+                String(this.requests[key].createdDate)
+              ).format("DD/MM/yyyy");
+            }
+          }
+        })
+        .catch((e) => {
+          // this.logout();
+          console.log(e);
+        });
+    },
     setDateTime() {
       if (
         this.isRestBySlot ||
         this.createOTRequestDialogVisible ||
         this.isForgetTimeKeeping
       ) {
-        const date = new Date(this.ruleForm.startDate);
+        var date = new Date(this.ruleForm.startDate);
         this.ruleForm.endDate = date;
-        const date1 = new Date(this.ruleForm.endDate);
+        var date1 = new Date(this.ruleForm.endDate);
+        if (this.isOTAfter == true) {
+          var count = 0;
+          var o = date.getDate();
+          date.setDate(o + 1);
+          date = moment(String(date)).format("yyyy-MM-DD");
+          this.getDataByUser(this.ruleForm.startDate, date);
+          setTimeout(() => {
+            for (const key in this.listRequest) {
+              if (Object.hasOwnProperty.call(this.listRequest, key)) {
+                if (this.listRequest[key].requestType.id == 4) {
+                  count = count + 1;
+                }
+              }
+            }
+            if (count > 0) {
+              this.isWarning = false;
+            } else {
+              this.isWarning = true;
+            }
+          }, 50);
+        }
         if (this.ruleForm.slotId == 1) {
-          date.setHours(8, 30, 0, 0);
-          date1.setHours(12, 0, 0, 0);
-          this.ruleForm.startTime = date;
-          this.ruleForm.endTime = date1;
+          this.getWoringTimeById(2);
+          setTimeout(() => {
+            console.log(this.shift);
+            var startTime = this.shift.startTime;
+            var subStartTime = startTime.split(":");
+            date.setHours(
+              Number(subStartTime[0]),
+              Number(subStartTime[1]),
+              Number(subStartTime[2])
+            );
+            var endTime = this.shift.endTime;
+            var subEndTime = endTime.split(":");
+            date1.setHours(
+              Number(subEndTime[0]),
+              Number(subEndTime[1]),
+              Number(subEndTime[2])
+            );
+            this.ruleForm.startTime = date;
+            this.ruleForm.endTime = date1;
+          }, 50);
         } else if (this.ruleForm.slotId == 2) {
-          date.setHours(13, 0, 0, 0);
-          date1.setHours(18, 0, 0, 0);
-          this.ruleForm.startTime = date;
-          this.ruleForm.endTime = date1;
+          this.getWoringTimeById(3);
+          setTimeout(() => {
+            console.log(this.shift);
+            var startTime = this.shift.startTime;
+            var subStartTime = startTime.split(":");
+            date.setHours(
+              Number(subStartTime[0]),
+              Number(subStartTime[1]),
+              Number(subStartTime[2])
+            );
+            var endTime = this.shift.endTime;
+            var subEndTime = endTime.split(":");
+            date1.setHours(
+              Number(subEndTime[0]),
+              Number(subEndTime[1]),
+              Number(subEndTime[2])
+            );
+            this.ruleForm.startTime = date;
+            this.ruleForm.endTime = date1;
+          }, 50);
         }
       }
     },
@@ -1629,6 +1780,10 @@ export default {
       startDay.setDate(startDay.getDate() - 1);
       return date < startDay;
     },
+    rangeStartTime() {
+      return this.startFullTime + " - " + this.endFullTime;
+    },
+
     rangeOTTime() {
       const startTime = new Date(this.ruleForm.startTime);
       var min = startTime.getMinutes();
@@ -1638,18 +1793,22 @@ export default {
     },
 
     rangeOtherTime() {
-      const startDate = new Date(this.ruleForm.startDate);
-      const endDate = new Date(this.ruleForm.endDate);
-      var startDateString = moment(String(startDate)).format("DD/MM/yyyy");
-      var endDateString = moment(String(endDate)).format("DD/MM/yyyy");
-      if (startDateString === endDateString) {
-        const startTime = new Date(this.ruleForm.startTime);
-        var min = startTime.getMinutes();
-        startTime.setMinutes(min + 1);
-        var timeString = moment(String(startTime)).format("HH:mm:ss");
-        return timeString + " - 18:00:00";
+      if (this.ruleForm.startDate != "" && this.ruleForm.endDate != "") {
+        const startDate = new Date(this.ruleForm.startDate);
+        const endDate = new Date(this.ruleForm.endDate);
+        var startDateString = moment(String(startDate)).format("DD/MM/yyyy");
+        var endDateString = moment(String(endDate)).format("DD/MM/yyyy");
+        if (startDateString === endDateString) {
+          if (this.ruleForm.startTime != "") {
+            const startTime = new Date(this.ruleForm.startTime);
+            var min = startTime.getMinutes();
+            startTime.setMinutes(min + 1);
+            var timeString = moment(String(startTime)).format("HH:mm:ss");
+            return timeString + " - " + this.endFullTime;
+          }
+        }
       }
-      return "8:30:00 - 18:00:00";
+      return this.startFullTime + " - " + this.endFullTime;
     },
 
     disableOneDayAgoDate(date) {
@@ -1662,7 +1821,7 @@ export default {
 
     logout() {
       this.$store.dispatch("auth/logout");
-      window.location.replace("http://localhost:2001/login");
+      window.location.replace("/login");
       localStorage.removeItem("user");
     },
     handlePageChange(value) {
@@ -1861,63 +2020,63 @@ input:checked + .slider:before {
 }
 
 @media only screen and (min-width: 150px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 108%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: left;
   }
 }
 
 @media only screen and (min-width: 992px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 100%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: left;
   }
 }
 
 @media only screen and (min-width: 1440px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-request .div-buttons {
     float: right;
   }
 }
 
 @media only screen and (min-width: 1689px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-request .div-buttons {
     float: right;
   }
 }
 
 @media only screen and (min-width: 1920px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-request .div-buttons {
     float: right;
   }
 }

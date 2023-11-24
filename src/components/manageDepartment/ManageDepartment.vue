@@ -1,29 +1,10 @@
 <template>
   <div class="manage-department">
-    <h3>Quản lý phòng ban</h3>
-    <hr style="margin-bottom: 5%" />
+    <h3 class="text-start" style="font-weight: bold">Quản lý phòng ban</h3>
+    <hr style="margin-bottom: 2%" />
     <div style="padding-bottom: 20px">
       <div className="" style="width: 100%; margin: auto">
         <el-row :gutter="20">
-          <!-- <el-col :md="6" :lg="6" :xl="6">
-            <div class="grid-content" style="margin-bottom: 20px">
-              <span>Năm</span> &ensp;
-              <el-select
-                v-model="year"
-                @change="getData"
-                placeholder="Chọn Phòng ban"
-              >
-                <el-option
-                  v-for="item in years"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                >
-                </el-option>
-              </el-select>
-            </div>
-          </el-col> -->
-
           <el-col :md="6" :lg="6" :xl="6" style="margin-bottom: 20px">
             <div class="grid-content">
               <span style="">Tìm kiếm</span> &ensp;
@@ -109,16 +90,6 @@
               >
                 <i class="el-icon-delete" style="width: 30px"></i>
               </button>
-
-              <button v-if="data.row.status == 1" class="btn-action">
-                <!--                                @click="changeStatus(-->
-                <!--                                data.row.id,-->
-                <!--                                data.row.fullName,-->
-                <!--                                data.row.status) "-->
-                <i class="el-icon-unlock" style="width: 30px"></i>
-              </button>
-
-              <!--          </div>-->
             </el-table-column>
           </el-table>
         </div>
@@ -141,10 +112,10 @@
       left
     >
       <el-form
-        id="formCreate"
-        :model="ruleForm"
+        id="formEdit"
+        :model="departmentEdit"
         :rules="rules"
-        ref="ruleForm"
+        ref="departmentEdit"
         label-width="200px"
         class="demo-ruleForm"
       >
@@ -152,10 +123,9 @@
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <el-form-item label="Nhập tên phòng ban" prop="name">
               <el-input
-                v-model="ruleForm.name"
-                name="positionName"
+                v-model="departmentEdit.name"
+                name="name"
                 autocomplete="off"
-                maxlength="50"
               ></el-input>
             </el-form-item>
           </div>
@@ -169,7 +139,7 @@
                   class="btn btn-outline-danger"
                   type="primary"
                   style="width: 90%"
-                  @click="cancelEditForm('ruleForm')"
+                  @click="cancelEditForm('departmentEdit')"
                   >Hủy</el-button
                 >
               </el-form-item>
@@ -182,7 +152,7 @@
                   class="btn btn-success"
                   type="primary"
                   style="width: 90%"
-                  @click="submitEditForm('ruleForm')"
+                  @click="submitEditForm('departmentEdit')"
                   >Lưu</el-button
                 >
               </el-form-item>
@@ -200,9 +170,9 @@
     >
       <el-form
         id="formCreate"
-        :model="ruleForm"
+        :model="departmentCreate"
         :rules="rules"
-        ref="ruleForm"
+        ref="departmentCreate"
         label-width="200px"
         class="demo-ruleForm"
       >
@@ -210,10 +180,9 @@
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <el-form-item label="Nhập tên phòng ban" prop="name">
               <el-input
-                v-model="ruleForm.name"
+                v-model="departmentCreate.name"
                 name="positionName"
                 autocomplete="off"
-                maxlength="50"
               ></el-input>
             </el-form-item>
           </div>
@@ -226,7 +195,7 @@
                   class="btn btn-outline-danger"
                   type="primary"
                   style="width: 90%"
-                  @click="cancelCreateForm('ruleForm')"
+                  @click="cancelCreateForm('departmentCreate')"
                   >Hủy</el-button
                 >
               </el-form-item>
@@ -239,7 +208,7 @@
                   class="btn btn-success"
                   type="primary"
                   style="width: 90%"
-                  @click="submitForm('ruleForm')"
+                  @click="submitForm('departmentCreate')"
                   >Lưu</el-button
                 >
               </el-form-item>
@@ -256,15 +225,15 @@
       left
     >
       <el-form
-        id="formCreate"
-        :model="ruleForm"
+        id="formDelete"
+        :model="departmentDelete"
         :rules="rules"
-        ref="ruleForm"
+        ref="departmentDelete"
         label-width="200px"
         class="demo-ruleForm"
       >
         <p style="text-align: center">Xác nhận xóa phòng ban</p>
-        <p style="text-align: center">{{ ruleForm.name }}</p>
+        <p style="text-align: center">{{ departmentDelete.name }}</p>
 
         <div class="row" style="margin-top: 70px">
           <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -294,21 +263,24 @@
 </template>
 
 <script>
-// import HolidayService from "@/services/holiday-service";
 import DepartmentService from "@/services/department-service";
 import moment from "moment";
 export default {
   components: {},
   name: "ManageDepartment",
   data() {
-    var date = new Date();
-    var currentYear = date.getFullYear();
     return {
-      year: currentYear,
-      years: [],
       departmentId: "",
-      roles: [],
       ruleForm: {
+        name: "",
+      },
+      departmentCreate: {
+        name: "",
+      },
+      departmentEdit: {
+        name: "",
+      },
+      departmentDelete: {
         name: "",
       },
       rules: {
@@ -318,10 +290,10 @@ export default {
             message: "Vui lòng nhập tên phòng ban!",
             trigger: "blur",
           },
-            {
+          {
             min: 1,
-            max: 100,
-            message: "Tên phòng ban từ 1 đến 100 kí tự",
+            max: 255,
+            message: "Tên phòng ban từ 1 đến 255 kí tự",
             trigger: "blur",
           },
         ],
@@ -341,23 +313,28 @@ export default {
 
   created() {
     this.getData();
-    // this.getAllYear();
   },
 
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          DepartmentService.save(this.ruleForm).then(() => {
-            this.createPositionDialogVisible = false;
-            this.$notify.success({
-              message: "Tạo chức vụ thành công",
-              title: "Success",
-              timer: 2000,
-              timerProgressBar: true,
+          DepartmentService.save(this.departmentCreate)
+            .then(() => {
+              this.createDepartmentDialogVisible = false;
+              this.$notify.success({
+                message: "Tạo phòng ban thành công!",
+                title: "Success",
+                timer: 2000,
+                timerProgressBar: true,
+              });
+              this.getData();
+            })
+            .catch((e) => {
+              if (e.response.status == 401) {
+                this.logout();
+              }
             });
-            this.getData();
-          });
         } else {
           console.log("error submit!!");
           return false;
@@ -375,19 +352,23 @@ export default {
         if (valid) {
           DepartmentService.updateDepartment(
             this.departmentId,
-            this.ruleForm
-          ).then(() => {
-            this.createDepartmentDialogVisible = false;
-            this.editDepartmentDialogVisible = false;
-            this.deleteDepartmentDialogVisible = false;
-            this.$notify.success({
-              message: "Sửa thành công",
-              title: "Success",
-              timer: 2000,
-              timerProgressBar: true,
+            this.departmentEdit
+          )
+            .then(() => {
+              this.editDepartmentDialogVisible = false;
+              this.$notify.success({
+                message: "Sửa phòng ban thành công!",
+                title: "Success",
+                timer: 2000,
+                timerProgressBar: true,
+              });
+              this.getData();
+            })
+            .catch((e) => {
+              if (e.response.status == 401) {
+                this.logout();
+              }
             });
-            this.getData();
-          });
         } else {
           return false;
         }
@@ -401,49 +382,60 @@ export default {
 
     showCreateDepartmentDialog() {
       this.createDepartmentDialogVisible = true;
+      this.$refs["departmentCreate"].resetFields();
       this.editDepartmentDialogVisible = false;
       this.deleteDepartmentDialogVisible = false;
-      this.ruleForm = {};
     },
 
     showEditDepartmentDialog(id) {
       this.editDepartmentDialogVisible = true;
+      setTimeout(() => {
+        this.$refs["departmentEdit"].resetFields();
+      }, 5);
       this.createDepartmentDialogVisible = false;
       this.deleteDepartmentDialogVisible = false;
       this.departmentId = id;
-      DepartmentService.getDepartment(id)
-        .then((response) => {
-          this.ruleForm.name = response.data.name;
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      setTimeout(() => {
+        DepartmentService.getDepartment(id)
+          .then((response) => {
+            this.departmentEdit.name = response.data.name;
+          })
+          .catch((e) => {
+            if (e.response.status == 401) {
+              this.logout();
+            }
+          });
+      }, 10);
     },
 
     showDeleteDepartmentDialog(id) {
       this.editDepartmentDialogVisible = false;
       this.createDepartmentDialogVisible = false;
       this.deleteDepartmentDialogVisible = true;
+      setTimeout(() => {
+        this.$refs["departmentDelete"].resetFields();
+      }, 5);
       this.departmentId = id;
-
-      DepartmentService.getDepartment(id)
-        .then((response) => {
-          this.ruleForm.name = response.data.name;
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      setTimeout(() => {
+        DepartmentService.getDepartment(id)
+          .then((response) => {
+            this.departmentDelete.name = response.data.name;
+          })
+          .catch((e) => {
+            if (e.response.status == 401) {
+              this.logout();
+            }
+          });
+      }, 10);
     },
 
     acceptDelete() {
       DepartmentService.deleteDepartment(this.departmentId)
         .then((response) => {
           console.log(response.data);
-          this.editDepartmentDialogVisible = false;
-          this.createDepartmentDialogVisible = false;
           this.deleteDepartmentDialogVisible = false;
           this.$notify.success({
-            message: "Xóa thành công",
+            message: "Xóa phòng ban thành công!",
             title: "Success",
             timer: 2000,
             timerProgressBar: true,
@@ -451,46 +443,49 @@ export default {
           this.getData();
         })
         .catch((e) => {
-          this.editDepartmentDialogVisible = false;
-          this.createDepartmentDialogVisible = false;
-          this.deleteDepartmentDialogVisible = false;
-          this.$notify.error({
-            message: "Không thể xóa phòng ban!",
-            title: "Failed",
-            timer: 2000,
-            timerProgressBar: true,
-          });
-          this.getData();
+          if (e.response.status == 401) {
+            this.logout();
+          } else {
+            this.deleteDepartmentDialogVisible = false;
+            this.$notify.error({
+              message: "Không thể xóa phòng này vì đã được sử dụng!",
+              title: "Failed",
+              timer: 2000,
+              timerProgressBar: true,
+            });
+            this.getData();
+          }
           console.log(e);
         });
     },
 
     getData() {
-      DepartmentService.getDepartments(
-        this.page,
-        this.pageSize,
-        this.search
-      ).then((response) => {
-        this.departments = response.data.content;
-        for (const key in this.departments) {
-          if (Object.hasOwnProperty.call(this.departments, key)) {
-            this.departments[key].createdDate = moment(
-              String(this.departments[key].createdDate)
-            ).format("DD/MM/yyyy");
+      DepartmentService.getDepartments(this.page, this.pageSize, this.search)
+        .then((response) => {
+          this.departments = response.data.content;
+          for (const key in this.departments) {
+            if (Object.hasOwnProperty.call(this.departments, key)) {
+              this.departments[key].createdDate = moment(
+                String(this.departments[key].createdDate)
+              ).format("DD/MM/yyyy");
+            }
           }
-        }
-        this.page = response.data.pageable.pageNumber;
-        this.totalItems = response.data.totalElements;
-      });
+          this.page = response.data.pageable.pageNumber;
+          this.totalItems = response.data.totalElements;
+        })
+        .catch((e) => {
+          if (e.response.status == 401) {
+            this.logout();
+          }
+          console.log(e);
+        });
     },
 
-    // getAllYear() {
-    //   HolidayService.getYears().then((response) => {
-    //     this.years = response.data;
-    //   });
-    // },
-
-
+    logout() {
+      this.$store.dispatch("auth/logout");
+      window.location.replace("/login");
+      localStorage.removeItem("user");
+    },
 
     handlePageChange(value) {
       this.page = value - 1;
@@ -676,63 +671,63 @@ input:checked + .slider:before {
 }
 
 @media only screen and (min-width: 150px) {
-  .el-col-md-6 {
+  .manage-department .el-col-md-6 {
     width: 108%;
   }
 
-  .buttons {
+  .manage-department .buttons {
     text-align: left;
   }
 }
 
 @media only screen and (min-width: 992px) {
-  .el-col-md-6 {
+  .manage-department .el-col-md-6 {
     width: 100%;
   }
 
-  .buttons {
+  .manage-department .buttons {
     text-align: left;
   }
 }
 
 @media only screen and (min-width: 1440px) {
-  .el-col-md-6 {
+  .manage-department .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-department .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-department .div-buttons {
     float: right;
   }
 }
 
 @media only screen and (min-width: 1689px) {
-  .el-col-md-6 {
+  .manage-department .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-department .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-department .div-buttons {
     float: right;
   }
 }
 
 @media only screen and (min-width: 1920px) {
-  .el-col-md-6 {
+  .manage-department .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-department .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-department .div-buttons {
     float: right;
   }
 }

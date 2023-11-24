@@ -70,7 +70,7 @@ const router = new Router({
 
         {
             path: "/calendar",
-            component: () => import("./components/calendar/calendarReport.vue"),
+            component: () => import("./components/calendar/CalendarReport.vue"),
         },
         {
             path: "/logCheckAdmin",
@@ -103,6 +103,10 @@ const router = new Router({
         {
             path: "/statisticTimeKeeping",
             component: () => import("./components/statisticTimeKeeping/StatisticTimeKeeping.vue"),
+        },
+        {
+            path: "/manageWorkingTime",
+            component: () => import("./components/manageWorkingTime/ManageWorkingTime.vue"),
         }
 
     ],
@@ -112,7 +116,7 @@ router.beforeEach((to, from, next) => {
     const publicPages = [
         "/login",
         "/",
-
+        "/forgotPassword"
     ];
     const userPages = [
         "/calendar",
@@ -135,7 +139,8 @@ router.beforeEach((to, from, next) => {
         "/manageDepartment",
         "/report",
         "/manageRequest",
-        "/manageContract"
+        "/manageContract",
+        "/manageWorkingTime"
 
     ];
     const managePages = [

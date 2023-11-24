@@ -1,7 +1,7 @@
 <template>
   <div class="manage-holiday">
-    <h3>Quản lý ngày nghỉ</h3>
-    <hr style="margin-bottom: 5%" />
+    <h3 class="text-start" style="font-weight: bold">Quản lý ngày nghỉ</h3>
+    <hr style="margin-bottom: 2%" />
     <div style="padding-bottom: 20px">
       <div className="" style="width: 100%; margin: auto">
         <el-row :gutter="20">
@@ -11,7 +11,7 @@
               <el-select
                 v-model="year"
                 @change="getData"
-                placeholder="Chọn Phòng ban"
+                placeholder="Chọn Năm"
               >
                 <el-option
                   v-for="item in years"
@@ -110,7 +110,6 @@
               width="150px"
               align="center"
             >
-              <!--            <el-button type="danger" icon="el-icon-edit-outline" circle></el-button>-->
               <button
                 style="margin-right: 10px"
                 class="btn-action"
@@ -125,16 +124,6 @@
               >
                 <i class="el-icon-delete" style="width: 30px"></i>
               </button>
-
-              <button v-if="data.row.status == 1" class="btn-action">
-                <!--                                @click="changeStatus(-->
-                <!--                                data.row.id,-->
-                <!--                                data.row.fullName,-->
-                <!--                                data.row.status) "-->
-                <i class="el-icon-unlock" style="width: 30px"></i>
-              </button>
-
-              <!--          </div>-->
             </el-table-column>
           </el-table>
         </div>
@@ -171,7 +160,6 @@
                 v-model="ruleForm.holidayName"
                 name="holidayName"
                 autocomplete="off"
-                maxlength="50"
               ></el-input>
             </el-form-item>
           </div>
@@ -189,6 +177,7 @@
                   name="startDate"
                   placeholder="Chọn ngày"
                   style="width: 100%"
+                  :picker-options="pickerOptionStartDate"
                 ></el-date-picker>
               </el-form-item>
             </el-form-item>
@@ -204,6 +193,7 @@
                   value-format="yyyy-MM-dd"
                   placeholder="Chọn ngày"
                   style="width: 100%"
+                  :picker-options="pickerOptionEndDate"
                 ></el-date-picker>
               </el-form-item>
             </el-form-item>
@@ -261,7 +251,6 @@
                 v-model="ruleForm.holidayName"
                 name="holidayName"
                 autocomplete="off"
-                maxlength="50"
               ></el-input>
             </el-form-item>
           </div>
@@ -279,6 +268,7 @@
                   name="startDate"
                   placeholder="Chọn ngày"
                   style="width: 100%"
+                  :picker-options="pickerOptionStartDate"
                 ></el-date-picker>
               </el-form-item>
             </el-form-item>
@@ -294,6 +284,7 @@
                   value-format="yyyy-MM-dd"
                   placeholder="Chọn ngày"
                   style="width: 100%"
+                  :picker-options="pickerOptionEndDate"
                 ></el-date-picker>
               </el-form-item>
             </el-form-item>
@@ -381,30 +372,16 @@ export default {
   components: {},
   name: "ManageHoliday",
   data() {
-     var date = new Date();
+    var date = new Date();
     var currentYear = date.getFullYear();
     var validateEndDate = (rule, value, callback) => {
-      if (value < this.ruleForm.startDate) {
-        callback(
-          new Error("Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu!")
-        );
+      if (this.ruleForm.startDate == "" && this.ruleForm.endDate != "") {
+        this.ruleForm.endDate = "";
+        callback(new Error("Vui lòng nhập ngày bắt đầu trước!"));
       } else {
         callback();
       }
     };
-
-      var validateStartDate = (rule, value, callback) => {
-         var startHolidayDate = new Date(value);
-      if (startHolidayDate < date) {
-        callback(
-          new Error("Vui lòng không chọn ngày hiện tại và ngày đã qua!")
-        );
-      } else {
-        callback();
-      }
-    };
-
-   
 
     return {
       year: currentYear,
@@ -416,6 +393,9 @@ export default {
         holidayName: "",
         startDate: "",
       },
+      startHolidayDate: "",
+      endHolidayDate: "",
+
       rules: {
         holidayName: [
           {
@@ -424,26 +404,24 @@ export default {
             trigger: "blur",
           },
           {
-            min: 3,
+            min: 1,
             max: 100,
-            message: "Tên ngày nghỉ từ 3 đến 100 kí tự",
+            message: "Tên ngày nghỉ từ 1 đến 100 kí tự",
             trigger: "blur",
           },
-            
         ],
         startDate: [
           {
             required: true,
             message: "Vui lòng nhập ngày bắt đầu kỳ nghỉ!",
-            trigger: "blur",
+            trigger: "change",
           },
-          { validator: validateStartDate, trigger: "blur" },
         ],
         endDate: [
           {
             required: true,
             message: "Vui lòng nhập ngày kết thúc kỳ nghỉ!",
-            trigger: "blur",
+            trigger: "change",
           },
           { validator: validateEndDate, trigger: "blur" },
         ],
@@ -465,6 +443,18 @@ export default {
     this.getData();
     this.getAllYear();
   },
+  computed: {
+    pickerOptionStartDate() {
+      return {
+        disabledDate: this.disableOneDayAgoStartDate,
+      };
+    },
+    pickerOptionEndDate() {
+      return {
+        disabledDate: this.disableOneDayAgoEndDate,
+      };
+    },
+  },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -472,13 +462,14 @@ export default {
           HolidayService.save(this.ruleForm).then(() => {
             this.createHolidayDialogVisible = false;
             this.$notify.success({
-              message: "Tạo ngày nghỉ thành công",
+              message: "Tạo ngày nghỉ thành công!",
               title: "Success",
               timer: 2000,
               timerProgressBar: true,
             });
             this.getData();
           });
+          this.$refs[formName].resetFields();
         } else {
           console.log("error submit!!");
           return false;
@@ -494,12 +485,13 @@ export default {
     submitEditForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          console.log(this.ruleForm)
           HolidayService.updateHoliday(this.holidayId, this.ruleForm).then(
             () => {
               this.createHolidayDialogVisible = false;
               this.editHolidayDialogVisible = false;
               this.$notify.success({
-                message: "Sửa thành công",
+                message: "Sửa ngày nghỉ thành công!",
                 title: "Success",
                 timer: 2000,
                 timerProgressBar: true,
@@ -523,53 +515,94 @@ export default {
       this.createHolidayDialogVisible = true;
       this.editHolidayDialogVisible = false;
       this.deleteHolidayDialogVisible = false;
-      this.ruleForm = {};
+      this.ruleForm.endDate = "";
+      this.ruleForm.startDate = "";
+      this.ruleForm.holidayName = "";
     },
 
     showEditHolidayDialog(id) {
-      this.editHolidayDialogVisible = true;
-      this.createHolidayDialogVisible = false;
-      this.deleteHolidayDialogVisible = false;
-      this.holidayId = id;
-
       HolidayService.getHoliday(id)
         .then((response) => {
+          this.startHolidayDate = response.data.startDate;
+          this.endHolidayDate = response.data.endDate;
           this.ruleForm = response.data;
         })
         .catch((e) => {
+          this.logout();
           console.log(e);
         });
+      setTimeout(() => {
+        this.startHolidayDate = new Date(this.startHolidayDate);
+        this.endHolidayDate = new Date(this.endHolidayDate);
+         this.currentDate.setHours(7, 0, 0, 0);
+        if (
+          this.startHolidayDate <= this.currentDate &&
+          this.currentDate <= this.endHolidayDate
+        ) {
+          this.$notify.error({
+            message: "Không thể sửa vì đang trong kỳ nghỉ!.",
+            title: "Failed",
+            timer: 2000,
+            timerProgressBar: true,
+          });
+        } else if (this.currentDate > this.endHolidayDate) {
+          this.$notify.error({
+            message: "Không thể sửa vì kỳ nghỉ đã qua!.",
+            title: "Failed",
+            timer: 2000,
+            timerProgressBar: true,
+          });
+        } else {
+          this.editHolidayDialogVisible = true;
+          this.createHolidayDialogVisible = false;
+          this.deleteHolidayDialogVisible = false;
+          this.holidayId = id;
+        }
+      }, 50);
     },
 
     showDeleteHolidayDialog(id) {
-      this.editHolidayDialogVisible = false;
-      this.createHolidayDialogVisible = false;
-      this.deleteHolidayDialogVisible = true;
-      this.holidayId = id;
-
       HolidayService.getHoliday(id)
         .then((response) => {
+          this.startHolidayDate = response.data.startDate;
+          this.endHolidayDate = response.data.endDate;
           this.ruleForm = response.data;
         })
         .catch((e) => {
+          this.logout();
           console.log(e);
         });
+      setTimeout(() => {
+        this.startHolidayDate = new Date(this.startHolidayDate);
+        this.endHolidayDate = new Date(this.endHolidayDate);
+        this.currentDate.setHours(7, 0, 0, 0);
+        if (
+          this.startHolidayDate <= this.currentDate &&
+          this.currentDate <= this.endHolidayDate
+        ) {
+          this.$notify.error({
+            message: "Không thể xóa vì đang trong kỳ nghỉ!.",
+            title: "Failed",
+            timer: 2000,
+            timerProgressBar: true,
+          });
+        } else if (this.currentDate > this.endHolidayDate) {
+          this.$notify.error({
+            message: "Không thể xóa vì kỳ nghỉ đã qua!.",
+            title: "Failed",
+            timer: 2000,
+            timerProgressBar: true,
+          });
+        } else {
+          this.editHolidayDialogVisible = false;
+          this.createHolidayDialogVisible = false;
+          this.deleteHolidayDialogVisible = true;
+          this.holidayId = id;
+        }
+      }, 50);
     },
 
     acceptDelete() {
-      var startHolidayDate = new Date(this.ruleForm.startDate);
-      if (this.currentDate >= startHolidayDate) {
-        this.editHolidayDialogVisible = false;
-        this.createHolidayDialogVisible = false;
-        this.deleteHolidayDialogVisible = false;
-        this.$notify.error({
-          message: "Xóa không thành công vì ngày nghỉ đã qua.",
-          title: "Failed",
-          timer: 2000,
-          timerProgressBar: true,
-        });
-        this.getData();
-      }else{
       HolidayService.deleteHoliday(this.holidayId)
         .then((response) => {
           console.log(response.data);
@@ -577,7 +610,7 @@ export default {
           this.createHolidayDialogVisible = false;
           this.deleteHolidayDialogVisible = false;
           this.$notify.success({
-            message: "Xóa thành công",
+            message: "Xóa ngày nghỉ thành công!",
             title: "Success",
             timer: 2000,
             timerProgressBar: true,
@@ -585,52 +618,70 @@ export default {
           this.getData();
         })
         .catch((e) => {
+          this.editHolidayDialogVisible = false;
+          this.createHolidayDialogVisible = false;
+          this.deleteHolidayDialogVisible = false;
+          this.$notify.error({
+            message: "Không thể xóa ngày nghỉ này vì đã được sử dụng!",
+            title: "Failed",
+            timer: 2000,
+            timerProgressBar: true,
+          });
+          this.getData();
           console.log(e);
         });
-      }
     },
 
     getData() {
       console.log(this.page);
-      HolidayService.getData(
-        this.page,
-        this.pageSize,
-        this.search,
-        this.year
-      ).then((response) => {
-        this.holidays = response.data.content;
-        console.log(response.data);
-        for (const key in this.holidays) {
-          if (Object.hasOwnProperty.call(this.holidays, key)) {
-            this.holidays[key].startDate = moment(
-              String(this.holidays[key].startDate)
-            ).format("DD/MM/yyyy");
-            this.holidays[key].endDate = moment(
-              String(this.holidays[key].endDate)
-            ).format("DD/MM/yyyy");
+      HolidayService.getData(this.page, this.pageSize, this.search, this.year)
+        .then((response) => {
+          this.holidays = response.data.content;
+          console.log(response.data);
+          for (const key in this.holidays) {
+            if (Object.hasOwnProperty.call(this.holidays, key)) {
+              this.holidays[key].startDate = moment(
+                String(this.holidays[key].startDate)
+              ).format("DD/MM/yyyy");
+              this.holidays[key].endDate = moment(
+                String(this.holidays[key].endDate)
+              ).format("DD/MM/yyyy");
+            }
           }
-        }
-        this.page = response.data.pageable.pageNumber;
-        this.totalItems = response.data.totalElements;
-      }).catch((e) => {
+          this.page = response.data.pageable.pageNumber;
+          this.totalItems = response.data.totalElements;
+        })
+        .catch((e) => {
           this.logout();
           console.log(e);
         });
     },
 
     getAllYear() {
-      HolidayService.getYears().then((response) => {
-        this.years = response.data;
-      }).catch((e) => {
-          this.logout();
+      HolidayService.getYears()
+        .then((response) => {
+          this.years = response.data;
+        })
+        .catch((e) => {
           console.log(e);
         });
     },
 
-      logout(){
-          this.$store.dispatch("auth/logout");
-          window.location.replace("http://localhost:2001/login");
-          localStorage.removeItem('user');
+    disableOneDayAgoStartDate(date) {
+      const startWork = new Date();
+      startWork.setDate(startWork.getDate());
+      return date < startWork;
+    },
+
+    disableOneDayAgoEndDate(date) {
+      const endWork = new Date(this.ruleForm.startDate);
+      endWork.setDate(endWork.getDate() - 1);
+      return date < endWork;
+    },
+    logout() {
+      this.$store.dispatch("auth/logout");
+     window.location.replace("/login");
+      localStorage.removeItem("user");
     },
 
     handlePageChange(value) {
@@ -812,64 +863,65 @@ input:checked + .slider:before {
 }
 
 @media only screen and (min-width: 150px) {
-  .el-col-md-6 {
+  .manage-holiday .el-col-md-6 {
     width: 108%;
   }
 
-  .buttons {
+  .manage-holiday .buttons {
     text-align: left;
   }
 }
 
 @media only screen and (min-width: 992px) {
-  .el-col-md-6 {
+  .manage-holiday .el-col-md-6 {
     width: 100%;
   }
 
-  .buttons {
+  .manage-holiday .buttons {
     text-align: left;
   }
 }
 
 @media only screen and (min-width: 1440px) {
-  .el-col-md-6 {
+  .manage-holiday .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-holiday .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-holiday .div-buttons {
     float: right;
   }
 }
 
 @media only screen and (min-width: 1689px) {
-  .el-col-md-6 {
+  .manage-holiday .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-holiday .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-holiday .div-buttons {
     float: right;
   }
 }
 
 @media only screen and (min-width: 1920px) {
-  .el-col-md-6 {
+  .manage-holiday .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-holiday .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-holiday .div-buttons {
     float: right;
   }
 }
 </style>
+

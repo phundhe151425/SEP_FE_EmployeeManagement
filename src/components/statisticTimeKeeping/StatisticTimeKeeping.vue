@@ -1,6 +1,6 @@
 <template>
   <div class="manage-request">
-    <h3>Thống kê chấm công</h3>
+    <h3 class="text-start" style="font-weight: bold">Thống kê chấm công</h3>
     <div v-if="isAdmin || isModerator">
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="Toàn bộ" name="first">
@@ -8,7 +8,7 @@
             <div className="" style="width: 100%; margin: auto">
               <el-row :gutter="20">
                 <el-col :md="6" :lg="6" :xl="6" v-if="isModerator == false">
-                  <div class="grid-content" style="margin-bottom: 20px">
+                  <div class="" style="margin-bottom: 20px">
                     <span>Phòng ban</span> &ensp;
                     <el-select
                       v-model="departmentId"
@@ -30,7 +30,7 @@
                   </div>
                 </el-col>
                 <el-col :md="6" :lg="6" :xl="6" v-else>
-                  <div class="grid-content" style="margin-bottom: 20px">
+                  <div class="" style="margin-bottom: 20px">
                     <span>Phòng ban: </span> &ensp;
                     <span>{{ departmentOfModerator }}</span>
                   </div>
@@ -42,7 +42,7 @@
                   class="div-buttons"
                   style="margin-bottom: 20px"
                 >
-                  <div class="grid-content div-buttons">
+                  <div class="div-buttons">
                     <el-date-picker
                       v-model="value1"
                       type="datetimerange"
@@ -135,7 +135,7 @@
                   class="div-buttons"
                   style="margin-bottom: 20px"
                 >
-                  <div class="grid-content div-buttons">
+                  <div class="div-buttons">
                     <el-date-picker
                       v-model="value2"
                       type="datetimerange"
@@ -230,7 +230,7 @@
               class="div-buttons"
               style="margin-bottom: 20px"
             >
-              <div class="grid-content div-buttons">
+              <div class="div-buttons">
                 <el-date-picker
                   v-model="value2"
                   type="datetimerange"
@@ -373,9 +373,9 @@ export default {
     } else if (this.$store.state.auth.user.roles[0] === "ROLE_MODERATOR") {
       this.isModerator = true;
       this.getData();
-    } 
-      this.getDataAttendanceByUser();
-    
+    }
+    this.getDataAttendanceByUser();
+
     this.name = this.$store.state.auth.user.fullName;
     this.department = this.$store.state.auth.user.departmentName;
   },
@@ -438,7 +438,9 @@ export default {
           this.totalItems = response.data.totalElements;
         })
         .catch((e) => {
-          this.logout();
+          if (this.isAdmin == false && this.isModerator == false) {
+            this.logout();
+          }
           console.log(e);
         });
     },
@@ -449,7 +451,6 @@ export default {
           this.departments = response.data;
         })
         .catch((e) => {
-          this.logout();
           console.log(e);
         });
     },
@@ -475,7 +476,7 @@ export default {
 
     logout() {
       this.$store.dispatch("auth/logout");
-      window.location.replace("http://localhost:2001/login");
+      window.location.replace("/login");
       localStorage.removeItem("user");
     },
 
@@ -552,32 +553,6 @@ export default {
   padding: 6px 36px;
 }
 
-.manage-request .el-table .tt1 {
-  cursor: default;
-  color: white;
-  background-color: #75c4c0;
-  border: none;
-  border-radius: 5px;
-  padding: 3px 20px;
-}
-
-.manage-request .el-table .tt2 {
-  cursor: default;
-  color: white;
-  background-color: #ed9696;
-  border: none;
-  border-radius: 5px;
-  padding: 3px 20px;
-}
-
-.manage-request .el-table .tt3 {
-  cursor: default;
-  color: white;
-  background-color: #f8cbad;
-  border: none;
-  border-radius: 5px;
-  padding: 3px 20px;
-}
 .el-table .btn-action {
   border: none;
   padding: 5px 5px;
@@ -675,63 +650,63 @@ input:checked + .slider:before {
 }
 
 @media only screen and (min-width: 150px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 108%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: left;
   }
 }
 
 @media only screen and (min-width: 992px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 100%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: left;
   }
 }
 
 @media only screen and (min-width: 1440px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-request .div-buttons {
     float: right;
   }
 }
 
 @media only screen and (min-width: 1689px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-request .div-buttons {
     float: right;
   }
 }
 
 @media only screen and (min-width: 1920px) {
-  .el-col-md-6 {
+  .manage-request .el-col-md-6 {
     width: 23%;
   }
 
-  .buttons {
+  .manage-request .buttons {
     text-align: right;
   }
 
-  .div-buttons {
+  .manage-request .div-buttons {
     float: right;
   }
 }

@@ -27,7 +27,7 @@ class UserService {
     }
 
     changePass(data){
-        return axios.post(BASE_URL + `/change-password`, data);
+        return axios.put(BASE_URL + `/auth/change-password`, data, {headers: authHeader()});
     }
 
     changeStatus(id){

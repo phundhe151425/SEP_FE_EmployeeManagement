@@ -1,5 +1,7 @@
 <template>
     <div>
+        <h3 class="text-start" style="font-weight: bold">Quản lý nhân viên</h3>
+        <hr style="margin-bottom: 2%" />
         <div style="padding-bottom: 20px">
             <div className="" style="width: 100%; margin: auto">
                 <el-row :gutter="20">
@@ -146,7 +148,7 @@
                             <el-image
                                     style="width: 100px; height: 100px"
                                     v-if="data.row.userImage != null"
-                                    v-bind:src="`http://localhost:2000/api/file/avatar/` + data.row.userImage"
+                                    v-bind:src="beUrl+ `api/file/avatar/` + data.row.userImage"
                                     :fit="fit"
                             ></el-image>
                             <el-image
@@ -674,7 +676,7 @@
                                        :class="{'error-border':errContractFile !== null && errContractFile !== ''}"
                                        @change="clearErrorFullName('contractFile')"
                                        style="width: 90%"/>
-                                <el-link :href="`http://localhost:2000/api/file/contract/`+contractFileEdit" type="warning"
+                                <el-link :href="this.beUrl+`api/file/contract/`+contractFileEdit" type="warning"
                                          target="_blank">
                                     {{ contractNameEdit }}
                                 </el-link>
@@ -755,12 +757,15 @@ import UserService from "@/services/user-service";
 import ExcelService from "@/services/excel-service";
 import PositionService from "@/services/position-service";
 import ContractService from "@/services/contract-service";
-
+import {BE_URL} from "@/http-common";
+import {FE_URL} from "@/http-common";
 export default {
     components: {},
     name: "ManageUser",
     data() {
         return {
+            beUrl: BE_URL,
+            feUrl: FE_URL,
             logInUser: '',
             users: [],
             page: 0,
@@ -1188,7 +1193,7 @@ export default {
                 this.deparmentEditName = this.userEdit.department.name
                 this.positionEditName = this.userEdit.position.positionName
                 this.userImageEdit = this.userEdit.userImage !== ''
-                    ? "http://localhost:2000/api/file/avatar/" + this.userEdit.userImage
+                    ? this.beUrl+ "api/file/avatar/" + this.userEdit.userImage
                     : "https://www.namepros.com/attachments/empty-png.89209/";
                 console.log(this.userEdit.department.name)
             })
@@ -1343,9 +1348,7 @@ export default {
 </script>
 
 <style scoped>
-* {
-    font-size: 16px;
-}
+
 
 
 .avatar {

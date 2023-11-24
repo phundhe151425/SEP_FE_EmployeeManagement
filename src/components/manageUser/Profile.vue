@@ -19,40 +19,40 @@
           <div class="col-xs-12 col-md-7">
             <div class="detail" v-if="currentUser != null">
               <div class="item">
-                <label>Họ và tên nhân viên</label>
-                <p>{{ currentUser.fullName }}</p>
+                <label style="width:30%">Họ và tên</label>
+                <p style="overflow: auto;">{{ currentUser.fullName }}</p>
               </div>
               <div class="item">
-                <label>Mã nhân viên</label>
+                <label style="width:40%">Mã nhân viên</label>
                 <p>{{ currentUser.userCode }}</p>
               </div>
               <div class="item">
-                <label>Bộ phận</label>
+                <label style="width:30%">Bộ phận</label>
                 <p>{{ currentUser.department.name }}</p>
               </div>
               <div class="item">
-                <label>Email</label>
+                <label style="width:30%">Email</label>
                 <p>{{ currentUser.email }}</p>
               </div>
-              <div class="item">
+              <!-- <div class="item">
                 <label>Loại tài khoản</label>
                 <p>parttime</p>
-              </div>
+              </div> -->
               <div class="item">
-                <label>Ngày sinh</label>
+                <label style="width:30%">Ngày sinh</label>
                 <p>{{ dateFormat }}</p>
               </div>
               <div class="item">
-                <label>Giới tính</label>
+                <label style="width:30%">Giới tính</label>
                 <p v-if="currentUser.gender == 1">Nam</p>
                 <p v-else>Nữ</p>
               </div>
               <div class="item">
-                <label>Địa chỉ</label>
-                <p>{{ currentUser.address }}</p>
+                <label style="width:40%">Địa chỉ</label>
+                <p style="overflow: auto;">{{ currentUser.address }}</p>
               </div>
               <div class="item">
-                <label>Số điện thoại</label>
+                <label style="width:40%">Số điện thoại</label>
                 <p>{{ currentUser.phone }}</p>
               </div>
             </div>
@@ -150,9 +150,10 @@ h4 {
   justify-content: space-between;
   width: 75%;
   border-bottom: black solid;
-  height: 35px;
+
   margin-bottom: 3%;
 }
+
 
 .profile .btn {
   border-radius: 15px;

@@ -5,14 +5,14 @@
       style="text-decoration: none; font-size: 18px; margin-left: 5%"
       :to="'/manageRequest'"
     >
-      Chi tiết đề xuất</router-link
+      Quản lý đề xuất</router-link
     >
     <router-link
       v-else
       style="text-decoration: none; font-size: 18px; margin-left: 5%"
       :to="'/myRequest'"
     >
-      Chi tiết đề xuất</router-link
+      Danh sách đề xuất</router-link
     >
     <h1 style="margin-top: 2%; margin-left: 5%; margin-bottom: 2%;">
       {{ request.requestTitle }}
