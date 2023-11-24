@@ -438,9 +438,7 @@ export default {
           this.totalItems = response.data.totalElements;
         })
         .catch((e) => {
-          if (this.isAdmin == false && this.isModerator == false) {
             this.logout();
-          }
           console.log(e);
         });
     },
