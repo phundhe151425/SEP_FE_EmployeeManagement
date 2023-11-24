@@ -24,6 +24,10 @@ const router = new Router({
             component: () => import("./components/manageUser/ManageUser.vue"),
         },
         {
+            path: "/manageContract",
+            component: () => import("./components/manageContract/ManageContract.vue"),
+        },
+        {
             path: "/profile",
             component: () => import("./components/manageUser/Profile.vue"),
         },
@@ -135,6 +139,7 @@ router.beforeEach((to, from, next) => {
         "/manageDepartment",
         "/report",
         "/manageRequest",
+        "/manageContract",
         "/manageWorkingTime"
 
     ];

@@ -206,12 +206,6 @@
                                 </ul>
                             </div>
                         </li>
-
-
-
-
-
-
                         <li class="nav-item mb-1" v-if="isAdmin || isModerator">
                             <button class="nav-link sel btn-drop" aria-current="page" data-bs-toggle="collapse" data-bs-target="#getting-started-collapse3" aria-expanded="false">
                                 <i class="el-icon-s-tools"/> Quản Lý <i class="el-icon-arrow-right"/>
@@ -251,6 +245,15 @@
                                             </router-link>
                                         </a>
                                     </li>
+                                     <li class="nav-item" v-if="isAdmin">
+                        <a class="nav-link active" aria-current="page">
+                          <router-link to="/manageContract" class="nav-link sel">
+                             <i class="el-icon-document"></i>
+                            <font-awesome-icon icon="home" />
+                            Quản lý hợp đồng
+                          </router-link>
+                        </a>
+                      </li>
                                     <li class="nav-item" v-if="isAdmin">
                                         <a class="nav-link active" aria-current="page">
                                             <router-link to="/manageHoliday" class="nav-link sel">
@@ -270,10 +273,6 @@
                                 </ul>
                             </div>
                         </li>
-
-
-
-
                     </ul>
                 </div>
             </div>

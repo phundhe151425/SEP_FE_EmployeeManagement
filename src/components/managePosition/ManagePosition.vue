@@ -548,7 +548,7 @@ export default {
     },
 
     handlePageChange(value) {
-      this.page = value - 1;
+      this.page = value - 1; 
       this.getData();
     },
 
