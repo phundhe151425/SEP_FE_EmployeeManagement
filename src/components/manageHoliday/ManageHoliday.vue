@@ -146,10 +146,10 @@
       left
     >
       <el-form
-        id="formCreate"
-        :model="ruleForm"
+        id="formEdit"
+        :model="holidayEdit"
         :rules="rules"
-        ref="ruleForm"
+        ref="holidayEdit"
         label-width="200px"
         class="demo-ruleForm"
       >
@@ -157,7 +157,7 @@
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <el-form-item label="Nhập tên ngày nghỉ" prop="holidayName">
               <el-input
-                v-model="ruleForm.holidayName"
+                v-model="holidayEdit.holidayName"
                 name="holidayName"
                 autocomplete="off"
               ></el-input>
@@ -171,7 +171,7 @@
               <el-form-item prop="startDate">
                 <el-date-picker
                   type="date"
-                  v-model="ruleForm.startDate"
+                  v-model="holidayEdit.startDate"
                   format="dd/MM/yyyy"
                   value-format="yyyy-MM-dd"
                   name="startDate"
@@ -187,7 +187,7 @@
               <el-form-item prop="endDate">
                 <el-date-picker
                   type="date"
-                  v-model="ruleForm.endDate"
+                  v-model="holidayEdit.endDate"
                   name="endDate"
                   format="dd/MM/yyyy"
                   value-format="yyyy-MM-dd"
@@ -207,7 +207,7 @@
                   class="btn btn-outline-danger"
                   type="primary"
                   style="width: 90%"
-                  @click="cancelEditForm('ruleForm')"
+                  @click="cancelEditForm('holidayEdit')"
                   >Hủy</el-button
                 >
               </el-form-item>
@@ -220,7 +220,7 @@
                   class="btn btn-success"
                   type="primary"
                   style="width: 90%"
-                  @click="submitEditForm('ruleForm')"
+                  @click="submitEditForm('holidayEdit')"
                   >Lưu</el-button
                 >
               </el-form-item>
@@ -238,9 +238,9 @@
     >
       <el-form
         id="formCreate"
-        :model="ruleForm"
+        :model="holidayCreate"
         :rules="rules"
-        ref="ruleForm"
+        ref="holidayCreate"
         label-width="200px"
         class="demo-ruleForm"
       >
@@ -248,7 +248,7 @@
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <el-form-item label="Nhập tên ngày nghỉ" prop="holidayName">
               <el-input
-                v-model="ruleForm.holidayName"
+                v-model="holidayCreate.holidayName"
                 name="holidayName"
                 autocomplete="off"
               ></el-input>
@@ -262,7 +262,7 @@
               <el-form-item prop="startDate">
                 <el-date-picker
                   type="date"
-                  v-model="ruleForm.startDate"
+                  v-model="holidayCreate.startDate"
                   format="dd/MM/yyyy"
                   value-format="yyyy-MM-dd"
                   name="startDate"
@@ -278,7 +278,7 @@
               <el-form-item prop="endDate">
                 <el-date-picker
                   type="date"
-                  v-model="ruleForm.endDate"
+                  v-model="holidayCreate.endDate"
                   name="endDate"
                   format="dd/MM/yyyy"
                   value-format="yyyy-MM-dd"
@@ -298,7 +298,7 @@
                   class="btn btn-outline-danger"
                   type="primary"
                   style="width: 90%"
-                  @click="cancelCreateForm('ruleForm')"
+                  @click="cancelCreateForm('holidayCreate')"
                   >Hủy</el-button
                 >
               </el-form-item>
@@ -311,7 +311,7 @@
                   class="btn btn-success"
                   type="primary"
                   style="width: 90%"
-                  @click="submitForm('ruleForm')"
+                  @click="submitForm('holidayCreate')"
                   >Lưu</el-button
                 >
               </el-form-item>
@@ -328,15 +328,15 @@
       left
     >
       <el-form
-        id="formCreate"
-        :model="ruleForm"
+        id="formDelete"
+        :model="holidayDelete"
         :rules="rules"
-        ref="ruleForm"
+        ref="holidayDelete"
         label-width="200px"
         class="demo-ruleForm"
       >
         <p style="text-align: center">Xác nhận xóa ngày nghỉ</p>
-        <p style="text-align: center">{{ ruleForm.holidayName }}</p>
+        <p style="text-align: center">{{ holidayDelete.holidayName }}</p>
 
         <div class="row" style="margin-top: 70px">
           <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -375,11 +375,26 @@ export default {
     var date = new Date();
     var currentYear = date.getFullYear();
     var validateEndDate = (rule, value, callback) => {
-      if (this.ruleForm.startDate == "" && this.ruleForm.endDate != "") {
-        this.ruleForm.endDate = "";
-        callback(new Error("Vui lòng nhập ngày bắt đầu trước!"));
-      } else {
-        callback();
+      if (this.createHolidayDialogVisible) {
+        if (
+          this.holidayCreate.startDate == "" &&
+          this.holidayCreate.endDate != ""
+        ) {
+          this.holidayCreate.endDate = "";
+          callback(new Error("Vui lòng nhập ngày bắt đầu trước!"));
+        } else {
+          callback();
+        }
+      } else if (this.editHolidayDialogVisible) {
+        if (
+          this.holidayEdit.startDate == "" &&
+          this.holidayEdit.endDate != ""
+        ) {
+          this.holidayCreate.endDate = "";
+          callback(new Error("Vui lòng nhập ngày bắt đầu trước!"));
+        } else {
+          callback();
+        }
       }
     };
 
@@ -388,7 +403,22 @@ export default {
       currentDate: date,
       years: [],
       holidayId: "",
-      ruleForm: {
+      holidayCreate: {
+        endDate: "",
+        holidayName: "",
+        startDate: "",
+      },
+      holidayEdit: {
+        endDate: "",
+        holidayName: "",
+        startDate: "",
+      },
+      holidayDelete: {
+        endDate: "",
+        holidayName: "",
+        startDate: "",
+      },
+      holidayTemp: {
         endDate: "",
         holidayName: "",
         startDate: "",
@@ -428,7 +458,7 @@ export default {
       },
       holidays: [],
       page: 0,
-      pageSize: 5,
+      pageSize: 10,
       search: "",
       date: "",
       totalItems: 0,
@@ -459,17 +489,22 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          HolidayService.save(this.ruleForm).then(() => {
-            this.createHolidayDialogVisible = false;
-            this.$notify.success({
-              message: "Tạo ngày nghỉ thành công!",
-              title: "Success",
-              timer: 2000,
-              timerProgressBar: true,
+          HolidayService.save(this.holidayCreate)
+            .then(() => {
+              this.createHolidayDialogVisible = false;
+              this.$notify.success({
+                message: "Tạo ngày nghỉ thành công!",
+                title: "Success",
+                timer: 2000,
+                timerProgressBar: true,
+              });
+              this.getData();
+            })
+            .catch((e) => {
+              if (e.response.status == 401) {
+                this.logout();
+              }
             });
-            this.getData();
-          });
-          this.$refs[formName].resetFields();
         } else {
           console.log("error submit!!");
           return false;
@@ -483,12 +518,11 @@ export default {
     },
 
     submitEditForm(formName) {
+      console.log(this.holidayId);
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log(this.ruleForm)
-          HolidayService.updateHoliday(this.holidayId, this.ruleForm).then(
-            () => {
-              this.createHolidayDialogVisible = false;
+          HolidayService.updateHoliday(this.holidayId, this.holidayEdit)
+            .then(() => {
               this.editHolidayDialogVisible = false;
               this.$notify.success({
                 message: "Sửa ngày nghỉ thành công!",
@@ -497,8 +531,12 @@ export default {
                 timerProgressBar: true,
               });
               this.getData();
-            }
-          );
+            })
+            .catch((e) => {
+              if (e.response.status == 401) {
+                this.logout();
+              }
+            });
         } else {
           console.log("error submit!!");
           return false;
@@ -513,11 +551,9 @@ export default {
 
     showCreateHolidayDialog() {
       this.createHolidayDialogVisible = true;
+      this.$refs["holidayCreate"].resetFields();
       this.editHolidayDialogVisible = false;
       this.deleteHolidayDialogVisible = false;
-      this.ruleForm.endDate = "";
-      this.ruleForm.startDate = "";
-      this.ruleForm.holidayName = "";
     },
 
     showEditHolidayDialog(id) {
@@ -525,16 +561,18 @@ export default {
         .then((response) => {
           this.startHolidayDate = response.data.startDate;
           this.endHolidayDate = response.data.endDate;
-          this.ruleForm = response.data;
+          this.holidayTemp = response.data;
         })
         .catch((e) => {
-          this.logout();
+          if (e.response.status == 401) {
+            this.logout();
+          }
           console.log(e);
         });
       setTimeout(() => {
         this.startHolidayDate = new Date(this.startHolidayDate);
         this.endHolidayDate = new Date(this.endHolidayDate);
-         this.currentDate.setHours(7, 0, 0, 0);
+        this.currentDate.setHours(7, 0, 0, 0);
         if (
           this.startHolidayDate <= this.currentDate &&
           this.currentDate <= this.endHolidayDate
@@ -554,9 +592,15 @@ export default {
           });
         } else {
           this.editHolidayDialogVisible = true;
+          setTimeout(() => {
+            this.$refs["holidayEdit"].resetFields();
+          }, 5);
           this.createHolidayDialogVisible = false;
           this.deleteHolidayDialogVisible = false;
           this.holidayId = id;
+          setTimeout(() => {
+            this.holidayEdit = this.holidayTemp;
+          }, 10);
         }
       }, 50);
     },
@@ -566,10 +610,12 @@ export default {
         .then((response) => {
           this.startHolidayDate = response.data.startDate;
           this.endHolidayDate = response.data.endDate;
-          this.ruleForm = response.data;
+          this.holidayTemp = response.data;
         })
         .catch((e) => {
-          this.logout();
+          if (e.response.status == 401) {
+            this.logout();
+          }
           console.log(e);
         });
       setTimeout(() => {
@@ -597,7 +643,13 @@ export default {
           this.editHolidayDialogVisible = false;
           this.createHolidayDialogVisible = false;
           this.deleteHolidayDialogVisible = true;
+          setTimeout(() => {
+            this.$refs["holidayDelete"].resetFields();
+          }, 5);
           this.holidayId = id;
+          setTimeout(() => {
+            this.holidayDelete = this.holidayTemp;
+          }, 10);
         }
       }, 50);
     },
@@ -606,8 +658,6 @@ export default {
       HolidayService.deleteHoliday(this.holidayId)
         .then((response) => {
           console.log(response.data);
-          this.editHolidayDialogVisible = false;
-          this.createHolidayDialogVisible = false;
           this.deleteHolidayDialogVisible = false;
           this.$notify.success({
             message: "Xóa ngày nghỉ thành công!",
@@ -618,16 +668,18 @@ export default {
           this.getData();
         })
         .catch((e) => {
-          this.editHolidayDialogVisible = false;
-          this.createHolidayDialogVisible = false;
-          this.deleteHolidayDialogVisible = false;
-          this.$notify.error({
-            message: "Không thể xóa ngày nghỉ này vì đã được sử dụng!",
-            title: "Failed",
-            timer: 2000,
-            timerProgressBar: true,
-          });
-          this.getData();
+          if (e.response.status == 401) {
+            this.logout();
+          } else {
+            this.deleteHolidayDialogVisible = false;
+            this.$notify.error({
+              message: "Không thể xóa ngày nghỉ này vì đã được sử dụng!",
+              title: "Failed",
+              timer: 2000,
+              timerProgressBar: true,
+            });
+            this.getData();
+          }
           console.log(e);
         });
     },
@@ -652,7 +704,9 @@ export default {
           this.totalItems = response.data.totalElements;
         })
         .catch((e) => {
-          this.logout();
+          if (e.response.status == 401) {
+            this.logout();
+          }
           console.log(e);
         });
     },
@@ -674,13 +728,20 @@ export default {
     },
 
     disableOneDayAgoEndDate(date) {
-      const endWork = new Date(this.ruleForm.startDate);
-      endWork.setDate(endWork.getDate() - 1);
-      return date < endWork;
+      if (this.createHolidayDialogVisible == true) {
+        const endWork = new Date(this.holidayCreate.startDate);
+        endWork.setDate(endWork.getDate() - 1);
+        return date < endWork;
+      } else if (this.editHolidayDialogVisible == true) {
+        const endWork = new Date(this.holidayEdit.startDate);
+        endWork.setDate(endWork.getDate() - 1);
+        return date < endWork;
+      }
     },
+
     logout() {
       this.$store.dispatch("auth/logout");
-     window.location.replace("/login");
+      window.location.replace("/login");
       localStorage.removeItem("user");
     },
 
