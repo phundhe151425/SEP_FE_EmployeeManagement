@@ -1455,7 +1455,9 @@ export default {
           this.totalItems = response.data.totalElements;
         })
         .catch((e) => {
-          this.logout();
+          if (e.response.status == 401) {
+            this.logout();
+          }
           console.log(e);
         });
     },
@@ -1466,6 +1468,9 @@ export default {
           this.departments = response.data;
         })
         .catch((e) => {
+           if (e.response.status == 401) {
+            this.logout();
+          }
           console.log(e);
         });
     },
@@ -1476,21 +1481,31 @@ export default {
           this.requestCategories = response.data.content;
         })
         .catch((e) => {
+           if (e.response.status == 401) {
+            this.logout();
+          }
           console.log(e);
         });
     },
 
     acceptRequest(id) {
       this.requestStatus.status = 2;
-      RequestService.changeStatus(id, this.requestStatus).then(() => {
-        this.$notify.success({
-          message: "Yêu cầu đã được chấp nhận",
-          title: "Success",
-          timer: 2000,
-          timerProgressBar: true,
+      RequestService.changeStatus(id, this.requestStatus)
+        .then(() => {
+          this.$notify.success({
+            message: "Yêu cầu đã được chấp nhận",
+            title: "Success",
+            timer: 2000,
+            timerProgressBar: true,
+          });
+          this.getData();
+        })
+        .catch((e) => {
+          if (e.response.status == 401) {
+            this.logout();
+          }
+          console.log(e);
         });
-        this.getData();
-      });
     },
 
     declineRequest(formName) {
@@ -1498,8 +1513,8 @@ export default {
         if (valid) {
           this.declineRequestDialogVisible = false;
           this.requestStatus.status = 3;
-          RequestService.changeStatus(this.requestId, this.requestStatus).then(
-            () => {
+          RequestService.changeStatus(this.requestId, this.requestStatus)
+            .then(() => {
               this.$notify.success({
                 message: "Yêu cầu đã bị từ chối",
                 title: "Success",
@@ -1507,8 +1522,13 @@ export default {
                 timerProgressBar: true,
               });
               this.getData();
-            }
-          );
+            })
+            .catch((e) => {
+              if (e.response.status == 401) {
+                this.logout();
+              }
+              console.log(e);
+            });
         } else {
           console.log("error submit!!");
           return false;
@@ -1537,18 +1557,25 @@ export default {
             startTime: this.ruleForm.startTime,
             endTime: this.ruleForm.endTime,
           };
-          RequestService.save(request).then(() => {
-            this.createRequestDialogVisible = false;
-            this.createOTRequestDialogVisible = false;
-            this.createTimeKeepingRequestDialogVisible = false;
-            this.$notify.success({
-              message: "Tạo đề xuất thành công",
-              title: "Success",
-              timer: 2000,
-              timerProgressBar: true,
+          RequestService.save(request)
+            .then(() => {
+              this.createRequestDialogVisible = false;
+              this.createOTRequestDialogVisible = false;
+              this.createTimeKeepingRequestDialogVisible = false;
+              this.$notify.success({
+                message: "Tạo đề xuất thành công",
+                title: "Success",
+                timer: 2000,
+                timerProgressBar: true,
+              });
+              this.getData();
+            })
+            .catch((e) => {
+              if (e.response.status == 401) {
+                this.logout();
+              }
+              console.log(e);
             });
-            this.getData();
-          });
         } else {
           console.log("error submit!!");
           return false;
@@ -1753,7 +1780,12 @@ export default {
       WorkingTimeService.getWorkingTimeById(1).then((response) => {
         this.startFullTime = response.data.startTime;
         this.endFullTime = response.data.endTime;
-      });
+      }).catch((e) => {
+          if (e.response.status == 401) {
+            this.logout();
+          }
+          console.log(e);
+        });
     },
     getWoringTimeById(id) {
       WorkingTimeService.getWorkingTimeById(id).then((response) => {
@@ -1797,7 +1829,7 @@ export default {
           setTimeout(() => {
             for (const key in this.listRequest) {
               if (Object.hasOwnProperty.call(this.listRequest, key)) {
-                if(this.listRequest[key].requestType.id == 4){
+                if (this.listRequest[key].requestType.id == 4) {
                   count = count + 1;
                 }
               }

@@ -122,7 +122,7 @@ export default {
             message: "Vui lòng nhập lại mật khẩu mới!",
             trigger: "blur",
           },
-            {
+          {
             min: 8,
             message: "Mật khẩu có ít nhất 8 kí tự!",
             trigger: "blur",
@@ -149,7 +149,11 @@ export default {
               this.$router.push("/calendar");
             })
             .catch((e) => {
-              this.message = "Mật khẩu cũ không đúng vui lòng nhập lại!";
+              if (e.response.status == 401) {
+                this.logout();
+              } else {
+                this.message = "Mật khẩu cũ không đúng vui lòng nhập lại!";
+              }
               console.log(e);
             });
         } else {
@@ -158,6 +162,11 @@ export default {
           return false;
         }
       });
+    },
+    logout() {
+      this.$store.dispatch("auth/logout");
+      window.location.replace("/login");
+      localStorage.removeItem("user");
     },
   },
   computed: {},

@@ -14,11 +14,11 @@
     >
       Danh sách đề xuất</router-link
     >
-    <h1 style="margin-top: 2%; margin-left: 5%; margin-bottom: 2%;">
+    <h1 style="margin-top: 2%; margin-left: 5%; margin-bottom: 2%">
       {{ request.requestTitle }}
     </h1>
     <div style="display: flex">
-      <div style="display: flex; width:24%; margin-left: 3%;">
+      <div style="display: flex; width: 24%; margin-left: 3%">
         <label
           style="
             margin-bottom: 2%;
@@ -42,13 +42,22 @@
           </button></span
         >
       </div>
-      <div v-if="type==='manage'&&request.status == 1" style="margin-left:5%">
-        <el-row >
+      <div
+        v-if="type === 'manage' && request.status == 1"
+        style="margin-left: 5%"
+      >
+        <el-row>
           <span>Thao tác: </span>
-          <el-button type="success" @click="acceptRequest(request.id)" style="padding: 6px;"
+          <el-button
+            type="success"
+            @click="acceptRequest(request.id)"
+            style="padding: 6px"
             >Chấp thuận</el-button
           >
-          <el-button type="danger" @click="showDeclineRequestDialog(request.id)" style="padding: 6px;"
+          <el-button
+            type="danger"
+            @click="showDeclineRequestDialog(request.id)"
+            style="padding: 6px"
             >Từ chối</el-button
           >
         </el-row>
@@ -135,9 +144,7 @@
         </div>
 
         <div class="infor1">
-          <label class="label"  for=""
-            >Nội dung đề xuất:
-          </label>
+          <label class="label" for="">Nội dung đề xuất: </label>
           <p class="detail">{{ request.requestContent }}</p>
         </div>
       </div>
@@ -263,7 +270,7 @@
 
 <script>
 // import DataService from "../services/DataService";
-import DataService from "../../services/user-service";
+// import DataService from "../../services/user-service";
 import RequestService from "@/services/request-service";
 import moment from "moment";
 export default {
@@ -319,7 +326,10 @@ export default {
           this.request.startDate = moment(
             String(this.request.startDate)
           ).format("DD/MM/yyyy");
-          if (this.request.requestTypeId == 4 || this.request.requestTypeId == 5) {
+          if (
+            this.request.requestTypeId == 4 ||
+            this.request.requestTypeId == 5
+          ) {
             this.isOT = true;
             this.isForgetTimeKeeping = false;
             this.isWorkFromHome = false;
@@ -345,22 +355,31 @@ export default {
           }
         })
         .catch((e) => {
-          this.logout();
+          if (e.response.status == 401) {
+            this.logout();
+          }
           console.log(e);
         });
     },
 
     acceptRequest(id) {
       this.requestStatus.status = 2;
-      RequestService.changeStatus(id, this.requestStatus).then(() => {
-        this.$notify.success({
-          message: "Yêu cầu đã được chấp nhận",
-          title: "Success",
-          timer: 2000,
-          timerProgressBar: true,
+      RequestService.changeStatus(id, this.requestStatus)
+        .then(() => {
+          this.$notify.success({
+            message: "Yêu cầu đã được chấp nhận",
+            title: "Success",
+            timer: 2000,
+            timerProgressBar: true,
+          });
+          this.getUser(id);
+        })
+        .catch((e) => {
+          if (e.response.status == 401) {
+            this.logout();
+          }
+          console.log(e);
         });
-        this.getUser(id);
-      });
     },
 
     declineRequest(formName) {
@@ -368,8 +387,8 @@ export default {
         if (valid) {
           this.declineRequestDialogVisible = false;
           this.requestStatus.status = 3;
-          RequestService.changeStatus(this.requestId, this.requestStatus).then(
-            () => {
+          RequestService.changeStatus(this.requestId, this.requestStatus)
+            .then(() => {
               this.$notify.success({
                 message: "Yêu cầu đã bị từ chối",
                 title: "Success",
@@ -377,8 +396,13 @@ export default {
                 timerProgressBar: true,
               });
               this.getUser(this.requestId);
-            }
-          );
+            })
+            .catch((e) => {
+              if (e.response.status == 401) {
+                this.logout();
+              }
+              console.log(e);
+            });
         } else {
           console.log("error submit!!");
           return false;
@@ -397,31 +421,9 @@ export default {
       this.declineRequestDialogVisible = false;
     },
 
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        this.dateFormat = this.ruleForm.birthDay.toLocaleDateString();
-        this.ruleForm.birthDay = moment(String(this.dateFormat)).format(
-          "yyyy-MM-DD"
-        );
-        if (valid) {
-          DataService.updateProfile(this.currentUser.id, this.ruleForm)
-            .then((response) => {
-              console.log(response.data);
-            })
-            .catch((e) => {
-              console.log(e);
-            });
-
-          this.$router.push("/profile");
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
     logout() {
       this.$store.dispatch("auth/logout");
-      window.location.replace("http://localhost:2001/login");
+      window.location.replace("/login");
       localStorage.removeItem("user");
     },
   },
@@ -471,7 +473,6 @@ export default {
 }
 
 .request-detail .infor {
-
   margin-bottom: 5%;
 }
 
@@ -486,8 +487,8 @@ export default {
   font-weight: bold;
   font-size: 18px;
 }
-.request-detail .infor1 .label{
-   width: 38%;
+.request-detail .infor1 .label {
+  width: 38%;
 }
 
 .request-detail .label {

@@ -131,7 +131,7 @@ export default {
             message: "Vui lòng nhập số điện thoại!",
             trigger: "blur",
           },
-           {
+          {
             min: 1,
             max: 11,
             message: "Số điện thoại từ 1 đến 11 kí tự!",
@@ -172,7 +172,6 @@ export default {
   methods: {
     getUser(id) {
       DataService.getProfile(id)
-
         .then((response) => {
           this.currentUser = response.data;
           this.ruleForm.fullName = this.currentUser.fullName;
@@ -183,6 +182,9 @@ export default {
           this.ruleForm.birthDay = date;
         })
         .catch((e) => {
+          if (e.response.status == 401) {
+            this.logout();
+          }
           console.log(e);
         });
     },
@@ -203,6 +205,9 @@ export default {
               });
             })
             .catch((e) => {
+              if (e.response.status == 401) {
+                this.logout();
+              }
               console.log(e);
             });
 
@@ -212,6 +217,12 @@ export default {
           return false;
         }
       });
+    },
+
+    logout() {
+      this.$store.dispatch("auth/logout");
+      window.location.replace("/login");
+      localStorage.removeItem("user");
     },
   },
   computed: {},

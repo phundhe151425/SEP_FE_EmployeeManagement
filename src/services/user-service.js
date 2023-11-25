@@ -15,11 +15,11 @@ class UserService {
     }
 
     getProfile(id) {
-        return httpCommon.get(`/user/profile/${id}`);
+        return httpCommon.get(`/auth/user/profile/${id}`,{headers: authHeader()});
     }
 
     updateProfile(id, data) {
-        return axios.patch(BASE_URL + `/user/profile/${id}`,data);
+        return axios.patch(BASE_URL + `/auth/user/profile/${id}`,data,{headers: authHeader()});
     }
 
     forgotPass(data){

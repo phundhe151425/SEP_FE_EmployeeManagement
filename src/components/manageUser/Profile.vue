@@ -19,19 +19,19 @@
           <div class="col-xs-12 col-md-7">
             <div class="detail" v-if="currentUser != null">
               <div class="item">
-                <label style="width:30%">Họ và tên</label>
-                <p style="overflow: auto;">{{ currentUser.fullName }}</p>
+                <label style="width: 30%">Họ và tên</label>
+                <p style="overflow: auto">{{ currentUser.fullName }}</p>
               </div>
               <div class="item">
-                <label style="width:40%">Mã nhân viên</label>
+                <label style="width: 40%">Mã nhân viên</label>
                 <p>{{ currentUser.userCode }}</p>
               </div>
               <div class="item">
-                <label style="width:30%">Bộ phận</label>
+                <label style="width: 30%">Bộ phận</label>
                 <p>{{ currentUser.department.name }}</p>
               </div>
               <div class="item">
-                <label style="width:30%">Email</label>
+                <label style="width: 30%">Email</label>
                 <p>{{ currentUser.email }}</p>
               </div>
               <!-- <div class="item">
@@ -39,20 +39,20 @@
                 <p>parttime</p>
               </div> -->
               <div class="item">
-                <label style="width:30%">Ngày sinh</label>
+                <label style="width: 30%">Ngày sinh</label>
                 <p>{{ dateFormat }}</p>
               </div>
               <div class="item">
-                <label style="width:30%">Giới tính</label>
+                <label style="width: 30%">Giới tính</label>
                 <p v-if="currentUser.gender == 1">Nam</p>
                 <p v-else>Nữ</p>
               </div>
               <div class="item">
-                <label style="width:40%">Địa chỉ</label>
-                <p style="overflow: auto;">{{ currentUser.address }}</p>
+                <label style="width: 40%">Địa chỉ</label>
+                <p style="overflow: auto">{{ currentUser.address }}</p>
               </div>
               <div class="item">
-                <label style="width:40%">Số điện thoại</label>
+                <label style="width: 40%">Số điện thoại</label>
                 <p>{{ currentUser.phone }}</p>
               </div>
             </div>
@@ -74,7 +74,7 @@ export default {
       id: "",
       file: "",
       dateFormat: "",
-      currentUser: null,
+      currentUser: {},
     };
   },
   methods: {
@@ -86,19 +86,25 @@ export default {
           this.dateFormat = moment(String(this.currentUser.birthDay)).format(
             "DD/MM/yyyy"
           );
-          this.file = require("@/assets/images/" + this.currentUser.userImage);
-
-          //   this.value = this.currentTutorial.brandId;
-          //   this.oldFile = this.currentTutorial.image;
-          //   this.fileSrc = require('@/assets'+ this.currentTutorial.image);
-          //   console.log(response.data);
+          if (this.currentUser.userImage != null) {
+            this.file = require("@/assets/images/" +
+              this.currentUser.userImage);
+          }
         })
         .catch((e) => {
+          if (e.response.status == 401) {
+            this.logout();
+          }
           console.log(e);
         });
     },
     edit: function () {
       this.$router.push("/editProfile");
+    },
+    logout() {
+      this.$store.dispatch("auth/logout");
+      window.location.replace("/login");
+      localStorage.removeItem("user");
     },
   },
   computed: {},
@@ -153,7 +159,6 @@ h4 {
 
   margin-bottom: 3%;
 }
-
 
 .profile .btn {
   border-radius: 15px;
