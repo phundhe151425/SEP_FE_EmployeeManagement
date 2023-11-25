@@ -50,7 +50,11 @@
           </el-col>
           <el-col :md="6" :lg="6" :xl="6" class="div-buttons">
             <!-- chon-dept -->
-            <el-select v-model="deptIdSelect" placeholder="Chọn một giá trị" @change="handleDeptChange">
+            <el-select
+              v-model="deptIdSelect"
+              placeholder="Chọn một giá trị"
+              @change="handleDeptChange"
+            >
               <el-option
                 v-for="item in deptList"
                 :key="item.id"
@@ -87,13 +91,13 @@
             ></el-table-column>
 
             <el-table-column
-              label="Tên nhan vien"
+              label="Tên nhân viên"
               prop="user.fullName"
               align="center"
             ></el-table-column>
 
             <el-table-column
-              label="Tên phong ban"
+              label="Tên phòng ban"
               prop="user.department.name"
               align="center"
             ></el-table-column>
@@ -110,7 +114,7 @@
               align="center"
             ></el-table-column>
 
-                       <el-table-column
+            <el-table-column
               label="Ngày kết thúc"
               prop="user.endWork"
               align="center"
@@ -345,7 +349,6 @@
         class="demo-ruleForm"
       >
         <p style="text-align: center">Xác nhận xóa hợp đồng</p>
-        <p style="text-align: center">{{ ruleForm.contractName }}</p>
 
         <div class="row" style="margin-top: 70px">
           <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -388,8 +391,8 @@ export default {
     return {
       contracts: [], // Dữ liệu hợp đồng
       deptList: [],
-      deptIdSelect:"",//o thanh search
-      deptIdAdd:"",// o dialog add
+      deptIdSelect: "", //o thanh search
+      deptIdAdd: "", // o dialog add
       contractId: "",
       page: 0,
       pageSize: 5,
@@ -434,7 +437,6 @@ export default {
   },
   created() {
     this.getData();
-    
   },
   methods: {
     submitForm() {
@@ -448,16 +450,22 @@ export default {
       let dataObject = {};
       dataObject.contractName = this.ruleForm.contractName;
       dataObject.userId = Number(this.ruleForm.userId);
-      ContractService.save(dataObject, this.ruleForm.contractFile).then(() => {
-        this.createContractDialogVisible = false;
-        this.$notify.success({
-          message: "Tạo hợp đồng thành công",
-          title: "Thành công",
-          timer: 2000,
-          timerProgressBar: true,
+      ContractService.save(dataObject, this.ruleForm.contractFile)
+        .then(() => {
+          this.createContractDialogVisible = false;
+          this.$notify.success({
+            message: "Tạo hợp đồng thành công",
+            title: "Thành công",
+            timer: 2000,
+            timerProgressBar: true,
+          });
+          this.getData();
+        })
+        .catch((e) => {
+          if (e.response.status == 401) {
+            this.logout();
+          }
         });
-        this.getData();
-      });
       //   } else {
       //     console.log("error submit!!");
       //     return false;
@@ -503,18 +511,24 @@ export default {
             this.contractId,
             dataObject,
             this.ruleForm.contractFile
-          ).then(() => {
-            this.createContractDialogVisible = false;
-            this.editContractDialogVisible = false;
-            this.deleteContractDialogVisible = false;
-            this.$notify.success({
-              message: "Sửa thành công",
-              title: "Success",
-              timer: 2000,
-              timerProgressBar: true,
+          )
+            .then(() => {
+              this.createContractDialogVisible = false;
+              this.editContractDialogVisible = false;
+              this.deleteContractDialogVisible = false;
+              this.$notify.success({
+                message: "Sửa thành công",
+                title: "Success",
+                timer: 2000,
+                timerProgressBar: true,
+              });
+              this.getData();
+            })
+            .catch((e) => {
+              if (e.response.status == 401) {
+                this.logout();
+              }
             });
-            this.getData();
-          });
         } else {
           console.log("error submit!!");
           return false;
@@ -624,17 +638,32 @@ export default {
     },
     getData() {
       // get deptList
-      departmentService.getAllDepartment().then((response) => {
-        console.log("tat ca phong ban");
-        console.log(response);
-        this.deptList = [{
-          id: "",
-          name:"Tẩt cả phòng ban"
-        },...response.data];
-      });
+      departmentService
+        .getAllDepartment()
+        .then((response) => {
+          console.log("tat ca phong ban");
+          console.log(response);
+          this.deptList = [
+            {
+              id: "",
+              name: "Tẩt cả phòng ban",
+            },
+            ...response.data,
+          ];
+        })
+        .catch((e) => {
+          if (e.response.status == 401) {
+            this.logout();
+          }
+        });
 
-      ContractService.getContracts(this.page, this.pageSize, this.search, this.deptIdSelect).then(
-        (response) => {
+      ContractService.getContracts(
+        this.page,
+        this.pageSize,
+        this.search,
+        this.deptIdSelect
+      )
+        .then((response) => {
           this.contracts = response.data.content;
           console.log(response.data.content);
           for (const key in this.contracts) {
@@ -646,8 +675,12 @@ export default {
           }
           this.page = response.data.number;
           this.totalItems = response.data.totalElements;
-        }
-      );
+        })
+        .catch((e) => {
+          if (e.response.status == 401) {
+            this.logout();
+          }
+        });
     },
     handlePageChange(value) {
       this.page = value - 1;
@@ -667,13 +700,17 @@ export default {
         this.ruleForm.contractFile = fileInput.files[0];
       }
     },
+    logout() {
+      this.$store.dispatch("auth/logout");
+      window.location.replace("/login");
+      localStorage.removeItem("user");
+    },
 
     handleUserChange() {
       // Cập nhật giá trị userId trong ruleForm khi có sự thay đổi trong el-select
       console.log("Selected user ID:", this.valueSelect);
       this.ruleForm.userId = this.valueSelect;
-    },//handleDeptChange
-
+    }, //handleDeptChange
 
     handleDeptChange() {
       // Cập nhật giá trị userId trong ruleForm khi có sự thay đổi trong el-select
@@ -682,12 +719,11 @@ export default {
       this.getData();
     },
 
-
-     handleDeptChangeAdd() {
+    handleDeptChangeAdd() {
       // Cập nhật giá trị userId trong ruleForm khi có sự thay đổi trong el-select
       console.log("Selected dept ID:", this.deptIdAdd);
       //this.ruleForm.userId = this.valueSelect;
-     // this.getData();
+      // this.getData();
       this.getEmployee();
     },
 
