@@ -445,10 +445,12 @@
 // import ExcelService from "@/services/excel-service";
 import AttendanceService from "@/services/attendance-service";
 import DepartmentService from "@/services/department-service";
+import {FE_URL} from "@/http-common";
 export default {
     name: "ReportAdmin",
     data() {
         return {
+            feUrl: FE_URL,
             accountDepartment: "",
             users: [],
             checkNone: false,
@@ -540,13 +542,24 @@ export default {
             }
         },
         handleDeleteEdit() {
-            this.getLog();
-            this.$swal.fire({
-                title: "Xóa chỉnh sửa thành công",
-                type: "success",
-                icon: "success",
-                showCloseButton: true,
-            });
+            if(this.logsEdit == []){
+                this.$swal.fire({
+                    title: "Chưa có thay đổi nào",
+                    type: "success",
+                    icon: "success",
+                    showCloseButton: true,
+                });
+            }
+            else{
+                this.getLog();
+                this.$swal.fire({
+                    title: "Xóa chỉnh sửa thành công",
+                    type: "success",
+                    icon: "success",
+                    showCloseButton: true,
+                });
+            }
+
         },
         handelUpdate() {
             AttendanceService.updateAttendance(this.logsEdit)
@@ -565,11 +578,12 @@ export default {
                     });
                     this.logsEdit = [];
                 })
-                .catch((error) => {
+                .catch((e) => {
+                    if(e.status == 401) this.$store.dispatch("auth/logout");
                     this.$swal.fire({
                         title: "Cập nhật thất bại",
                         type: "error",
-                        text: error.response.data.message,
+                        text: e.response.data.message,
                         icon: "error",
                         showCloseButton: true,
                     });
@@ -663,9 +677,14 @@ export default {
         //         });
         // },
         getDepartment() {
-            DepartmentService.getAllDepartment().then((response) => {
-                this.departments = response.data;
-            });
+            DepartmentService.getAllDepartment()
+                .then((response) => {
+                    this.departments = response.data;
+                })
+                .catch((e) => {
+                    console.log(e);
+                    if(e.status == 401) this.$store.dispatch("auth/logout");
+                });
         },
         getLog() {
             if (this.showModeratorBoard) {
@@ -747,8 +766,12 @@ export default {
                     this.users = [];
                     this.checkNone = true;
                 }
+            }).catch((e) => {
+                console.log(e);
+                if(e.status == 401) this.$store.dispatch("auth/logout");
             });
         },
+
     },
     computed: {
         currentUser() {
@@ -766,6 +789,7 @@ export default {
             }
             return false;
         },
+
     },
     mounted() {
         this.getDepartment();

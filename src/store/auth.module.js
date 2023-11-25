@@ -1,5 +1,7 @@
 import AuthService from '../services/auth.service';
+import {FE_URL} from "@/http-common";
 
+const feUrl = FE_URL;
 const user = JSON.parse(localStorage.getItem('user'));
 const initialState = user
     ? {status: {loggedIn: true}, user}
@@ -23,6 +25,7 @@ export const auth = {
         },
         logout({commit}) {
             AuthService.logout();
+            window.location.replace(feUrl + "login");
             commit('logout');
         },
         register({commit}, user) {

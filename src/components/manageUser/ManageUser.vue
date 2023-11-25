@@ -1169,15 +1169,23 @@ export default {
             }
         },
         getAllDepartment() {
-            DepartmentService.getAllDepartment().then((response) => {
-                this.departments = response.data
-            })
+            DepartmentService.getAllDepartment()
+                .then((response) => {
+                    this.departments = response.data;
+                })
+                .catch((e) => {
+                    console.log(e);
+                    if(e.status == 401) this.$store.dispatch("auth/logout");
+                })
         },
         getAllPosition() {
             console.log(this.gender)
             PositionService.getAllPosition().then((response) => {
                 this.positions = response.data
                 // console.log(this.positions)
+            }).catch((e) => {
+                console.log(e);
+                this.logOut()
             })
         },
         showCreateEmployeeDialog() {
@@ -1341,7 +1349,8 @@ export default {
             this.errUserName = ''
             this.errStartWork = ''
             this.errEndWork = ''
-        }
+        },
+
     },
 
 }
