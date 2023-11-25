@@ -496,6 +496,7 @@ export default {
                 message: "Tạo ngày nghỉ thành công!",
                 title: "Success",
                 timer: 2000,
+
                 timerProgressBar: true,
               });
               this.getData();
@@ -985,4 +986,3 @@ input:checked + .slider:before {
   }
 }
 </style>
-
