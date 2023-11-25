@@ -542,13 +542,24 @@ export default {
             }
         },
         handleDeleteEdit() {
-            this.getLog();
-            this.$swal.fire({
-                title: "Xóa chỉnh sửa thành công",
-                type: "success",
-                icon: "success",
-                showCloseButton: true,
-            });
+            if(this.logsEdit == []){
+                this.$swal.fire({
+                    title: "Chưa có thay đổi nào",
+                    type: "success",
+                    icon: "success",
+                    showCloseButton: true,
+                });
+            }
+            else{
+                this.getLog();
+                this.$swal.fire({
+                    title: "Xóa chỉnh sửa thành công",
+                    type: "success",
+                    icon: "success",
+                    showCloseButton: true,
+                });
+            }
+
         },
         handelUpdate() {
             AttendanceService.updateAttendance(this.logsEdit)
@@ -567,11 +578,12 @@ export default {
                     });
                     this.logsEdit = [];
                 })
-                .catch((error) => {
+                .catch((e) => {
+                    if(e.status == 401) this.$store.dispatch("auth/logout");
                     this.$swal.fire({
                         title: "Cập nhật thất bại",
                         type: "error",
-                        text: error.response.data.message,
+                        text: e.response.data.message,
                         icon: "error",
                         showCloseButton: true,
                     });
@@ -671,8 +683,8 @@ export default {
                 })
                 .catch((e) => {
                     console.log(e);
-                    this.logOut()
-                })
+                    if(e.status == 401) this.$store.dispatch("auth/logout");
+                });
         },
         getLog() {
             if (this.showModeratorBoard) {
@@ -754,12 +766,12 @@ export default {
                     this.users = [];
                     this.checkNone = true;
                 }
+            }).catch((e) => {
+                console.log(e);
+                if(e.status == 401) this.$store.dispatch("auth/logout");
             });
         },
-        logOut() {
-            this.$store.dispatch("auth/logout");
-            window.location.replace(this.feUrl + "login");
-        },
+
     },
     computed: {
         currentUser() {

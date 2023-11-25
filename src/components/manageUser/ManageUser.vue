@@ -1175,7 +1175,7 @@ export default {
                 })
                 .catch((e) => {
                     console.log(e);
-                    this.logOut()
+                    if(e.status == 401) this.$store.dispatch("auth/logout");
                 })
         },
         getAllPosition() {
@@ -1350,10 +1350,7 @@ export default {
             this.errStartWork = ''
             this.errEndWork = ''
         },
-        logOut() {
-            this.$store.dispatch("auth/logout");
-            window.location.replace(this.feUrl + "login");
-        },
+
     },
 
 }

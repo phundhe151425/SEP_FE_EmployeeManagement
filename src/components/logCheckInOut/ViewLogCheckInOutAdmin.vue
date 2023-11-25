@@ -215,9 +215,10 @@ export default {
                 this.page = response.data.pageable.pageNumber;
                 this.totalItems = response.data.totalElements;
                 console.log(this.page + " " + this.totalItems)
-            }).catch(error => {
-                console.log(error);
-            })
+            }).catch((e) => {
+                console.log(e)
+                if(e.status == 401) this.$store.dispatch("auth/logout");
+            });
         },
         // getAllByDate() {
         //   this.from = this.dateRange.at(0);

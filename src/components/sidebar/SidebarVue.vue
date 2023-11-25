@@ -318,7 +318,7 @@ export default {
 
         logOut() {
             this.$store.dispatch("auth/logout");
-            window.location.replace(this.feUrl + "login");
+            // window.location.replace(this.feUrl + "login");
         },
     },
 };
