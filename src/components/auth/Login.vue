@@ -7,8 +7,8 @@
     <section class="main">
         <div class="login-container">
             <img
-                src="../../../public/mixi_logo.png"
-                style="width: 185px"
+                src="../../../public/emslogo2.png"
+                style="width: 160px"
                 alt="logo"
             />
             <div class="separator"></div>
