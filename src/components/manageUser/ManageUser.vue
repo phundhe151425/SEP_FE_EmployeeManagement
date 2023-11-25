@@ -1,7 +1,7 @@
 <template>
     <div>
         <h3 class="text-start" style="font-weight: bold">Quản lý nhân viên</h3>
-        <hr style="margin-bottom: 2%" />
+        <hr style="margin-bottom: 2%"/>
         <div style="padding-bottom: 20px">
             <div className="" style="width: 100%; margin: auto">
                 <el-row :gutter="20">
@@ -445,7 +445,8 @@
                             <div class="w-100"></div>
                             <div class="col" style="margin-top: 30px">
                                 <span>Ngày bắt đầu hợp đồng<span style="color: red"> *</span></span><br>
-                                <el-date-picker id="startWork" v-model="user.startWork" name="startWork" autocomplete="off"
+                                <el-date-picker id="startWork" v-model="user.startWork" name="startWork"
+                                                autocomplete="off"
                                                 :class="{'error-border':errStartWork !== null && errStartWork !== ''}"
                                                 @change="clearErrorFullName('startWork')"
                                                 format='yyyy-MM-dd'
@@ -688,7 +689,8 @@
                             </div>
                             <div class="col">
                                 <span>Tài khoản<span style="color: red"> *</span></span><br>
-                                <el-input id="usernameEdit" v-model="userEdit.username" name="username" autocomplete="off"
+                                <el-input id="usernameEdit" v-model="userEdit.username" name="username"
+                                          autocomplete="off"
                                           maxlength="50"
                                           :class="{'error-border':errUserName !== null && errUserName !== ''}"
                                           @change="clearErrorFullName('username')"
@@ -759,6 +761,7 @@ import PositionService from "@/services/position-service";
 import ContractService from "@/services/contract-service";
 import {BE_URL} from "@/http-common";
 import {FE_URL} from "@/http-common";
+
 export default {
     components: {},
     name: "ManageUser",
@@ -915,23 +918,23 @@ export default {
                 document.getElementById("userImage").classList.add("error-border")
                 return;
             }
-                // else if (!this.user.contractFile) {
-                //     console.log(this.user.contractFile)
-                //     this.errContractFile = "Vui lòng chọn hợp đồng";
-                //     document.getElementById("contractFile").classList.add("error-border")
-                //     return;
+            // else if (!this.user.contractFile) {
+            //     console.log(this.user.contractFile)
+            //     this.errContractFile = "Vui lòng chọn hợp đồng";
+            //     document.getElementById("contractFile").classList.add("error-border")
+            //     return;
             // }
-             if (!this.user.username) {
+            if (!this.user.username) {
                 this.errUserName = "Vui lòng nhập tài khoản";
                 document.getElementById("username").classList.add("error-border")
                 return;
             }
-             if (!this.user.startWork) {
+            if (!this.user.startWork) {
                 this.errStartWork = "Vui lòng chọn ngày bắt đầu hợp đồng";
                 document.getElementById("startWork").classList.add("error-border")
                 return;
             }
-             if (!this.user.endWork) {
+            if (!this.user.endWork) {
                 this.errEndWork = "Vui lòng chọn ngày kết thúc hợp đồng";
                 document.getElementById("endWork").classList.add("error-border")
                 return;
@@ -960,6 +963,9 @@ export default {
                 });
                 // this.hideLoading();
                 this.getData();
+            }).catch((e) => {
+                console.log(e);
+                if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
             });
 
 
@@ -1048,7 +1054,6 @@ export default {
             }
 
 
-
             this.editEmployeeDialogVisible = false;
             for (var i = 0; i < this.departments.length; i++) {
                 if (document.getElementById('departmentIdEdit').value === this.departments.at(i).name) {
@@ -1073,6 +1078,9 @@ export default {
                 });
                 // this.hideLoading();
                 this.getData();
+            }).catch((e) => {
+                console.log(e);
+                if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
             });
 
 
@@ -1108,6 +1116,9 @@ export default {
                                     width: "24em",
                                 });
                                 this.getData();
+                            }).catch((e) => {
+                                console.log(e);
+                                if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
                             });
                         } else if (result.isDenied) {
                             this.$swal.fire({
@@ -1152,6 +1163,9 @@ export default {
                                     width: "24em",
                                 });
                                 this.getData();
+                            }).catch((e) => {
+                                console.log(e);
+                                if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
                             });
                         } else if (result.isDenied) {
                             this.$swal.fire({
@@ -1175,8 +1189,8 @@ export default {
                 })
                 .catch((e) => {
                     console.log(e);
-                    if(e.status == 401) this.$store.dispatch("auth/logout");
-                })
+                    if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
+                });
         },
         getAllPosition() {
             console.log(this.gender)
@@ -1185,8 +1199,8 @@ export default {
                 // console.log(this.positions)
             }).catch((e) => {
                 console.log(e);
-                this.logOut()
-            })
+                if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
+            });
         },
         showCreateEmployeeDialog() {
             this.clearAll()
@@ -1201,7 +1215,7 @@ export default {
                 this.deparmentEditName = this.userEdit.department.name
                 this.positionEditName = this.userEdit.position.positionName
                 this.userImageEdit = this.userEdit.userImage !== ''
-                    ? this.beUrl+ "api/file/avatar/" + this.userEdit.userImage
+                    ? this.beUrl + "api/file/avatar/" + this.userEdit.userImage
                     : "https://www.namepros.com/attachments/empty-png.89209/";
                 console.log(this.userEdit.department.name)
             })
@@ -1213,7 +1227,10 @@ export default {
                 this.users = response.data.content;
                 this.page = response.data.pageable.pageNumber;
                 this.totalItems = response.data.totalElements;
-            })
+            }).catch((e) => {
+                console.log(e);
+                if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
+            });
         },
         exportUsers() {
             const params = {
@@ -1240,7 +1257,10 @@ export default {
                 this.contractFileEdit = response.data.fileName
                 this.contractNameEdit = response.data.contractName
                 console.log(this.contractFileEdit)
-            })
+            }).catch((e) => {
+                console.log(e);
+                if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
+            });
         },
         previewFiles(event) {
             const file = event.target.files[0];
@@ -1276,7 +1296,7 @@ export default {
             this.clearErrorFullName('phone');
             this.user.phone = this.user.phone.replace(/[^0-9]/g, '');
             this.userEdit.phone = this.userEdit.phone.replace(/[^0-9]/g, '');
-            if(this.user.phone != '' || this.userEdit.phone != ''){
+            if (this.user.phone != '' || this.userEdit.phone != '') {
                 this.clearErrorFullName('phone');
             }
         },
@@ -1357,7 +1377,6 @@ export default {
 </script>
 
 <style scoped>
-
 
 
 .avatar {

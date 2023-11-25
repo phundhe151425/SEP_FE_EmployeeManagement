@@ -156,6 +156,7 @@ export default {
             })
             .catch((e) => {
                 console.log(e);
+                if(e.response.data.status == 401) this.$store.dispatch("auth/logout");
             });
         this.getUserCode();
     },
@@ -228,8 +229,9 @@ export default {
                 this.page = response.data.pageable.pageNumber;
                 this.totalItems = response.data.totalElements;
                 console.log(this.page + " " + this.totalItems)
-            }).catch(error => {
-                console.log(error);
+            }).catch(e => {
+                console.log(e);
+                if(e.response.data.status == 401) this.$store.dispatch("auth/logout");
             })
         },
         // getAllByDate() {

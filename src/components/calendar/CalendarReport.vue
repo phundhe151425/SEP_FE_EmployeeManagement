@@ -34,7 +34,8 @@
                         </p>
                         <div class="sign-calender text-center align-middle ">
                             {{ Sign.name }}
-                            <el-tooltip popper-class="reason-popper" v-if="Sign.note.length!=0" placement="right" effect="light">
+                            <el-tooltip popper-class="reason-popper" v-if="Sign.note.length!=0" placement="right"
+                                        effect="light">
                                 <div slot="content">
                                     <div class="tooltip-wrapper"
                                          :class="{
@@ -45,7 +46,8 @@
                                     </div>
                                 </div>
                                 <svg class="position-absolute top-0 end-0 " x="0px" y="0px"
-                                     viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;width: 15px;fill: #A843A8FF "
+                                     viewBox="0 0 512 512"
+                                     style="enable-background:new 0 0 512 512;width: 15px;fill: #A843A8FF "
                                      xml:space="preserve">
               <g>
                 <polygon points="5.8,0.6 0,6.4 0,378.3 5.8,384 384,384 512,512 512,5.8 506.3,0 6.4,0 	"/>
@@ -70,7 +72,6 @@
             </div>
             <note-calendar id="table-note" style="margin-left: 80px ;margin-top: 100px"/>
         </div>
-
 
 
         <b-modal id="my-modal" centered size="sm">
@@ -134,8 +135,9 @@ export default {
                 this.attendances = response.data;
                 console.log(this.attendances)
             })
-                .catch(error => {
-                    console.log(error);
+                .catch(e => {
+                    console.log(e);
+                    if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
                 })
 
         },

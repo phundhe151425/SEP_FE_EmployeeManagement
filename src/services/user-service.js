@@ -5,13 +5,13 @@ import authHeader from "@/services/auth-header";
 class UserService {
     saveUser(data) {
         let dataForm = new FormData(data)
-        return httpCommon.post("/user/create", dataForm);
+        return httpCommon.post("/auth/user/create", dataForm,{headers: authHeader()});
     }
     getData(page, size, departId, search, status) {
-        return httpCommon.get( "/user/data?page="+page+"&size="+size+"&departmentId="+departId+"&search="+search+"&status="+status, authHeader());
+        return httpCommon.get( "/auth/user/data?page="+page+"&size="+size+"&departmentId="+departId+"&search="+search+"&status="+status, {headers: authHeader()});
     }
     profile(id){
-        return httpCommon.get("/user/profile/"+ id);
+        return httpCommon.get("/auth/user/profile/"+ id,{headers: authHeader()});
     }
 
     getProfile(id) {
@@ -31,14 +31,14 @@ class UserService {
     }
 
     changeStatus(id){
-        return httpCommon.get("/user/block/"+ id);
+        return httpCommon.get("/auth/user/block/"+ id,{headers: authHeader()});
     }
 
     updateUser(id,data) {
         console.log(12, data);
         let dataForm = new FormData(data)
         console.log(13, dataForm);
-        return httpCommon.put("/user/update/"+id, dataForm);
+        return httpCommon.put("/auth/user/update/"+id, dataForm,{headers: authHeader()});
     }
 }
 

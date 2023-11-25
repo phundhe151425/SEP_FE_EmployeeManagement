@@ -579,7 +579,7 @@ export default {
                     this.logsEdit = [];
                 })
                 .catch((e) => {
-                    if(e.status == 401) this.$store.dispatch("auth/logout");
+                    if(e.response.data.status == 401) this.$store.dispatch("auth/logout");
                     this.$swal.fire({
                         title: "Cập nhật thất bại",
                         type: "error",
@@ -683,7 +683,7 @@ export default {
                 })
                 .catch((e) => {
                     console.log(e);
-                    if(e.status == 401) this.$store.dispatch("auth/logout");
+                    if(e.response.data.status == 401) this.$store.dispatch("auth/logout");
                 });
         },
         getLog() {
@@ -710,8 +710,7 @@ export default {
             AttendanceService.getForReport(param).then((respone) => {
                 let dataCall = [];
                 let data = respone.data;
-                console.log("data")
-                console.log(respone.data)
+
                 for (let users of data) {
                     let signs = [];
                     for (let i = 1; i <= 31; i++) {
@@ -768,7 +767,7 @@ export default {
                 }
             }).catch((e) => {
                 console.log(e);
-                if(e.status == 401) this.$store.dispatch("auth/logout");
+                if(e.response.data.status == 401) this.$store.dispatch("auth/logout");
             });
         },
 

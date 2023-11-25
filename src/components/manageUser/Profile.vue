@@ -91,12 +91,10 @@ export default {
               this.currentUser.userImage);
           }
         })
-        .catch((e) => {
-          if (e.response.status == 401) {
-            this.logout();
-          }
-          console.log(e);
-        });
+          .catch((e) => {
+              console.log(e);
+              if(e.response.data.status == 401) this.$store.dispatch("auth/logout");
+          });
     },
     edit: function () {
       this.$router.push("/editProfile");

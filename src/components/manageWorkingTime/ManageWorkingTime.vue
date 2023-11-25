@@ -243,11 +243,10 @@ export default {
               });
               this.getData();
             })
-            .catch((e) => {
-              if (e.response.status == 401) {
-                this.logout();
-              }
-            });
+              .catch((e) => {
+                  console.log(e);
+                  if(e.response.data.status == 401) this.$store.dispatch("auth/logout");
+              });
         } else {
           console.log("error submit!!");
           return false;
@@ -283,12 +282,10 @@ export default {
           );
           this.ruleForm.endTime = date1;
         })
-        .catch((e) => {
-          if (e.response.status == 401) {
-            this.logout();
-          }
-          console.log(e);
-        });
+          .catch((e) => {
+              console.log(e);
+              if(e.response.data.status == 401) this.$store.dispatch("auth/logout");
+          });
 
       this.editWorkingTimeDialogVisible = true;
       this.workingTimeId = id;
@@ -302,12 +299,10 @@ export default {
           //   this.page = response.data.pageable.pageNumber;
           //   this.totalItems = response.data.totalElements;
         })
-        .catch((e) => {
-          if (e.response.status == 401) {
-            this.logout();
-          }
-          console.log(e);
-        });
+          .catch((e) => {
+              console.log(e);
+              if(e.response.data.status == 401) this.$store.dispatch("auth/logout");
+          });
     },
 
     rangeEndTime() {
