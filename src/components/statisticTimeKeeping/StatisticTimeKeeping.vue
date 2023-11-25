@@ -407,7 +407,9 @@ export default {
           this.totalItems = response.data.totalElements;
         })
         .catch((e) => {
-          this.logout();
+          if (e.response.status == 401) {
+            this.logout();
+          }
           console.log(e);
         });
     },
@@ -438,7 +440,9 @@ export default {
           this.totalItems = response.data.totalElements;
         })
         .catch((e) => {
+           if (e.response.status == 401) {
             this.logout();
+          }
           console.log(e);
         });
     },
