@@ -275,7 +275,7 @@ export default {
 }
 
 .edit-profile .btn {
-    border-radius: 15px;
+    border-radius: 5px;
     color: white;
     width: 20%;
     margin-top: 100px;

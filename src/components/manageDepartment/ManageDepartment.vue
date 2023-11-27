@@ -136,9 +136,9 @@
                         <div style="bottom: 40px">
                             <el-form-item>
                                 <el-button
-                                        class="btn btn-outline-danger"
+                                        class="btn"
                                         type="primary"
-                                        style="width: 90%"
+                                        style="width: 90%;background-color: #ed9696; color: white"
                                         @click="cancelEditForm('departmentEdit')"
                                 >Hủy
                                 </el-button
@@ -150,9 +150,9 @@
                         <div style="bottom: 40px">
                             <el-form-item>
                                 <el-button
-                                        class="btn btn-success"
+                                        class="btn"
                                         type="primary"
-                                        style="width: 90%"
+                                        style="width: 90%;background-color: #75c4c0; color: white"
                                         @click="submitEditForm('departmentEdit')"
                                 >Lưu
                                 </el-button
@@ -194,9 +194,9 @@
                         <div style="bottom: 40px">
                             <el-form-item>
                                 <el-button
-                                        class="btn btn-outline-danger"
+                                        class="btn"
                                         type="primary"
-                                        style="width: 90%"
+                                        style="width: 90%;background-color: #ed9696; color: white"
                                         @click="cancelCreateForm('departmentCreate')"
                                 >Hủy
                                 </el-button
@@ -208,9 +208,9 @@
                         <div style="bottom: 40px">
                             <el-form-item>
                                 <el-button
-                                        class="btn btn-success"
+                                        class="btn"
                                         type="primary"
-                                        style="width: 90%"
+                                        style="width: 90%;background-color: #75c4c0; color: white"
                                         @click="submitForm('departmentCreate')"
                                 >Lưu
                                 </el-button
@@ -239,29 +239,33 @@
                 <p style="text-align: center">Xác nhận xóa phòng ban</p>
                 <p style="text-align: center">{{ departmentDelete.name }}</p>
 
-                <div class="row" style="margin-top: 70px">
-                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                <div class="row" style="margin-top: 20px">
+                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                      </div>
+                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                         <el-form-item>
                             <el-button
-                                    class="btn btn-success"
-                                    style="width: 100%"
+                                    class="btn"
+                                    style="width: 100%;background-color: #ed9696; color: white"
                                     @click="deleteDepartmentDialogVisible = false"
                             >Huỷ
                             </el-button
                             >
                         </el-form-item>
                     </div>
-                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                         <el-form-item>
                             <el-button
-                                    style="width: 100%"
-                                    class="btn btn-outline-danger"
+                                    style="width: 100%;background-color: #75c4c0; color: white"
+                                    class="btn"
                                     @click="acceptDelete()"
                             >Xác nhận
                             </el-button
                             >
                         </el-form-item>
                     </div>
+                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                      </div>
                 </div>
             </el-form>
         </el-dialog>

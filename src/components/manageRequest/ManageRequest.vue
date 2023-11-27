@@ -668,9 +668,9 @@
                         <div style="bottom: 40px">
                             <el-form-item>
                                 <el-button
-                                        class="btn btn-outline-danger"
+                                        class="btn"
                                         type="primary"
-                                        style="width: 90%"
+                                        style="width: 90%;background-color: #ed9696; color: white"
                                         @click="cancelCreateForm('ruleForm')"
                                 >Hủy
                                 </el-button
@@ -682,9 +682,9 @@
                         <div style="bottom: 40px">
                             <el-form-item>
                                 <el-button
-                                        class="btn btn-success"
+                                        class="btn"
                                         type="primary"
-                                        style="width: 90%"
+                                        style="width: 90%;background-color: #75c4c0; color: white"
                                         @click="submitForm('ruleForm')"
                                 >Lưu
                                 </el-button
@@ -776,9 +776,7 @@
                     <div v-if="isWarning == true">
                         <div class="row" style="margin-top: 5px">
                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                <div style="color: orange">
-                                    Bạn chưa tạo đơn xin trước cho ngày này!
-                                </div>
+                                <small style="color: Orange">Chú ý: Bạn chưa tạo đơn xin trước cho ngày này!</small>
                             </div>
                         </div>
                     </div>
@@ -827,9 +825,9 @@
                         <div style="bottom: 40px">
                             <el-form-item>
                                 <el-button
-                                        class="btn btn-outline-danger"
+                                        class="btn"
                                         type="primary"
-                                        style="width: 90%"
+                                        style="width: 90%;background-color: #ed9696; color: white"
                                         @click="cancelCreateForm('ruleForm')"
                                 >Hủy
                                 </el-button
@@ -841,9 +839,9 @@
                         <div style="bottom: 40px">
                             <el-form-item>
                                 <el-button
-                                        class="btn btn-success"
+                                        class="btn"
                                         type="primary"
-                                        style="width: 90%"
+                                        style="width: 90%;background-color: #75c4c0; color: white"
                                         @click="submitForm('ruleForm')"
                                 >Lưu
                                 </el-button
@@ -1075,9 +1073,9 @@
                         <div style="bottom: 40px">
                             <el-form-item>
                                 <el-button
-                                        class="btn btn-outline-danger"
+                                        class="btn"
                                         type="primary"
-                                        style="width: 90%"
+                                        style="width: 90%;background-color: #ed9696; color: white"
                                         @click="cancelCreateForm('ruleForm')"
                                 >Hủy
                                 </el-button
@@ -1089,9 +1087,9 @@
                         <div style="bottom: 40px">
                             <el-form-item>
                                 <el-button
-                                        class="btn btn-success"
+                                        class="btn"
                                         type="primary"
-                                        style="width: 90%"
+                                        style="width: 90%;background-color: #75c4c0; color: white"
                                         @click="submitForm('ruleForm')"
                                 >Lưu
                                 </el-button
@@ -1784,6 +1782,7 @@ export default {
                 if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
             });
         },
+        
         getWoringTimeById(id) {
             WorkingTimeService.getWorkingTimeById(id).then((response) => {
                 this.shift = response.data;

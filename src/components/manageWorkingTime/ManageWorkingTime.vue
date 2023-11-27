@@ -130,9 +130,9 @@
             <div style="bottom: 40px">
               <el-form-item>
                 <el-button
-                  class="btn btn-outline-danger"
+                  class="btn"
                   type="primary"
-                  style="width: 90%"
+                  style="width: 90%;background-color: #ed9696; color: white"
                   @click="cancelEditForm('ruleForm')"
                   >Hủy</el-button
                 >
@@ -143,9 +143,9 @@
             <div style="bottom: 40px">
               <el-form-item>
                 <el-button
-                  class="btn btn-success"
+                  class="btn"
                   type="primary"
-                  style="width: 90%"
+                  style="width: 90%;background-color: #75c4c0; color: white"
                   @click="submitEditForm('ruleForm')"
                   >Lưu</el-button
                 >

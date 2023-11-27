@@ -25,7 +25,7 @@
                 </li>
                 <li>
                     <a class="dropdown-item">
-                        <router-link to="/changepassword" class="nav-link">
+                        <router-link to="/changePassword" class="nav-link">
                             <i class="el-icon-refresh-left"></i>
                             Thay đổi mật khẩu
                         </router-link>
@@ -67,7 +67,7 @@
                 </li>
                 <li>
                     <a class="dropdown-item">
-                        <router-link to="/changepassword" class="nav-link">
+                        <router-link to="/changePassword" class="nav-link">
                             <i class="el-icon-refresh-left"></i>
                             Thay đổi mật khẩu
                         </router-link>

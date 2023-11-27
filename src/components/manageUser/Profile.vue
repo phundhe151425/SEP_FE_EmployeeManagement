@@ -14,7 +14,7 @@
                 `http://localhost:2000/api/file/avatar/` + currentUser.userImage
               "
             />
-            <img v-else class="img" src="..\src\assets\images\avatar.jpg" />
+            <img v-else class="img" src="../../../public/avatar.jpg" />
           </div>
           <div class="col-xs-12 col-md-7">
             <div class="detail" v-if="currentUser != null">
@@ -34,10 +34,6 @@
                 <label style="width: 30%">Email</label>
                 <p>{{ currentUser.email }}</p>
               </div>
-              <!-- <div class="item">
-                <label>Loại tài khoản</label>
-                <p>parttime</p>
-              </div> -->
               <div class="item">
                 <label style="width: 30%">Ngày sinh</label>
                 <p>{{ dateFormat }}</p>
@@ -72,7 +68,6 @@ export default {
   data() {
     return {
       id: "",
-      file: "",
       dateFormat: "",
       currentUser: {},
     };
@@ -86,15 +81,13 @@ export default {
           this.dateFormat = moment(String(this.currentUser.birthDay)).format(
             "DD/MM/yyyy"
           );
-          if (this.currentUser.userImage != null) {
-            this.file = require("@/assets/images/" +
-              this.currentUser.userImage);
-          }
+
         })
-          .catch((e) => {
-              console.log(e);
-              if(e.response.data.status == 401) this.$store.dispatch("auth/logout");
-          });
+        .catch((e) => {
+          console.log(e);
+          if (e.response.data.status == 401)
+            this.$store.dispatch("auth/logout");
+        });
     },
     edit: function () {
       this.$router.push("/editProfile");
@@ -105,7 +98,8 @@ export default {
       localStorage.removeItem("user");
     },
   },
-  computed: {},
+  computed: {
+  },
   beforeMount() {
     this.id = this.$store.state.auth.user.id;
   },
@@ -159,7 +153,7 @@ h4 {
 }
 
 .profile .btn {
-  border-radius: 15px;
+  border-radius: 5px;
   color: white;
   width: 20%;
   margin-top: 40px;

@@ -207,7 +207,7 @@ export default {
 }
 
 .change-pass .input .btn-changepass {
-    border-radius: 15px;
+    border-radius: 5px;
     color: white;
     margin-top: 50px;
     margin-left: 20%;
