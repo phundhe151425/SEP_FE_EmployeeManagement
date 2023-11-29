@@ -1218,6 +1218,11 @@ export default {
                     ? this.beUrl + "api/file/avatar/" + this.userEdit.userImage
                     : "https://www.namepros.com/attachments/empty-png.89209/";
                 console.log(this.userEdit.department.name)
+            }).catch(e => {
+                console.log(e);
+                if (e.response.data.status == 401){
+                    this.$store.dispatch("auth/logout");
+                }
             })
             this.getCurrentContractByUserId(userId)
             this.editEmployeeDialogVisible = true;

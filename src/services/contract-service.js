@@ -6,12 +6,10 @@ import { authHeaderFormData } from "@/services/auth-header";
 
 class ContractService {
   getCurrentContractByUserId(userId) {
-    return httpCommon.get("/auth/contract/" + userId);
+    return httpCommon.get("/auth/contract/" + userId,{ headers: authHeader()});
   }
   getAllContract() {
-    return axios.get(BASE_URL + "/auth/contract/get-all", {
-      headers: authHeader(),
-    });
+    return axios.get(BASE_URL + "/auth/contract/get-all", { headers: authHeader(),});
   }
   getContracts(page, size, search, deptId) {
     return axios.get(
