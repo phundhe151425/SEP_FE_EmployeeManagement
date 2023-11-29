@@ -14,7 +14,7 @@
                 `http://localhost:2000/api/file/avatar/` + currentUser.userImage
               "
             />
-            <img v-else class="img" src="..\src\assets\images\avatar.jpg" />
+<!--            <img v-else class="img" src="..\src\assets\images\avatar.jpg" />-->
           </div>
           <div class="col-xs-12 col-md-7">
             <div class="detail" v-if="currentUser != null">

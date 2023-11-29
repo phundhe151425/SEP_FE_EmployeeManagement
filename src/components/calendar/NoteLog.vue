@@ -4,7 +4,7 @@
 
     <div class="tab">
           <!--  Admin Edit-->
-    <div v-if="note.noteCatergory.noteCategoryId==1">
+    <div v-if="note.noteCategory.noteCategoryId==1">
       <div class="tab-type edit"><span class="dot" style="background-color: #F5DD29"></span>Edit</div>
       <div class="avatar">
 <!--        <b-avatar class="me-3" size="30px" v-bind:src="this.beUrl + note.adminEdit.userImage"></b-avatar>-->
@@ -19,7 +19,7 @@
         <!--      <div class="tab-type face"><span class="dot" style="background-color: #FFAF3F"></span>FaceKeep</div>-->
         <!--    </div>-->
         <!--  Request-->
-    <div v-if="note.noteCatergory.noteCategoryId==2">
+    <div v-if="note.noteCategory.noteCategoryId==2">
       <div class="tab-type request"><span class="dot" style="background-color: #EF7564"></span>Đề xuất</div>
       <div class="avatar">
         <b-avatar class="me-3" size="30px"
@@ -31,7 +31,7 @@
       </div>
     </div>
         <!--  LỄ-->
-    <div v-if="note.noteCatergory.noteCategoryId==3">
+    <div v-if="note.noteCategory.noteCategoryId==3">
       <div class="tab-type holiday"><span class="dot" style="background-color: #5BA4CF"></span>Ngày lễ</div>
        <div class="content">
          {{ note.content }}
