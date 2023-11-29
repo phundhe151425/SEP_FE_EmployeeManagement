@@ -94,7 +94,7 @@
             >
                 <div class="offcanvas-header" style="margin: auto">
                     <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">
-                        <img src="../../../public/mixi_logo.png" width="140px"/>
+                        <img src="../../../public/emslogo1.png" width="140px"/>
                     </h5>
                     <button
                             type="button"

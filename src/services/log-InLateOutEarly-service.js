@@ -6,7 +6,7 @@ import authHeader from "@/services/auth-header";
 class LogInLateOutEarly {
 
     getData(params) {
-        return httpCommon.get("/logInLateOutEarly/data", {params,headers: authHeader()});
+        return httpCommon.get("/auth/logInLateOutEarly/data", {params,headers: authHeader()});
     }
 
 }

@@ -6,7 +6,7 @@ import authHeader from "@/services/auth-header";
 class LogCheckInOutService {
 
     getData(params) {
-        return httpCommon.get("/logCheckInOut/data", {params,headers: authHeader()});
+        return httpCommon.get("/auth/logCheckInOut/data", {params,headers: authHeader()});
     }
 
 }

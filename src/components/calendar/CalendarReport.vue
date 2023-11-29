@@ -169,6 +169,7 @@ export default {
                     sign.timeIn = log.timeIn
                     sign.timeOut = log.timeOut
                     sign.note = log.noteLogSet
+                    console.log(sign.note)
                     if (sign.name.includes("H") && !sign.name.includes("_"))
                         sign.allDay = true
                     if (sign.name.includes("NT"))
