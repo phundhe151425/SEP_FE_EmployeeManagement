@@ -17,7 +17,7 @@
                                     @change="getData"
                                     name="startDate"
                                     format="dd/MM/yyyy"
-                                    value-format="yyyy-MM-dd"
+                                    value-format="yyyy-MM-dd 00:00:00"
                                     placeholder="Chọn ngày"
                                     style="width: 100%"
                             ></el-date-picker>
@@ -35,7 +35,7 @@
                                     @change="getData"
                                     name="endDate"
                                     format="dd/MM/yyyy"
-                                    value-format="yyyy-MM-dd"
+                                    value-format="yyyy-MM-dd 23:59:59"
                                     placeholder="Chọn ngày"
                                     style="width: 100%"
                                     :picker-options="pickerOptionFilterEndDate"
@@ -79,6 +79,7 @@
                                     @change="getData"
                                     placeholder="Chọn trạng thái"
                             >
+                            <el-option value="" label="Tất cả"></el-option>
                                 <el-option
                                         v-for="item in allStatus"
                                         :key="item.id"
@@ -1205,7 +1206,7 @@ export default {
             requestCategories: [],
             requestId: "",
             requestTypeId: "",
-            status: 0,
+            status: "",
             departments: [],
             departmentId: "",
             startDate: startDate,
@@ -1237,10 +1238,6 @@ export default {
                 },
             ],
             allStatus: [
-                {
-                    id: 0,
-                    name: "Tất cả",
-                },
                 {
                     id: 1,
                     name: "Chờ phê duyệt",

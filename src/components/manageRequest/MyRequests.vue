@@ -52,6 +52,7 @@
                 @change="getData"
                 placeholder="Chọn trạng thái"
               >
+               <el-option value="" label="Tất cả"></el-option>
                 <el-option
                   v-for="item in allStatus"
                   :key="item.id"
@@ -1127,7 +1128,7 @@ export default {
       requestCategories: [],
       requestId: "",
       requestTypeId: "",
-      status: 0,
+      status: "",
       departments: [],
       departmentId: "",
       startDate: startDate,
@@ -1158,10 +1159,6 @@ export default {
         },
       ],
       allStatus: [
-        {
-          id: 0,
-          name: "Tất cả",
-        },
         {
           id: 1,
           name: "Chờ phê duyệt",
