@@ -17,7 +17,7 @@
                                     @change="getData"
                                     name="startDate"
                                     format="dd/MM/yyyy"
-                                    value-format="yyyy-MM-dd 00:00:00"
+                                    value-format="yyyy-MM-dd"
                                     placeholder="Chọn ngày"
                                     style="width: 100%"
                             ></el-date-picker>
@@ -35,7 +35,7 @@
                                     @change="getData"
                                     name="endDate"
                                     format="dd/MM/yyyy"
-                                    value-format="yyyy-MM-dd 23:59:59"
+                                    value-format="yyyy-MM-dd"
                                     placeholder="Chọn ngày"
                                     style="width: 100%"
                                     :picker-options="pickerOptionFilterEndDate"
