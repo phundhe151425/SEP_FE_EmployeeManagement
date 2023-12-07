@@ -209,9 +209,9 @@
                 class="text-end"
                 background
                 layout="prev, pager, next"
-                :total="totalItems"
+                :total="totalItemsPersonalUser"
                 :page-size="pageSize"
-                @current-change="handlePageChange"
+                @current-change="handlePersonalUserPageChange"
               >
               </el-pagination>
             </div>
@@ -296,15 +296,15 @@
               </el-table-column>
             </el-table>
           </div>
-          <el-pagination
-            class="text-end"
-            background
-            layout="prev, pager, next"
-            :total="totalItems"
-            :page-size="pageSize"
-            @current-change="handlePageChange"
-          >
-          </el-pagination>
+             <el-pagination
+                class="text-end"
+                background
+                layout="prev, pager, next"
+                :total="totalItemsPersonalUser"
+                :page-size="pageSize"
+                @current-change="handlePersonalUserPageChange"
+              >
+              </el-pagination>
         </div>
       </div>
     </div>
@@ -352,8 +352,10 @@ export default {
       departmentId: "",
       startDate: startDate,
       endDate: endDate,
+      pagePersonalUser: 0,
+      totalItemsPersonalUser: 0,
       page: 0,
-      pageSize: 10,
+      pageSize: 30,
       search: "",
       date: "",
       totalItems: 0,
@@ -372,6 +374,8 @@ export default {
       this.isAdmin = true;
     } else if (this.$store.state.auth.user.roles[0] === "ROLE_MODERATOR") {
       this.isModerator = true;
+       this.departmentOfModerator = this.$store.state.auth.user.departmentName;
+        this.departmentId = this.$store.state.auth.user.departmentId;
       this.getData();
     }
     this.getDataAttendanceByUser();
@@ -381,11 +385,6 @@ export default {
   },
   methods: {
     getData() {
-      if (this.$store.state.auth.user.roles[0] === "ROLE_MODERATOR") {
-        this.isModerator = true;
-        this.departmentOfModerator = this.$store.state.auth.user.departmentName;
-        this.departmentId = this.$store.state.auth.user.departmentId;
-      }
       TimeKeepingService.getData(
         this.page,
         this.pageSize,
@@ -415,11 +414,6 @@ export default {
     },
 
     getDataAttendanceByUser() {
-      if (this.$store.state.auth.user.roles[0] === "ROLE_MODERATOR") {
-        this.isModerator = true;
-        this.departmentOfModerator = this.$store.state.auth.user.departmentName;
-        this.departmentId = this.$store.state.auth.user.departmentId;
-      }
       TimeKeepingService.getListAttendanceByUser(
         this.page,
         this.pageSize,
@@ -436,11 +430,11 @@ export default {
               ).format("DD/MM/yyyy");
             }
           }
-          this.page = response.data.pageable.pageNumber;
-          this.totalItems = response.data.totalElements;
+          this.pagePersonalUser = response.data.pageable.pageNumber;
+          this.totalItemsPersonalUser =  response.data.totalElements;
         })
         .catch((e) => {
-           if (e.response.status == 401) {
+          if (e.response.status == 401) {
             this.logout();
           }
           console.log(e);
@@ -485,6 +479,11 @@ export default {
     handlePageChange(value) {
       this.page = value - 1;
       this.getData();
+    },
+
+      handlePersonalUserPageChange(value) {
+      this.page = value - 1;
+      this.getDataAttendanceByUser();
     },
 
     tableRowClassName({ rowIndex }) {
