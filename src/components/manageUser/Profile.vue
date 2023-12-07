@@ -125,7 +125,7 @@ export default {
   background-color: #d9d9d9;
   border-radius: 10px 10px 0 0;
   height: 50px;
-  width: 58.5%;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
 }
