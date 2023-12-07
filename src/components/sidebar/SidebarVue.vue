@@ -94,7 +94,7 @@
             >
                 <div class="offcanvas-header" style="margin: auto">
                     <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">
-                        <img src="../../../public/mixi_logo.png" width="140px"/>
+                        <img src="../../../public/emslogo1.png" width="140px"/>
                     </h5>
                     <button
                             type="button"
@@ -264,6 +264,14 @@
                                             <router-link to="/manageWorkingTime" class="nav-link sel">
                                                 <i class="el-icon-c-scale-to-original"></i>
                                                 Quản lý thời gian làm việc
+                                            </router-link>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item" v-if="isAdmin">
+                                        <a class="nav-link active" aria-current="page">
+                                            <router-link to="/manageContract" class="nav-link sel">
+                                                <i class="el-icon-c-scale-to-original"></i>
+                                                Quản lý hợp đồng
                                             </router-link>
                                         </a>
                                     </li>

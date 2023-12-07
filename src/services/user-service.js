@@ -1,11 +1,11 @@
 import httpCommon from "@/http-common";
 import { BASE_URL } from "@/http-common";
 import axios from 'axios';
-import authHeader from "@/services/auth-header";
+import authHeader, {authHeaderFormData} from "@/services/auth-header";
 class UserService {
     saveUser(data) {
         let dataForm = new FormData(data)
-        return httpCommon.post("/auth/user/create", dataForm,{headers: authHeader()});
+        return httpCommon.post("/auth/user/create", dataForm,{headers: authHeaderFormData()});
     }
     getData(page, size, departId, search, status) {
         return httpCommon.get( "/auth/user/data?page="+page+"&size="+size+"&departmentId="+departId+"&search="+search+"&status="+status, {headers: authHeader()});
@@ -38,7 +38,7 @@ class UserService {
         console.log(12, data);
         let dataForm = new FormData(data)
         console.log(13, dataForm);
-        return httpCommon.put("/auth/user/update/"+id, dataForm,{headers: authHeader()});
+        return httpCommon.put("/auth/user/update/"+id, dataForm,{headers: authHeaderFormData()});
     }
 }
 
