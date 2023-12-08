@@ -442,7 +442,7 @@
 
 <script>
 // import UserService from '../services/user.service';
-// import ExcelService from "@/services/excel-service";
+import ExcelService from "@/services/excel-service";
 import AttendanceService from "@/services/attendance-service";
 import DepartmentService from "@/services/department-service";
 import {FE_URL} from "@/http-common";
@@ -458,7 +458,7 @@ export default {
             year: new Date().getFullYear().toString(),
             department: null,
             departments: [],
-            signs: ["H", "KL", "NT", "H_KL", "KL_H", "_"],
+            signs: ["H", "KL", "NT", "H_KL", "KL_H", "H_P", "P_H", "_"],
             selected: "",
             dateEdit: "",
             codeEdit: "",
@@ -522,6 +522,7 @@ export default {
                         );
                     });
                     console.log(user.log[date].date)
+
                     if (sign == "_")
                         this.logsEdit.push({
                             date: user.log[date].date,
@@ -629,53 +630,53 @@ export default {
         },
         // Call API method
 
-        // exportExcel() {
-        //     this.$swal
-        //         .fire({
-        //             title: "Xuất bảng chấm công?",
-        //             showDenyButton: true,
-        //             confirmButtonColor: "#75C4C0",
-        //             confirmButtonText: "Xuất",
-        //             denyButtonColor: "#ED9696",
-        //             denyButtonText: "Hủy",
-        //             customClass: {
-        //                 actions: "my-actions",
-        //                 cancelButton: "order-1 right-gap",
-        //                 confirmButton: "order-2",
-        //                 denyButton: "order-3",
-        //             },
-        //         })
-        //         .then((result) => {
-        //             if (result.isConfirmed) {
-        //                 let params = null;
-        //                 if (this.showModeratorBoard) {
-        //                     params = {
-        //                         id: this.accountDepartment.id,
-        //                         month: this.currentMonth,
-        //                         year: this.year
-        //                     };
-        //                 } else {
-        //                     params = {
-        //                         id: this.department,
-        //                         month: this.currentMonth,
-        //                         year: this.year
-        //                     };
-        //                 }
-        //                 ExcelService.exportExcelReport(params);
-        //             } else if (result.isDenied) {
-        //                 this.$swal.fire({
-        //                     title: "Hủy xuất file",
-        //                     icon: "error",
-        //                     timer: 2000,
-        //                     timerProgressBar: true,
-        //                     toast: true,
-        //                     position: "top-end",
-        //                     showConfirmButton: false,
-        //                     width: "24em",
-        //                 });
-        //             }
-        //         });
-        // },
+        exportExcel() {
+            this.$swal
+                .fire({
+                    title: "Xuất bảng chấm công?",
+                    showDenyButton: true,
+                    confirmButtonColor: "#75C4C0",
+                    confirmButtonText: "Xuất",
+                    denyButtonColor: "#ED9696",
+                    denyButtonText: "Hủy",
+                    customClass: {
+                        actions: "my-actions",
+                        cancelButton: "order-1 right-gap",
+                        confirmButton: "order-2",
+                        denyButton: "order-3",
+                    },
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        let params = null;
+                        if (this.showModeratorBoard) {
+                            params = {
+                                id: this.accountDepartment.id,
+                                month: this.currentMonth,
+                                year: this.year
+                            };
+                        } else {
+                            params = {
+                                id: this.department,
+                                month: this.currentMonth,
+                                year: this.year
+                            };
+                        }
+                        ExcelService.exportExcelReport(params);
+                    } else if (result.isDenied) {
+                        this.$swal.fire({
+                            title: "Hủy xuất file",
+                            icon: "error",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            width: "24em",
+                        });
+                    }
+                });
+        },
         getDepartment() {
             DepartmentService.getAllDepartment()
                 .then((response) => {
