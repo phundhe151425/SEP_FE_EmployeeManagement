@@ -22,6 +22,23 @@ class ExcelService {
         });
     }
 
+    exportExcelReport(params) {
+        axios.get(BASE_URL + `/auth/attendance/export_report`, {
+            params,headers: authHeader(),
+            responseType: 'blob',
+        }).then((response) => {
+            const url = URL.createObjectURL(new Blob([response.data]))
+            const link = document.createElement('a')
+            link.href = url
+            link.setAttribute(
+                'download',
+                `Bảng Chấm Công-${new Date().toLocaleDateString()}.xls`
+            )
+            document.body.appendChild(link)
+            link.click()
+        })
+    }
+
 
 }
 

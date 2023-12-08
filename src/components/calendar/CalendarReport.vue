@@ -270,6 +270,10 @@ export default {
     background-color: #F8CBAD;
 }
 
+.disable {
+
+}
+
 .halfOff {
     background-color: #ECC376;
 }
