@@ -1,7 +1,8 @@
 <template>
     <div style="padding-bottom: 20px">
         <!--     Thanh chọn-->
-
+        <h3 class="text-start" style="font-weight: bold">Báo cáo chấm công</h3>
+        <hr style="margin-bottom: 1%" />
         <div class="d-flex flex-row mt-3 ms-0">
             <div class="col-9">
                 <el-select
@@ -198,10 +199,13 @@
                         Ngày trong tháng {{ currentMonth }}
                     </th>
                     <th rowspan="2" style="white-space: pre">
-                        Tổng số <br/>ngày làm <br/>việc
+                        <span>Tổng số <br/>ngày làm <br/>việc</span>
                     </th>
                     <th rowspan="2" style="white-space: pre">
-                        Tổng số <br/>ngày hưởng <br/>lương
+                        <span>Tổng số <br/>ngày hưởng <br/>lương</span>
+                    </th>
+                    <th rowspan="2" style="white-space: pre">
+                        <span>Tổng số <br/>giờ làm <br/>việc</span>
                     </th>
                 </tr>
                 <tr>
@@ -213,18 +217,21 @@
 
                 <tbody v-if="!checkNone">
                 <tr v-for="(user, indexLog) in users" :key="indexLog">
-                    <td>{{ indexLog + 1 }}</td>
-                    <td style="white-space: pre">{{ user.name }}</td>
+                    <td style=" width: 30px">{{ indexLog + 1 }}</td>
+                    <td style="white-space: pre; width: 100px">{{ user.name }}</td>
                     <td
                             v-b-modal="'my-modal'"
                             class="fix text-center position-relative"
                             :class="{
                 edited: log.status,
                 weekend: checkWeekend(index + 1) && !log.status,
+                disable: (year != new Date().getFullYear()) || (year == new Date().getFullYear() && currentMonth != new Date().getMonth() + 1),
               }"
                             v-on:click="infoEdit(index, user.code, log.sign, log.reason)"
                             v-for="(log, index) in user.log"
                             :key="index"
+                            style="font-size: 13px"
+
                     >
                         {{ log.sign }}
                         <el-tooltip
@@ -256,14 +263,16 @@
                 </svg>
                         </el-tooltip>
                     </td>
-                    <td class="text-center">{{ user.dayWork }}</td>
+                    <td class="text-center" style=" width: 100px">{{ user.dayWork }}</td>
                     <td
                             class="fix text-center"
                             @click="infoDayEdit(user.dayEarn, user.code)"
                             v-b-modal="'my-modal1'"
+                            style=" width: 100px"
                     >
                         {{ user.dayEarn }}
                     </td>
+                    <td class="text-center" style=" width: 100px">{{ user.dayWork }}</td>
                 </tr>
                 </tbody>
 
@@ -285,10 +294,13 @@
                     <th rowspan="2" style="white-space: pre">Họ tên</th>
                     <th colspan="31" class="text-center">Ngày trong tháng</th>
                     <th rowspan="2" style="white-space: pre">
-                        Tổng số <br/>ngày làm <br/>việc
+                        <span>Tổng số <br/>ngày làm <br/>việc</span>
                     </th>
                     <th rowspan="2" style="white-space: pre">
-                        Tổng số <br/>ngày hưởng <br/>lương
+                        <span>Tổng số <br/>ngày hưởng <br/>lương</span>
+                    </th>
+                    <th rowspan="2" style="white-space: pre">
+                        <span>Tổng số <br/>giờ làm <br/>việc</span>
                     </th>
                 </tr>
                 <tr>
@@ -307,6 +319,7 @@
                             :class="{ weekend: checkWeekend(index + 1) }"
                             v-for="(log, index) in user.log"
                             :key="index"
+                            style="font-size: 13px"
                     >
                         {{ log.sign }}
                         <el-tooltip
@@ -338,8 +351,9 @@
                 </svg>
                         </el-tooltip>
                     </td>
-                    <td class="text-center">{{ user.dayWork }}</td>
-                    <td class="fix text-center">{{ user.dayEarn }}</td>
+                    <td class="text-center" style=" width: 100px">{{ user.dayWork }}</td>
+                    <td class="fix text-center" style=" width: 100px">{{ user.dayEarn }}</td>
+                    <td class="text-center" style=" width: 100px">{{ user.dayWork }}</td>
                 </tr>
                 </tbody>
 
@@ -458,7 +472,7 @@ export default {
             year: new Date().getFullYear().toString(),
             department: null,
             departments: [],
-            signs: ["H", "KL", "NT", "H_KL", "KL_H", "H_P", "P_H", "_"],
+            signs: ["H", "P", "KL", "NT", "H_KL", "KL_H", "H_P", "P_H", "_"],
             selected: "",
             dateEdit: "",
             codeEdit: "",
@@ -827,7 +841,10 @@ export default {
 .weekend {
     background-color: #f8cbad !important;
 }
-
+.disable {
+    opacity: 0.5 !important; /* hoặc giá trị nào đó thấp hơn 1 */
+    pointer-events: none !important; /* Tùy chọn: để tránh sự kiện truyền qua */
+}
 .reason-popper {
     border: #a843a8 1px;
 }
