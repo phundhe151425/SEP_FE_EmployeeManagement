@@ -70,8 +70,6 @@
 
                             ><i class="el-icon-plus"></i> Thêm nhân viên
                             </el-button>
-
-
                             <el-button
                                     class="buttons btn-add"
                                     type="danger"
@@ -157,7 +155,7 @@
                                     src="../../../avatar/default.png"
                                     :fit="fit"
                             ></el-image>
-                            <!--                            <img  src="../../../avatar/default.png" height="127" width="127"/>-->
+                        
                         </el-table-column>
                         <el-table-column
                                 prop="position.positionName"
@@ -217,8 +215,6 @@
                                     @click="changeStatus(data.row.id, data.row.userCode, data.row.status)">
                                 <i class="el-icon-lock" style="width: 30px"></i>
                             </button>
-
-                            <!--          </div>-->
                         </el-table-column>
                     </el-table>
                 </div>
@@ -233,10 +229,7 @@
                 </el-pagination>
             </div>
         </div>
-
-        <!--        create-->
         <el-dialog
-
                 :visible.sync="createEmployeeDialogVisible"
                 width="50%"
                 title="Tạo mới nhân viên"
@@ -255,7 +248,6 @@
                                 {{ errFullName }}
                             </small>
                         </div>
-
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Mã nhân viên<span style="color: red"> *</span></span><br>
@@ -305,7 +297,6 @@
                                   :class="{'error-border':errEmail !== null && errEmail !== ''}"
                                   @input="clearErrorFullName('email')"
                                   style="width: 90%"></el-input>
-
                         <div>
                             <small v-if="errEmail !== null" style="color: red">
                                 {{ errEmail }}
@@ -357,7 +348,6 @@
                                     :value="item.id"
                             ></el-option>
                         </el-select>
-
                         <div>
                             <small v-if="errPositionId !== null" style="color: red">
                                 {{ errPositionId }}
@@ -375,10 +365,8 @@
                                     :key="item.department"
                                     :label="item.name"
                                     :value="item.id"
-
                             ></el-option>
                         </el-select>
-
                         <div>
                             <small v-if="errDepartmentId !== null" style="color: red">
                                 {{ errDepartmentId }}
@@ -386,7 +374,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="row" style="margin-top: 30px">
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Nhập ảnh nhân viên<span style="color: red"> *</span></span><br>
@@ -404,15 +391,12 @@
                         <img alt=""
                              :src=" user.userImage ||'https://www.namepros.com/attachments/empty-png.89209/'"
                              style="width: 90%"/>
-
                         <div>
                             <small v-if="errUserImage !== null" style="color: red">
                                 {{ errUserImage }}
                             </small>
                         </div>
                     </div>
-
-
                     <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
                         <div class="row">
                             <div class="col">
@@ -421,7 +405,6 @@
                                        :class="{'error-border':errContractFile !== null && errContractFile !== ''}"
                                        @change="clearErrorFullName('contractFile')"
                                        style="width: 90%"/>
-
                                 <div>
                                     <small v-if="errContractFile !== null" style="color: red">
                                         {{ errContractFile }}
@@ -481,16 +464,12 @@
                         <div style="position: absolute;bottom: 40px;right: 40px">
                             <!--                        <el-button  @click="createEmployeeDialogVisible = false">Huỷ</el-button>-->
                             <button class="save" type="button" @click="sendForm">Thêm</button>
-
                         </div>
                     </div>
                 </div>
             </form>
         </el-dialog>
-
-        <!--        edit-->
         <el-dialog
-
                 :visible.sync="editEmployeeDialogVisible"
                 width="50%"
                 title="Sửa thông tin nhân viên"
@@ -509,7 +488,6 @@
                                 {{ errFullName }}
                             </small>
                         </div>
-
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Mã nhân viên<span style="color: red"> *</span></span><br>
@@ -561,7 +539,6 @@
                                   :class="{'error-border':errEmail !== null && errEmail !== ''}"
                                   @input="clearErrorFullName('email')"
                                   style="width: 90%"></el-input>
-
                         <div>
                             <small v-if="errEmail !== null" style="color: red">
                                 {{ errEmail }}
@@ -574,7 +551,6 @@
                                   :class="{'error-border':errPhone !== null && errPhone !== ''}"
                                   @input="validateIsNumbers,clearErrorFullName('birthDay')"
                                   style="width: 90%"></el-input>
-
                         <div>
                             <small v-if="errPhone !== null" style="color: red">
                                 {{ errPhone }}
@@ -592,7 +568,6 @@
                                         :class="{'error-border':errBirthDay !== null && errBirthDay !== ''}"
                                         @change="clearErrorFullName('birthDay')"
                                         placeholder="Chọn ngày" style="width: 90%"></el-date-picker>
-
                         <div>
                             <small v-if="errBirthDay !== null" style="color: red">
                                 {{ errBirthDay }}
@@ -601,7 +576,6 @@
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Vị trí<span style="color: red"> *</span></span><br>
-
                         <el-select id="positionIdEdit" v-model="positionEditName" name="positionId" autocomplete="off"
                                    :class="{'error-border':errPositionId !== null && errPositionId !== ''}"
                                    @change="clearErrorFullName('positionId')"
@@ -614,7 +588,6 @@
 
                             ></el-option>
                         </el-select>
-
                         <div>
                             <small v-if="errPositionId !== null" style="color: red">
                                 {{ errPositionId }}
@@ -633,10 +606,8 @@
                                     :key="item.department"
                                     :label="item.name"
                                     :value="item.id"
-
                             ></el-option>
                         </el-select>
-
                         <div>
                             <small v-if="errDepartmentId !== null" style="color: red">
                                 {{ errDepartmentId }}
@@ -644,7 +615,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="row" style="margin-top: 30px">
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <span>Nhập ảnh nhân viên<span style="color: red"> *</span></span><br>
@@ -658,11 +628,9 @@
                                 :class="{'error-border':errUserImage !== null && errUserImage !== ''}"
                                 style="width: 90%"
                         />
-
                         <img alt=""
                              :src="userImageEdit ||'https://www.namepros.com/attachments/empty-png.89209/'"
                              style="width: 90%"/>
-
                         <div>
                             <small v-if="errUserImage !== null" style="color: red">
                                 {{ errUserImage }}
@@ -695,7 +663,6 @@
                                           :class="{'error-border':errUserName !== null && errUserName !== ''}"
                                           @change="clearErrorFullName('username')"
                                           style="width: 90%"></el-input>
-
                                 <div>
                                     <small v-if="errUserName !== null" style="color: red">
                                         {{ errUserName }}
@@ -713,7 +680,6 @@
                                                 value-format='yyyy-MM-dd'
                                                 :editable="false"
                                                 placeholder="Chọn ngày" style="width: 90%"></el-date-picker>
-
                                 <div>
                                     <small v-if="errStartWork !== null" style="color: red">
                                         {{ errStartWork }}
@@ -731,7 +697,6 @@
                                                 value-format='yyyy-MM-dd'
                                                 :picker-options="pickerOptionsEdit"
                                                 placeholder="Chọn ngày" style="width: 90%"></el-date-picker>
-
                                 <div>
                                     <small v-if="errEndWork !== null" style="color: red">
                                         {{ errEndWork }}
@@ -742,11 +707,8 @@
                         <div style="position: absolute;bottom: 40px;right: 40px; margin-top: 50px">
                             <!--                        <el-button  @click="createEmployeeDialogVisible = false">Huỷ</el-button>-->
                             <button class="save" type="button" @click="editUser">Chỉnh sửa</button>
-
                         </div>
                     </div>
-
-
                 </div>
             </form>
         </el-dialog>
@@ -782,8 +744,6 @@ export default {
             fit: "fill",
             departments: [],
             positions: [],
-
-
             createEmployeeDialogVisible: false,
             user: {
                 username: '',

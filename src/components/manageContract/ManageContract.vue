@@ -121,6 +121,21 @@
                         ></el-table-column>
 
                         <el-table-column
+                                label="Hợp đồng"
+                                align="center"
+                                v-slot:="data"
+                        >    
+
+                        <button
+                                    style="margin-right: 10px; background: none;"
+                                    class="btn-action"
+                                    @click="downloadFileContract(data.row.fileName)"                     
+                        >
+                                        {{data.row.fileName}}
+                                  </button>
+                        </el-table-column>
+
+                        <el-table-column
                                 v-slot:="data"
                                 label="Thao tác"
                                 width="150px"
@@ -133,6 +148,7 @@
                             >
                                 <i class="el-icon-edit-outline" style="width: 30px"></i>
                             </button>
+                            
                             <button
                                     style="margin-right: 10px"
                                     class="btn-action"
@@ -149,7 +165,6 @@
                                 <i class="el-icon-unlock" style="width: 30px"></i>
                             </button>
 
-                            <!--          </div>-->
                         </el-table-column>
                     </el-table>
                 </div>
@@ -193,9 +208,15 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <el-form-item label="Chọn file hợp đồng" prop="contractFile">
-                            <input type="file" @change="handleFileChange"/>
-                            <div>{{ ruleForm.fileName }}</div>
+                        <el-form-item label="Chọn file hợp đồng">
+                                <input id="contractFile" type="file" name="contractFile"
+                                       style="width: 90%"
+                                       />
+                                               <span style="display:block"></span>
+                                <el-link :href="this.beUrl+`api/file/contract/`+ contractFile" type="warning"
+                                         target="_blank">
+                                    {{contractFile}}
+                                </el-link>
                         </el-form-item>
                     </div>
                 </div>
@@ -207,7 +228,7 @@
                                 <el-button
                                         class="btn btn-outline-danger"
                                         type="primary"
-                                        style="width: 90%"
+                                         style="width: 100%;background-color: #ed9696; color: white"
                                         @click="cancelEditForm('ruleForm')"
                                 >Hủy
                                 </el-button
@@ -218,10 +239,9 @@
                     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
                         <div style="bottom: 40px">
                             <el-form-item>
-                                <el-button
-                                        class="btn btn-success"
+                                <el-button                                       
                                         type="primary"
-                                        style="width: 90%"
+                                        style="width: 100%;background-color: #75c4c0; color: white"
                                         @click="submitEditForm('ruleForm')"
                                 >Lưu
                                 </el-button
@@ -232,7 +252,6 @@
                 </div>
             </el-form>
         </el-dialog>
-
         <el-dialog
                 :visible.sync="createContractDialogVisible"
                 width="50%"
@@ -263,7 +282,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <el-form-item label="Chọn file hợp đồng" prop="contractFile">
                             <input type="file" @change="handleFileChange"/>
-                            <div>{{ ruleForm.fileName }}</div>
+                            <div>{{ruleForm.fileName}}</div>
                         </el-form-item>
                     </div>
                 </div>
@@ -312,7 +331,7 @@
                                 <el-button
                                         class="btn btn-outline-danger"
                                         type="primary"
-                                        style="width: 90%"
+                                        style="width: 100%;background-color: #ed9696; color: white"
                                         @click="cancelCreateForm('ruleForm')"
                                 >Hủy
                                 </el-button
@@ -326,7 +345,7 @@
                                 <el-button
                                         class="btn btn-success"
                                         type="primary"
-                                        style="width: 90%"
+                                        style="width: 100%;background-color: #75c4c0; color: white"
                                         @click="submitForm()"
                                 >Lưu
                                 </el-button
@@ -389,6 +408,7 @@ import ContractService from "@/services/contract-service";
 import moment from "moment/moment";
 import departmentService from "@/services/department-service";
 
+import { BE_URL } from '@/http-common';
 export default {
     components: {},
     name: "ManageContract",
@@ -407,6 +427,8 @@ export default {
             totalItems: 0,
             selectedOption: [],
             valueSelect: "",
+            beUrl:BE_URL,
+            contractFile: '',
             ruleForm: {
                 contractName: "",
                 contractFile: null,
@@ -564,6 +586,7 @@ export default {
                 .then((response) => {
                     console.log(response.data.nameContract);
                     this.ruleForm.contractName = response.data.nameContract;
+                    this.contractFile = response.data.fileContract;
                     this.ruleForm.userId = response.data.user.id;
                     this.contractId = response.data.id;
                     console.log(this.ruleForm.userId);
@@ -572,6 +595,17 @@ export default {
                     console.log(e);
                     if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
                 });
+        },
+
+        downloadFileContract(fileName){
+                                var link = document.createElement('a');
+                    link.href = this.beUrl+`api/file/contract/`+ fileName;
+                    // link.download = [[${productFinancial.productTerms}]] // Đặt tên tệp tin tại đây
+                    document.body.appendChild(link);
+                    link.click();
+
+                    // Hủy đường link và phần tử a sau khi đã tải xuống xong
+                    link.remove();
         },
 
         showDeleteDepartmentDialog(id) {
@@ -672,6 +706,7 @@ export default {
             )
                 .then((response) => {
                     this.contracts = response.data.content;
+                    console.log(this.contracts);
                     console.log(response.data.content);
                     for (const key in this.contracts) {
                         if (Object.hasOwnProperty.call(this.contracts, key)) {
@@ -970,4 +1005,5 @@ input:checked + .slider:before {
         float: right;
     }
 }
+
 </style>
