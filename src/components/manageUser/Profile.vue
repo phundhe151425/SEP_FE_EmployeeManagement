@@ -52,6 +52,13 @@
                 <label >Số điện thoại</label>
                 <p>{{ currentUser.phone }}</p>
               </div>
+               <div class="item">
+                <label >Hợp đồng</label>
+                <p><el-link :href="this.beUrl+`api/file/contract/`+contractFileEdit" type="warning"
+                                         target="_blank">
+                                    {{ contractNameEdit }}
+                                </el-link></p>
+              </div>
             </div>
             <button type="button" class="btn" @click="edit()">Chỉnh sửa</button>
           </div>
@@ -63,14 +70,21 @@
 
 <script>
 import DataService from "../../services/user-service";
+import ContractService from "@/services/contract-service";
+import {BE_URL} from "@/http-common";
+import {FE_URL} from "@/http-common";
 import moment from "moment";
 export default {
   name: "user-profile",
   data() {
     return {
+      beUrl: BE_URL,
+      feUrl: FE_URL,
       id: "",
       dateFormat: "",
       currentUser: {},
+      contractNameEdit: '',
+      contractFileEdit: '',
     };
   },
   methods: {
@@ -89,7 +103,20 @@ export default {
           if (e.response.data.status == 401)
             this.$store.dispatch("auth/logout");
         });
+         this.getCurrentContractByUserId(id)
     },
+
+      getCurrentContractByUserId(userId) {
+            ContractService.getCurrentContractByUserId(userId).then(response => {
+                this.contractFileEdit = response.data.fileName
+                this.contractNameEdit = response.data.contractName
+                console.log(response)
+            }).catch((e) => {
+                console.log(e);
+                if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
+            });
+        },
+
     edit: function () {
       this.$router.push("/editProfile");
     },

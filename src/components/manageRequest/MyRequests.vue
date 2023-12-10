@@ -52,7 +52,7 @@
                 @change="getData"
                 placeholder="Chọn trạng thái"
               >
-               <el-option value="" label="Tất cả"></el-option>
+                <el-option value="" label="Tất cả"></el-option>
                 <el-option
                   v-for="item in allStatus"
                   :key="item.id"
@@ -286,11 +286,13 @@
             </el-form-item>
           </div>
         </div>
-          <div class="row" style="margin-top: 5px">
-                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                <small style="color: Orange">Lưu ý: {{ numberDayRemainMess }} ngày!</small>
-                            </div>
+        <div class="row" style="margin-top: 5px">
+          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <small style="color: Orange"
+              >Lưu ý: {{ numberDayRemainMess }} ngày!</small
+            >
           </div>
+        </div>
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <el-form-item label="Chọn loại đề xuất" prop="requestTypeId">
@@ -308,6 +310,11 @@
                 </el-option>
               </el-select>
             </el-form-item>
+          </div>
+        </div>
+        <div v-if="errMess != ''" class="row" style="margin-top: 5px">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <small style="color: red">Cảnh báo: {{ errMess }}</small>
           </div>
         </div>
         <div v-if="isPersonalWork == true">
@@ -1052,6 +1059,7 @@
 import RequestService from "@/services/request-service";
 import DepartmentService from "@/services/department-service";
 import WorkingTimeService from "@/services/workingtime-service";
+import DataService from "../../services/user-service";
 import moment from "moment";
 
 export default {
@@ -1168,9 +1176,11 @@ export default {
       isWarning: false,
       startFullTime: "",
       endFullTime: "",
-      numberDayRemainMess:"",
+      numberDayRemainMess: "",
       // numberRestDay: 0,
       slotId: "",
+      dayOff: "",
+      errMess: "",
       slots: [
         {
           id: 1,
@@ -1376,8 +1386,10 @@ export default {
   },
   methods: {
     getData() {
-        this.startDate = moment(String(this.startDate)).format("yyyy-MM-DD 00:00:00");
-        this.endDate = moment(String(this.endDate)).format("yyyy-MM-DD 23:59:59");
+      this.startDate = moment(String(this.startDate)).format(
+        "yyyy-MM-DD 00:00:00"
+      );
+      this.endDate = moment(String(this.endDate)).format("yyyy-MM-DD 23:59:59");
       if (this.$store.state.auth.user.roles[0] === "ROLE_MODERATOR") {
         this.isModerator = true;
         this.departmentOfModerator = this.$store.state.auth.user.departmentName;
@@ -1402,6 +1414,20 @@ export default {
           }
           this.page = response.data.pageable.pageNumber;
           this.totalItems = response.data.totalElements;
+        })
+        .catch((e) => {
+          console.log(e);
+          if (e.response.data.status == 401)
+            this.$store.dispatch("auth/logout");
+        });
+    },
+
+    getUser() {
+      DataService.getProfile(this.$store.state.auth.user.id)
+        .then((response) => {
+          console.log(response.data);
+          this.currentUser = response.data;
+          this.dayOff = response.data.dayOff;
         })
         .catch((e) => {
           console.log(e);
@@ -1515,6 +1541,17 @@ export default {
               console.log(e);
               if (e.response.data.status == 401)
                 this.$store.dispatch("auth/logout");
+              if (
+                e.response.data.status == 400 &&
+                this.ruleForm.requestTypeId == 1
+              ) {
+                this.$notify.error({
+                  message: "Bạn đã hết xin nghỉ có phép!",
+                  title: "Failed",
+                  timer: 2000,
+                  timerProgressBar: true,
+                });
+              }
             });
         } else {
           console.log("error submit!!");
@@ -1564,9 +1601,14 @@ export default {
       this.isBusinessTravel = false;
       this.ruleForm.slotId = "";
       this.ruleForm.requestTypeId = "";
+      this.errMess = "";
       this.clearField();
       if (categotyId == 1) {
-        this.numberDayRemainMess = "Số ngày nghỉ có lương còn lại của bạn là: " + this.$store.state.auth.user.dayoff;
+        this.getUser();
+        setTimeout(() => {
+          this.numberDayRemainMess =
+            "Số ngày nghỉ có lương còn lại của bạn là: " + this.dayOff;
+        }, 50);
         this.createRequestDialogVisible = true;
         this.createOTRequestDialogVisible = false;
         this.createTimeKeepingRequestDialogVisible = false;
@@ -1629,14 +1671,23 @@ export default {
       this.isOTBefore = false;
       switch (typeId) {
         case 1:
-          if (this.$store.state.auth.user.dayoff <= 0) {
-            this.$notify.error({
-              message: "Bạn đã hết xin nghỉ có phép!",
-              title: "Failed",
-              timer: 2000,
-              timerProgressBar: true,
-            });
+          if (this.dayOff <= 0) {
+            this.isRest = false;
+            this.isPersonalWork = false;
+            this.ruleForm.restType = "";
+            this.isRestBySlot = false;
+            this.isRestByDay = false;
+            this.ruleForm.slotId = "";
+            this.errMess =
+              "Số ngày nghỉ phép có lương còn lại của bạn là 0 ngày! Vui lòng chọn loại đơn khác!";
+            // this.$notify.error({
+            //   message: "Bạn đã hết xin nghỉ có phép!",
+            //   title: "Failed",
+            //   timer: 2000,
+            //   timerProgressBar: true,
+            // });
           } else {
+            this.errMess = "";
             this.isRest = true;
             this.isPersonalWork = false;
             this.ruleForm.restType = "";
@@ -1646,6 +1697,7 @@ export default {
           }
           break;
         case 2:
+          this.errMess = "";
           this.isRest = true;
           this.isPersonalWork = false;
           this.ruleForm.restType = "";
@@ -1654,6 +1706,7 @@ export default {
           this.ruleForm.slotId = "";
           break;
         case 3:
+          this.errMess = "";
           this.isPersonalWork = true;
           this.ruleForm.restType = 1;
           this.isRest = false;
