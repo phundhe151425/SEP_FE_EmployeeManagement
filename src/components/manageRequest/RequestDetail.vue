@@ -128,7 +128,7 @@
                     <div class="infor">
                         <label class="label" for="">Thời gian kết thúc: </label
                         ><span class="detail"
-                    >{{ request.startDate }} - {{ request.endTime }}</span
+                    >{{ request.endDate }} - {{ request.endTime }}</span
                     >
                     </div>
                 </div>
@@ -142,7 +142,7 @@
                     <div class="infor">
                         <label class="label" for="">Thời gian kết thúc: </label
                         ><span class="detail"
-                    >{{ request.startDate }} - {{ request.endTime }}</span
+                    >{{ request.endDate }} - {{ request.endTime }}</span
                     >
                     </div>
                 </div>
@@ -332,6 +332,9 @@ export default {
                     ).format("DD/MM/yyyy");
                     this.request.startDate = moment(
                         String(this.request.startDate)
+                    ).format("DD/MM/yyyy");
+                       this.request.endDate = moment(
+                        String(this.request.endDate)
                     ).format("DD/MM/yyyy");
                     if (
                         this.request.requestTypeId == 4 ||
