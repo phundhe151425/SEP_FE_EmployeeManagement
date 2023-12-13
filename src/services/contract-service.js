@@ -97,6 +97,19 @@ class ContractService {
       }
     );
   }
+
+getFileContract(fileName) {
+    return axios.get(
+      BASE_URL + "/file/contract/" + fileName,
+      {
+      }
+    );
+  }
+
+
+
+
+  
 }
 
 export default new ContractService();
