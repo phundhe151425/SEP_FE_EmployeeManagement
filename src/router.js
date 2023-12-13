@@ -105,6 +105,10 @@ const router = new Router({
             component: () => import("./components/statisticTimeKeeping/StatisticTimeKeeping.vue"),
         },
         {
+            path: "/statisticTimeKeepingUser",
+            component: () => import("./components/statisticTimeKeeping/StatisticTimeKeepingUser.vue"),
+        },
+        {
             path: "/manageWorkingTime",
             component: () => import("./components/manageWorkingTime/ManageWorkingTime.vue"),
         }
@@ -128,7 +132,7 @@ router.beforeEach((to, from, next) => {
         "/changePassword",
         "/myRequest",
         "/editProfile",
-        "/statisticTimeKeeping"
+        "/statisticTimeKeepingUser"
     ];
     const adminPages = [
         "/logCheckAdmin",
@@ -140,7 +144,8 @@ router.beforeEach((to, from, next) => {
         "/report",
         "/manageRequest",
         "/manageContract",
-        "/manageWorkingTime"
+        "/manageWorkingTime",
+        "/statisticTimeKeeping"
 
     ];
     const managePages = [
@@ -149,6 +154,7 @@ router.beforeEach((to, from, next) => {
         "/manageRequest",
         "/inLateOutEarlyMod",
         "/report",
+        "/statisticTimeKeeping"
     ];
     const authRequired = !publicPages.includes(to.path);
     const loggedIn = localStorage.getItem("user");
