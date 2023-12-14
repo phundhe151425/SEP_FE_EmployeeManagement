@@ -26,6 +26,11 @@ class RequestService {
         +"&size="+size+"&search="+search +"&status="+ status+"&from="+from+"&to="+to,{headers: authHeader()});
     }
 
+    getListRequestByUserAndStartDate(startDate, page, size) {
+        return httpCommon.get("/auth/request/get-list-request-by-user-id-and-start-date?page="+page
+        +"&size="+size+"&startDate="+startDate,{headers: authHeader()});
+    }
+
     getRequestTypes(categoryId) {
         return axios.get( BASE_URL+"/auth/request-type/get-list-request-type-by-category-id?categoryId="+categoryId
         ,{headers: authHeader()});
