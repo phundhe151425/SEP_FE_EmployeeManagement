@@ -179,6 +179,9 @@
               <button v-if="data.row.status == 3" class="tt2">
                 Đã từ chối
               </button>
+               <button v-if="data.row.status == 4" class="tt4">
+                Đã hủy
+              </button>
             </el-table-column>
 
             <el-table-column label="Ngày tạo" prop="createdDate" align="center">
@@ -2063,7 +2066,7 @@ export default {
 .manage-request .el-table .tt2 {
   cursor: default;
   color: white;
-  background-color: #ed9696;
+  background-color: #f46c6c;
   border: none;
   border-radius: 5px;
   padding: 3px 20px;
@@ -2076,6 +2079,15 @@ export default {
   border: none;
   border-radius: 5px;
   padding: 3px 20px;
+}
+
+.manage-request .tt4 {
+    cursor: default;
+    color: white;
+    background-color: #ed9696;
+    border: none;
+    border-radius: 5px;
+    padding: 3px 20px;
 }
 
 .manage-request .el-table .btn-action {

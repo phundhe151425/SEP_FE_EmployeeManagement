@@ -149,6 +149,9 @@
               <button v-if="data.row.status == 3" class="tt2">
                 Đã từ chối
               </button>
+              <button v-if="data.row.status == 4" class="tt4">
+                Đã hủy
+              </button>
             </el-table-column>
 
             <el-table-column label="Ngày tạo" prop="createdDate" align="center">
@@ -161,7 +164,7 @@
             >
               <!--
                                          <el-button type="danger" icon="el-icon-edit-outline" circle></el-button>-->
-              <div>
+                <div v-if="data.row.status == 1">
                 <button
                   style="margin-right: 10px"
                   class="btn-action"
@@ -169,7 +172,32 @@
                 >
                   <i class="el-icon-view" style="width: 30px"></i>
                 </button>
+                 <button
+                  style="margin-right: 10px"
+                  class="btn-action"
+                  @click="showCancelRequestDialog(data.row.id)"
+                >
+                  <i class="el-icon-close" style="width: 30px"></i>
+                </button>
               </div>
+                  <div v-else>
+                <button
+                  style="margin-right: 10px"
+                  class="btn-action"
+                  @click="showAcceptRequestDialog(data.row.id)"
+                >
+                  <i class="el-icon-view" style="width: 30px"></i>
+                </button>
+                 <button
+                  style="margin-right: 10px"
+                  class="btn-action"
+                  @click="showCancelRequestDialog(data.row.id)"
+                  disabled
+                >
+                  <i class="el-icon-close" style="width: 30px"></i>
+                </button>
+              </div>
+              
             </el-table-column>
           </el-table>
         </div>
@@ -184,6 +212,52 @@
         </el-pagination>
       </div>
     </div>
+          <el-dialog
+                :visible.sync="cancelRequestDialogVisible"
+                width="30%"
+                title="Xóa chức vụ"
+                left
+        >
+            <el-form
+                    id="formDelete"
+                    :model="positionDelete"
+                    :rules="rules"
+                    ref="positionDelete"
+                    label-width="200px"
+                    class="demo-ruleForm"
+            >
+                <p style="text-align: center">Xác nhận hủy đơn đề xuất này!</p>
+
+                <div class="row" style="margin-top: 20px;">
+                      <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                      </div>
+                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                        <el-form-item>
+                            <el-button
+                                    class="btn"
+                                    style="width: 100%;background-color: #ed9696; color: white"
+                                    @click="cancelRequestDialogVisible = false"
+                            >Huỷ
+                            </el-button
+                            >
+                        </el-form-item>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                        <el-form-item>
+                            <el-button
+                                    class="btn"
+                                    style="width: 100%;background-color: #75c4c0; color: white"
+                                    @click="acceptCancel()"
+                            >Xác nhận
+                            </el-button
+                            >
+                        </el-form-item>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                      </div>
+                </div>
+            </el-form>
+        </el-dialog>
 
     <el-dialog
       :visible.sync="declineRequestDialogVisible"
@@ -1226,7 +1300,6 @@ export default {
       ],
       requestStatus: {
         status: "",
-        note: "",
       },
       noteRules: {
         note: [
@@ -1350,6 +1423,7 @@ export default {
       createOTRequestDialogVisible: false,
       createTimeKeepingRequestDialogVisible: false,
       declineRequestDialogVisible: false,
+      cancelRequestDialogVisible: false,   
     };
   },
 
@@ -1524,6 +1598,28 @@ export default {
       });
     },
 
+        acceptCancel() {
+          this.cancelRequestDialogVisible = false;
+          this.requestStatus.status = 4;
+          RequestService.updateRequest(this.requestId, this.requestStatus)
+            .then(() => {
+              this.$notify.success({
+                message: "Yêu cầu đã được hủy",
+                title: "Success",
+                timer: 2000,
+                timerProgressBar: true,
+              });
+              this.getData();
+            })
+            .catch((e) => {
+              console.log(e);
+              if (e.response.data.status == 401)
+                this.$store.dispatch("auth/logout");
+            });
+       
+      
+    },
+
     submitForm(formName) {
       if (this.isPersonalWork) {
         this.ruleForm.restType = 1;
@@ -1678,6 +1774,14 @@ export default {
       this.requestId = id;
       this.requestStatus.note = "Đề xuất của bạn bị từ chối!";
       this.declineRequestDialogVisible = true;
+      this.createRequestDialogVisible = false;
+      this.createOTRequestDialogVisible = false;
+      this.createTimeKeepingRequestDialogVisible = false;
+    },
+
+      showCancelRequestDialog(id) {
+      this.requestId = id;
+      this.cancelRequestDialogVisible = true;
       this.createRequestDialogVisible = false;
       this.createOTRequestDialogVisible = false;
       this.createTimeKeepingRequestDialogVisible = false;
@@ -2084,7 +2188,7 @@ export default {
 .manage-request .el-table .tt2 {
   cursor: default;
   color: white;
-  background-color: #ed9696;
+  background-color: #f46c6c;
   border: none;
   border-radius: 5px;
   padding: 3px 20px;
@@ -2099,6 +2203,14 @@ export default {
   padding: 3px 20px;
 }
 
+.manage-request .tt4 {
+    cursor: default;
+    color: white;
+    background-color: #ed9696;
+    border: none;
+    border-radius: 5px;
+    padding: 3px 20px;
+}
 .el-table .btn-action {
   border: none;
   padding: 5px 5px;

@@ -17,6 +17,10 @@ class RequestService {
         return axios.post(BASE_URL +`/auth/request/update-status-request/${id}`, data,{headers: authHeader()});
     }
 
+    updateRequest(id, data){
+        return axios.post(BASE_URL +`/auth/request/update-request/${id}`, data,{headers: authHeader()});
+    }
+
     getRequest(id) {
         return httpCommon.get(`/auth/request/get-request-by-id/${id}`,{headers: authHeader()});
     }

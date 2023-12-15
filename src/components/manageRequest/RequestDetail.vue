@@ -39,7 +39,10 @@
           <button v-else-if="request.status == 2" class="tt1">
             {{ status }}
           </button>
-          <button v-else class="tt2">
+          <button  v-else-if="request.status == 3" class="tt2">
+            {{ status }}
+          </button>
+          <button  v-else class="tt4">
             {{ status }}
           </button></span
                 >
@@ -323,9 +326,11 @@ export default {
                     } else if (this.request.status === 2) {
                         this.status = "Đã chấp thuận";
                         this.accept = true;
-                    } else {
+                    } else if (this.request.status === 3){
                         this.status = "Đã từ chối";
                         this.accept = true;
+                    }else{
+                       this.status = "Đã hủy";
                     }
                     this.request.createdDate = moment(
                         String(this.request.createdDate)
@@ -457,7 +462,7 @@ export default {
 .request-detail .tt2 {
     cursor: default;
     color: white;
-    background-color: #ed9696;
+    background-color: #f46c6c;
     border: none;
     border-radius: 5px;
     padding: 3px 20px;
@@ -472,6 +477,15 @@ export default {
     padding: 3px 20px;
 }
 
+
+.request-detail .tt4 {
+    cursor: default;
+    color: white;
+    background-color: #ed9696;
+    border: none;
+    border-radius: 5px;
+    padding: 3px 20px;
+}
 .request-detail .row {
     width: 80%;
     margin-left: auto;
