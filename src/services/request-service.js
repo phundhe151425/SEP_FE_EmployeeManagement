@@ -44,18 +44,8 @@ class RequestService {
         return axios.get( BASE_URL+"/auth/request-category/get-list-request-category",{headers: authHeader()});
     }
 
-
-    
-
-    updateHoliday(id, data) {
-        return axios.put(BASE_URL + `/auth/holiday/update-holiday/${id}`,data,{headers: authHeader()});
-    }
-    deleteHoliday(id){
-        return httpCommon.delete(`/auth/holiday/delete-holiday/${id}`,{headers: authHeader()});
-    }
-
-    getYears(){
-        return httpCommon.get( "/auth/holiday/get-holidays/get-years", {headers: authHeader()});
+    processRequest(day, month,year){
+        return httpCommon.get("/scheduled/processRequest?day=" + day +"&month=" + month + "&year=" + year, {headers: authHeader()});
     }
 
 }

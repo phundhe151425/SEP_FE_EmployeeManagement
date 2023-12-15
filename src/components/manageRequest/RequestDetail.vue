@@ -2,23 +2,21 @@
   <div class="request-detail">
     <router-link
       v-if="type === 'manage'"
-      style="text-decoration: none; font-size: 18px; margin-left: 5%"
+      style="text-decoration: none; font-size: 18px; margin-left: 2%"
       :to="'/manageRequest'"
     >
-      Quản lý đề xuất
+      <i class="el-icon-back"></i> Quản lý đề xuất
     </router-link>
     <router-link
       v-else
-      style="text-decoration: none; font-size: 18px; margin-left: 5%"
+      style="text-decoration: none; font-size: 18px; margin-left: 2%"
       :to="'/myRequest'"
     >
-      Danh sách đề xuất
+     <i class="el-icon-back"></i> Danh sách đề xuất
     </router-link>
-    <h1 style="margin-top: 2%; margin-left: 5%; margin-bottom: 2%">
-      {{ request.requestTitle }}
-    </h1>
+ 
     <div style="display: flex">
-      <div style="display: flex; width: 24%; margin-left: 3%">
+      <div style="display: flex; width: 24%; margin-left: 3%; margin-top: 2%;">
         <label
           style="
             margin-bottom: 2%;
@@ -47,7 +45,7 @@
       </div>
       <div
         v-if="type === 'manage' && request.status == 1"
-        style="margin-left: 5%"
+        style="margin-left: 5%; margin-top: 2%;"
       >
         <el-row>
           <span>Thao tác: </span>
@@ -67,7 +65,7 @@
       </div>
       <div
         v-else-if="type === 'list' && request.status == 1"
-        style="margin-left: 5%"
+        style="margin-left: 5%; margin-top: 2%;"
       >
         <el-row>
           <span>Thao tác: </span>

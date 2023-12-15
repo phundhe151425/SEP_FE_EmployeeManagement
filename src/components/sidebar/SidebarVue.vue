@@ -284,6 +284,14 @@
                                             </router-link>
                                         </a>
                                     </li>
+                                     <li class="nav-item" v-if="isAdmin">
+                                        <a class="nav-link active" aria-current="page">
+                                            <router-link to="/process" class="nav-link sel">
+                                                <i class="el-icon-tickets"></i>
+                                                Duyệt đề xuất và chấm công
+                                            </router-link>
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>

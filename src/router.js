@@ -111,6 +111,10 @@ const router = new Router({
         {
             path: "/manageWorkingTime",
             component: () => import("./components/manageWorkingTime/ManageWorkingTime.vue"),
+        },
+        {
+            path:"/process",
+            component: () => import("./components/calendar/Process.vue"),
         }
 
     ],
@@ -145,8 +149,9 @@ router.beforeEach((to, from, next) => {
         "/manageRequest",
         "/manageContract",
         "/manageWorkingTime",
-        "/statisticTimeKeeping"
-
+        "/statisticTimeKeeping",
+        "/process"
+        
     ];
     const managePages = [
         "/logCheckMod",
