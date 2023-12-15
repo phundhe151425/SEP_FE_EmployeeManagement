@@ -599,7 +599,7 @@ export default {
                         timerProgressBar: true,
                     });
                 } else {
-                    this.editHolidayDialogVisible = true;
+                     this.editHolidayDialogVisible = true;
                     setTimeout(() => {
                         this.$refs["holidayEdit"].resetFields();
                     }, 5);
@@ -610,7 +610,7 @@ export default {
                         this.holidayEdit = this.holidayTemp;
                     }, 10);
                 }
-            }, 50);
+            }, 100);
         },
 
         showDeleteHolidayDialog(id) {
@@ -657,7 +657,7 @@ export default {
                         this.holidayDelete = this.holidayTemp;
                     }, 10);
                 }
-            }, 50);
+            }, 100);
         },
 
         acceptDelete() {

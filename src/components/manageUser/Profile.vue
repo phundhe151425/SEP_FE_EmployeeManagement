@@ -5,50 +5,51 @@
     </div>
     <div class="container">
       <div class="profile">
-        <div class="row">
+        <div class="row" style="text-align: center">
           <div class="col-xs-12 col-md-5">
+            <img v-if="currentUser.userImage == '' || currentUser.userImage == null" class="img" src="../../../public/avatar.jpg" />
             <img
-              v-if="currentUser.userImage != null"
+              v-else
               class="img"
               :src="
                 `http://localhost:2000/api/file/avatar/` + currentUser.userImage
               "
             />
-            <img v-else class="img" src="../../../public/avatar.jpg" />
+            
           </div>
           <div class="col-xs-12 col-md-7">
             <div class="detail" v-if="currentUser != null">
               <div class="item">
-                <label style="width: 30%">Họ và tên</label>
+                <label >Họ và tên</label>
                 <p style="overflow: auto">{{ currentUser.fullName }}</p>
               </div>
               <div class="item">
-                <label style="width: 40%">Mã nhân viên</label>
+                <label >Mã nhân viên</label>
                 <p>{{ currentUser.userCode }}</p>
               </div>
               <div class="item">
-                <label style="width: 30%">Bộ phận</label>
+                <label >Bộ phận</label>
                 <p>{{ currentUser.department.name }}</p>
               </div>
               <div class="item">
-                <label style="width: 30%">Email</label>
+                <label >Email</label>
                 <p>{{ currentUser.email }}</p>
               </div>
               <div class="item">
-                <label style="width: 30%">Ngày sinh</label>
+                <label >Ngày sinh</label>
                 <p>{{ dateFormat }}</p>
               </div>
               <div class="item">
-                <label style="width: 30%">Giới tính</label>
+                <label >Giới tính</label>
                 <p v-if="currentUser.gender == 1">Nam</p>
                 <p v-else>Nữ</p>
               </div>
               <div class="item">
-                <label style="width: 40%">Địa chỉ</label>
+                <label >Địa chỉ</label>
                 <p style="overflow: auto">{{ currentUser.address }}</p>
               </div>
               <div class="item">
-                <label style="width: 40%">Số điện thoại</label>
+                <label >Số điện thoại</label>
                 <p>{{ currentUser.phone }}</p>
               </div>
             </div>
@@ -124,7 +125,7 @@ export default {
   background-color: #d9d9d9;
   border-radius: 10px 10px 0 0;
   height: 50px;
-  width: 58.5%;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
 }
@@ -135,7 +136,7 @@ h4 {
   text-align: center;
 }
 .profile .img {
-  margin-left: 35%;
+  /* margin-left: 35%; */
   margin-top: 9.5%;
   height: 75%;
   width: 60%;
@@ -148,8 +149,12 @@ h4 {
   justify-content: space-between;
   width: 75%;
   border-bottom: black solid;
-
   margin-bottom: 3%;
+}
+
+.profile .detail .item label{
+  width:20%;
+  text-align: left;
 }
 
 .profile .btn {
@@ -157,7 +162,7 @@ h4 {
   color: white;
   width: 20%;
   margin-top: 40px;
-  margin-left: 55%;
+  margin-left: 31%;
   background-color: #75c4c0;
 }
 </style>

@@ -17,7 +17,6 @@
                                     @change="getData"
                                     name="startDate"
                                     format="dd/MM/yyyy"
-                                    value-format="yyyy-MM-dd"
                                     placeholder="Chọn ngày"
                                     style="width: 100%"
                             ></el-date-picker>
@@ -35,7 +34,6 @@
                                     @change="getData"
                                     name="endDate"
                                     format="dd/MM/yyyy"
-                                    value-format="yyyy-MM-dd"
                                     placeholder="Chọn ngày"
                                     style="width: 100%"
                                     :picker-options="pickerOptionFilterEndDate"
@@ -79,6 +77,7 @@
                                     @change="getData"
                                     placeholder="Chọn trạng thái"
                             >
+                            <el-option value="" label="Tất cả"></el-option>
                                 <el-option
                                         v-for="item in allStatus"
                                         :key="item.id"
@@ -341,6 +340,11 @@
                         </el-form-item>
                     </div>
                 </div>
+                  <div class="row" style="margin-top: 5px">
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                <small style="color: Orange">Lưu ý: {{ numberDayRemainMess }} ngày!</small>
+                            </div>
+                        </div>
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <el-form-item label="Chọn loại đề xuất" prop="requestTypeId">
@@ -1205,7 +1209,7 @@ export default {
             requestCategories: [],
             requestId: "",
             requestTypeId: "",
-            status: 0,
+            status: "",
             departments: [],
             departmentId: "",
             startDate: startDate,
@@ -1221,6 +1225,7 @@ export default {
             isWorkFromHome: false,
             isBusinessTravel: false,
             isWarning: false,
+            numberDayRemainMess:"",
             // numberRestDay: 0,
             startFullTime: "",
             endFullTime: "",
@@ -1237,10 +1242,6 @@ export default {
                 },
             ],
             allStatus: [
-                {
-                    id: 0,
-                    name: "Tất cả",
-                },
                 {
                     id: 1,
                     name: "Chờ phê duyệt",
@@ -1387,8 +1388,6 @@ export default {
     },
 
     created() {
-        this.startDate = moment(String(this.startDate)).format("yyyy-MM-DD");
-        this.endDate = moment(String(this.endDate)).format("yyyy-MM-DD");
         this.getData();
         this.getAllDepartment();
         this.getAllRequestCategory();
@@ -1436,6 +1435,8 @@ export default {
     },
     methods: {
         getData() {
+            this.startDate = moment(String(this.startDate)).format("yyyy-MM-DD 00:00:00");
+            this.endDate = moment(String(this.endDate)).format("yyyy-MM-DD 23:59:59");
             if (this.$store.state.auth.user.roles[0] === "ROLE_MODERATOR") {
                 this.isModerator = true;
                 this.departmentOfModerator = this.$store.state.auth.user.departmentName;
@@ -1619,6 +1620,7 @@ export default {
             this.ruleForm.requestTypeId = "";
             this.clearField();
             if (categotyId == 1) {
+                this.numberDayRemainMess = "Số ngày nghỉ có lương còn lại của bạn là: " + this.$store.state.auth.user.dayoff;
                 this.createRequestDialogVisible = true;
                 this.createOTRequestDialogVisible = false;
                 this.createTimeKeepingRequestDialogVisible = false;
@@ -1683,6 +1685,7 @@ export default {
             this.isOTBefore = false;
             switch (typeId) {
                 case 1:
+                    
                     if (this.$store.state.auth.user.dayoff <= 0) {
                         this.$notify.error({
                             message: "Bạn đã hết xin nghỉ có phép!",
@@ -1897,7 +1900,7 @@ export default {
 
         disableEndDate(date) {
             const startDay = new Date(this.startDate);
-            startDay.setDate(startDay.getDate() - 1);
+            startDay.setDate(startDay.getDate());
             return date < startDay;
         },
 

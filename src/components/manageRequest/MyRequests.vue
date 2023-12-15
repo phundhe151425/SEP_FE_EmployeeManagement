@@ -52,6 +52,7 @@
                 @change="getData"
                 placeholder="Chọn trạng thái"
               >
+               <el-option value="" label="Tất cả"></el-option>
                 <el-option
                   v-for="item in allStatus"
                   :key="item.id"
@@ -285,6 +286,11 @@
             </el-form-item>
           </div>
         </div>
+          <div class="row" style="margin-top: 5px">
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                <small style="color: Orange">Lưu ý: {{ numberDayRemainMess }} ngày!</small>
+                            </div>
+          </div>
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <el-form-item label="Chọn loại đề xuất" prop="requestTypeId">
@@ -347,6 +353,7 @@
                 <el-form-item prop="startDate">
                   <el-date-picker
                     type="date"
+                    :clearable="false"
                     v-model="ruleForm.startDate"
                     format="dd/MM/yyyy"
                     value-format="yyyy-MM-dd"
@@ -364,6 +371,7 @@
                   <el-time-picker
                     v-model="ruleForm.startTime"
                     placeholder="Chọn thời gian"
+                    :clearable="false"
                     :picker-options="pickerOptionStartTime"
                   >
                   </el-time-picker>
@@ -383,6 +391,7 @@
                     value-format="yyyy-MM-dd"
                     placeholder="Chọn ngày"
                     style="width: 100%"
+                    :clearable="false"
                     :picker-options="pickerOptionEndDate"
                   ></el-date-picker>
                 </el-form-item>
@@ -394,6 +403,7 @@
                   <el-time-picker
                     v-model="ruleForm.endTime"
                     placeholder="Chọn thời gian"
+                    :clearable="false"
                     :picker-options="pickerOptionOtherTime"
                   >
                   </el-time-picker>
@@ -450,6 +460,7 @@
                       placeholder="Chọn ngày"
                       style="width: 100%"
                       @change="setDateTime"
+                      :clearable="false"
                       :picker-options="pickerOptionStartDate"
                     ></el-date-picker>
                   </el-form-item>
@@ -515,6 +526,7 @@
                       name="startDate"
                       placeholder="Chọn ngày"
                       style="width: 100%"
+                      :clearable="false"
                       :picker-options="pickerOptionStartDate"
                     ></el-date-picker>
                   </el-form-item>
@@ -527,6 +539,7 @@
                     <el-time-picker
                       v-model="ruleForm.startTime"
                       placeholder="Chọn thời gian"
+                      :clearable="false"
                       :picker-options="pickerOptionStartTime"
                     >
                     </el-time-picker>
@@ -564,6 +577,7 @@
                       value-format="yyyy-MM-dd"
                       placeholder="Chọn ngày"
                       style="width: 100%"
+                      :clearable="false"
                       :picker-options="pickerOptionEndDate"
                     ></el-date-picker>
                   </el-form-item>
@@ -575,6 +589,7 @@
                     <el-time-picker
                       v-model="ruleForm.endTime"
                       placeholder="Chọn thời gian"
+                      :clearable="false"
                       :picker-options="pickerOptionOtherTime"
                     >
                     </el-time-picker>
@@ -698,6 +713,7 @@
                     placeholder="Chọn ngày"
                     style="width: 100%"
                     @change="setDateTime"
+                    :clearable="false"
                     :picker-options="pickerOptionOTBeforeDate"
                   ></el-date-picker>
                 </el-form-item>
@@ -719,6 +735,7 @@
                 <el-form-item prop="startTime">
                   <el-time-picker
                     v-model="ruleForm.startTime"
+                    :clearable="false"
                     placeholder="Chọn thời gian"
                   >
                   </el-time-picker>
@@ -731,6 +748,7 @@
                   <el-time-picker
                     v-model="ruleForm.endTime"
                     placeholder="Chọn thời gian"
+                    :clearable="false"
                     :picker-options="pickerOptionOTTime"
                   >
                   </el-time-picker>
@@ -851,6 +869,7 @@
                     name="startDate"
                     placeholder="Chọn ngày"
                     style="width: 100%"
+                    :clearable="false"
                     @change="setDateTime"
                   ></el-date-picker>
                 </el-form-item>
@@ -916,6 +935,7 @@
                     name="startDate"
                     placeholder="Chọn ngày"
                     style="width: 100%"
+                    :clearable="false"
                     :picker-options="pickerOptionStartDate"
                   ></el-date-picker>
                 </el-form-item>
@@ -927,6 +947,7 @@
                   <el-time-picker
                     v-model="ruleForm.startTime"
                     placeholder="Chọn thời gian"
+                    :clearable="false"
                     :picker-options="pickerOptionStartTime"
                   >
                   </el-time-picker>
@@ -961,6 +982,7 @@
                     value-format="yyyy-MM-dd"
                     placeholder="Chọn ngày"
                     style="width: 100%"
+                    :clearable="false"
                     :picker-options="pickerOptionEndDate"
                   ></el-date-picker>
                 </el-form-item>
@@ -972,6 +994,7 @@
                   <el-time-picker
                     v-model="ruleForm.endTime"
                     placeholder="Chọn thời gian"
+                    :clearable="false"
                     :picker-options="pickerOptionOtherTime"
                   >
                   </el-time-picker>
@@ -1127,7 +1150,7 @@ export default {
       requestCategories: [],
       requestId: "",
       requestTypeId: "",
-      status: 0,
+      status: "",
       departments: [],
       departmentId: "",
       startDate: startDate,
@@ -1145,6 +1168,7 @@ export default {
       isWarning: false,
       startFullTime: "",
       endFullTime: "",
+      numberDayRemainMess:"",
       // numberRestDay: 0,
       slotId: "",
       slots: [
@@ -1158,10 +1182,6 @@ export default {
         },
       ],
       allStatus: [
-        {
-          id: 0,
-          name: "Tất cả",
-        },
         {
           id: 1,
           name: "Chờ phê duyệt",
@@ -1309,8 +1329,6 @@ export default {
   },
 
   created() {
-    this.startDate = moment(String(this.startDate)).format("yyyy-MM-DD");
-    this.endDate = moment(String(this.endDate)).format("yyyy-MM-DD");
     this.getData();
     this.getAllDepartment();
     this.getAllRequestCategory();
@@ -1358,6 +1376,8 @@ export default {
   },
   methods: {
     getData() {
+        this.startDate = moment(String(this.startDate)).format("yyyy-MM-DD 00:00:00");
+        this.endDate = moment(String(this.endDate)).format("yyyy-MM-DD 23:59:59");
       if (this.$store.state.auth.user.roles[0] === "ROLE_MODERATOR") {
         this.isModerator = true;
         this.departmentOfModerator = this.$store.state.auth.user.departmentName;
@@ -1546,6 +1566,7 @@ export default {
       this.ruleForm.requestTypeId = "";
       this.clearField();
       if (categotyId == 1) {
+        this.numberDayRemainMess = "Số ngày nghỉ có lương còn lại của bạn là: " + this.$store.state.auth.user.dayoff;
         this.createRequestDialogVisible = true;
         this.createOTRequestDialogVisible = false;
         this.createTimeKeepingRequestDialogVisible = false;
@@ -1824,7 +1845,7 @@ export default {
 
     disableEndDate(date) {
       const startDay = new Date(this.startDate);
-      startDay.setDate(startDay.getDate() - 1);
+      startDay.setDate(startDay.getDate());
       return date < startDay;
     },
     rangeStartTime() {

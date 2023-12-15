@@ -1,19 +1,24 @@
 <template>
-    <div style="padding-bottom: 310px">
-        <el-tooltip placement="bottom" effect="light" style="display: none" id="button-note">
-            <el-button type="primary" class="el-icon-info el-button--info el-calendar__header"
-                       style="border-radius: 10px">
-                Chú thích
-            </el-button>
-            <div slot="content">
-                <note-calendar/>
-            </div>
-        </el-tooltip>
-        <div class="d-flex flex-row justify-content-center">
-            <el-calendar style="width: 70% ; margin-top: 50px; border-radius: 10px" v-model="value"
-                         ref="calendar">
-                <template slot="dateCell" slot-scope="{date,data,Sign = getSign(data.day)}">
-                    <div :class="{
+    <div>
+<!--        <h3 class="text-start" style="font-weight: bold">Lịch chấm công cá nhân</h3>-->
+<!--        <hr style="margin-bottom: 1%"/>-->
+<!--        <br>-->
+        <div style="padding-bottom: 310px">
+
+            <el-tooltip placement="bottom" effect="light" style="display: none" id="button-note">
+                <el-button type="primary" class="el-icon-info el-button--info el-calendar__header"
+                           style="border-radius: 10px">
+                    Chú thích
+                </el-button>
+                <div slot="content">
+                    <note-calendar/>
+                </div>
+            </el-tooltip>
+            <div class="d-flex flex-row justify-content-center">
+                <el-calendar style="width: 70% ; margin-top: 50px; border-radius: 10px" v-model="value"
+                             ref="calendar">
+                    <template slot="dateCell" slot-scope="{date,data,Sign = getSign(data.day)}">
+                        <div :class="{
                            weekend:getSign(data.day).weekend,
                             halfOff:Sign.halfOff,
                             off:Sign.off,
@@ -25,77 +30,77 @@
                             cellSign:true,
                             'position-relative':true
                             }"
-                         v-b-modal="'my-modal'"
-                         @click="setCell(data.day,Sign)"
-                    >
-                        <p style="font-size: 18px; margin-left: 2px">
-                            {{ date.getDate() }}
-                            <br>
-                        </p>
-                        <div class="sign-calender text-center align-middle ">
-                            {{ Sign.name }}
-                            <el-tooltip popper-class="reason-popper" v-if="Sign.note.length!=0" placement="right"
-                                        effect="light">
-                                <div slot="content">
-                                    <div class="tooltip-wrapper"
-                                         :class="{
+                             v-b-modal="'my-modal'"
+                             @click="setCell(data.day,Sign)"
+                        >
+                            <p style="font-size: 18px; margin-left: 2px">
+                                {{ date.getDate() }}
+                                <br>
+                            </p>
+                            <div class="sign-calender text-center align-middle ">
+                                {{ Sign.name }}
+                                <el-tooltip popper-class="reason-popper" v-if="Sign.note.length!=0" placement="right"
+                                            effect="light">
+                                    <div slot="content">
+                                        <div class="tooltip-wrapper"
+                                             :class="{
                                         'tooltip-wrapper_many':Sign.note.length>4,
                                         'tooltip-wrapper_min':Sign.note.length<=4
                                           }">
-                                        <note-log :notes="Sign.note"></note-log>
+                                            <note-log :notes="Sign.note"></note-log>
+                                        </div>
                                     </div>
-                                </div>
-                                <svg class="position-absolute top-0 end-0 " x="0px" y="0px"
-                                     viewBox="0 0 512 512"
-                                     style="enable-background:new 0 0 512 512;width: 15px;fill: #A843A8FF "
-                                     xml:space="preserve">
+                                    <svg class="position-absolute top-0 end-0 " x="0px" y="0px"
+                                         viewBox="0 0 512 512"
+                                         style="enable-background:new 0 0 512 512;width: 15px;fill: #A843A8FF "
+                                         xml:space="preserve">
               <g>
                 <polygon points="5.8,0.6 0,6.4 0,378.3 5.8,384 384,384 512,512 512,5.8 506.3,0 6.4,0 	"/>
               </g>
               </svg>
-                            </el-tooltip>
+                                </el-tooltip>
+                            </div>
                         </div>
-                    </div>
+                    </template>
+                </el-calendar>
+                <div class="mounthSelect">
+                    <el-date-picker
+                            v-model="month"
+                            type="month"
+                            placeholder="Chọn tháng"
+                            format="yyyy/MM"
+                            value-format="yyyy/MM"
+                            @change="getAll"
+                    >
+                        <!--                    @change="getAll"-->
+                    </el-date-picker>
+                </div>
+                <note-calendar id="table-note" style="margin-left: 80px ;margin-top: 100px"/>
+            </div>
+
+
+            <b-modal id="my-modal" centered size="sm">
+                <template #modal-header="{ close }">
+                    <!-- Emulate built in modal header close button action -->
+                    <h5>Chi tiết ngày {{ cellDate }}</h5>
+                    <b-icon-x-circle-fill style="color: #d8363a" size="sm" @click="close()">
+                    </b-icon-x-circle-fill>
                 </template>
-            </el-calendar>
-            <div class="mounthSelect">
-                <el-date-picker
-                        v-model="month"
-                        type="month"
-                        placeholder="Chọn tháng"
-                        format="yyyy/MM"
-                        value-format="yyyy/MM"
-                        @change="getAll"
-                >
-                    <!--                    @change="getAll"-->
-                </el-date-picker>
-            </div>
-            <note-calendar id="table-note" style="margin-left: 80px ;margin-top: 100px"/>
+                <div class="text-center" style="font-size: 16px;line-height: 19.5px;letter-spacing: 1px;">
+                    <div v-if="cellSign.timeIn!=null">{{ cellSign.timeIn }}</div>
+                    <div v-if="cellSign.timeIn==null">None</div>
+                    <div>...</div>
+                    <div v-if="cellSign.timeOut!=null">{{ cellSign.timeOut }}</div>
+                    <div v-if="cellSign.timeOut==null">None</div>
+                </div>
+
+                <template #modal-footer="{ok}">
+                    <b-button size="sm" variant="success" style="display:none;" @click="ok()">
+                    </b-button>
+                </template>
+            </b-modal>
         </div>
-
-
-        <b-modal id="my-modal" centered size="sm">
-            <template #modal-header="{ close }">
-                <!-- Emulate built in modal header close button action -->
-                <h5>Chi tiết ngày {{ cellDate }}</h5>
-                <b-icon-x-circle-fill style="color: #d8363a" size="sm" @click="close()">
-                </b-icon-x-circle-fill>
-            </template>
-            <div class="text-center" style="font-size: 16px;line-height: 19.5px;letter-spacing: 1px;">
-                <div v-if="cellSign.timeIn!=null">{{ cellSign.timeIn }}</div>
-                <div v-if="cellSign.timeIn==null">None</div>
-                <div>...</div>
-                <div v-if="cellSign.timeOut!=null">{{ cellSign.timeOut }}</div>
-                <div v-if="cellSign.timeOut==null">None</div>
-            </div>
-
-            <template #modal-footer="{ok}">
-                <b-button size="sm" variant="success" style="display:none;" @click="ok()">
-                </b-button>
-            </template>
-        </b-modal>
     </div>
-
 </template>
 
 <script>
@@ -268,6 +273,10 @@ export default {
 
 .weekend {
     background-color: #F8CBAD;
+}
+
+.disable {
+
 }
 
 .halfOff {
