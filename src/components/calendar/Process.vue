@@ -5,10 +5,10 @@
     </h3>
     <hr style="margin-bottom: 2%" />
     <div style="padding-bottom: 20px">
-      <div className="" style="width: 100%; margin: auto;">
-        <el-row :gutter="20">
-          <el-col :md="3" :lg="3" :xl="3" class="">
-            <div class="">
+      <div className="" style="width: 100%; margin-top: 20%;display: flex; justify-content: center;">
+        <el-row >
+        
+      
               <el-button
                 class="buttons btn-add"
                 type="danger"
@@ -18,11 +18,7 @@
               >
                 Duyệt đề xuất
               </el-button>
-            </div>
-          </el-col>
-
-          <el-col :md="3" :lg="3" :xl="3" class="">
-            <div class="">
+            
               <el-button
                 class="buttons btn-add"
                 type="danger"
@@ -32,8 +28,7 @@
               >
                 Duyệt chấm công
               </el-button>
-            </div>
-          </el-col>
+        
         </el-row>
         <br />
       </div>
@@ -53,7 +48,7 @@
         label-width="200px"
         class="demo-ruleForm"
       >
-        <div class="row" style="margin-top: 15px">
+        <div class="row" style="margin-top: 15px;display: flex; justify-content: center">
           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
             <el-form-item label="Chọn ngày" required>
               <el-form-item prop="date">
@@ -71,7 +66,7 @@
             </el-form-item>
           </div>
         </div>
-        <div class="row" style="display: flex; justify-content: flex-end">
+        <div class="row" style="display: flex; justify-content: center">
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
             <div style="bottom: 40px">
               <el-form-item>
@@ -116,7 +111,7 @@
         label-width="200px"
         class="demo-ruleForm"
       >
-        <div class="row" style="margin-top: 15px">
+        <div class="row" style="margin-top: 15px;display: flex; justify-content: center">
           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
             <el-form-item label="Chọn ngày" required>
               <el-form-item prop="date">
@@ -134,7 +129,7 @@
             </el-form-item>
           </div>
         </div>
-        <div class="row" style="display: flex; justify-content: flex-end">
+        <div class="row" style="display: flex; justify-content: center">
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
             <div style="bottom: 40px">
               <el-form-item>
