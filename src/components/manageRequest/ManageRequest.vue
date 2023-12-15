@@ -140,7 +140,7 @@
           >
             <el-table-column
               label="STT"
-              type="index"
+              prop="id"
               align="center"
               width="100px"
             ></el-table-column>
@@ -179,9 +179,7 @@
               <button v-if="data.row.status == 3" class="tt2">
                 Đã từ chối
               </button>
-               <button v-if="data.row.status == 4" class="tt4">
-                Đã hủy
-              </button>
+              <button v-if="data.row.status == 4" class="tt4">Đã hủy</button>
             </el-table-column>
 
             <el-table-column label="Ngày tạo" prop="createdDate" align="center">
@@ -473,6 +471,13 @@
               </el-form-item>
             </div>
           </div>
+          <div class="row" style="margin-top: 5px">
+            <div v-if="warningMess != ''" class="row" style="margin-top: 5px">
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <small style="color: red">Cảnh báo: {{ warningMess }}</small>
+              </div>
+            </div>
+          </div>
 
           <div v-if="isRestBySlot">
             <div class="row" style="margin-top: 15px">
@@ -577,7 +582,7 @@
                   </el-form-item>
                 </el-form-item>
               </div>
-               <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                 <el-form-item label="Nghỉ đến" required>
                   <el-form-item prop="endDate">
                     <el-date-picker
@@ -594,8 +599,6 @@
                   </el-form-item>
                 </el-form-item>
               </div>
-
-            
             </div>
             <div class="row">
               <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -616,7 +619,7 @@
               </div>
             </div>
             <div class="row" style="margin-top: 15px" hidden>
-               <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                 <el-form-item label="Thời gian" required>
                   <el-form-item prop="startTime">
                     <el-time-picker
@@ -1018,7 +1021,7 @@
                 </el-form-item>
               </el-form-item>
             </div>
-                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
               <el-form-item label="Chọn ngày kết thúc" required>
                 <el-form-item prop="endDate">
                   <el-date-picker
@@ -1052,7 +1055,7 @@
             </div>
           </div>
           <div class="row" hidden>
-              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
               <el-form-item label="Thời gian" required>
                 <el-form-item prop="startTime">
                   <el-time-picker
@@ -1242,6 +1245,7 @@ export default {
       listRequest: [],
       dayOff: "",
       errMess: "",
+      warningMess: "",
       slots: [
         {
           id: 1,
@@ -1264,6 +1268,10 @@ export default {
         {
           id: 3,
           name: "Đã từ chối",
+        },
+        {
+          id: 4,
+          name: "Đã hủy",
         },
       ],
       restTypes: [
@@ -1376,7 +1384,6 @@ export default {
             trigger: "change",
           },
         ],
- 
       },
       page: 0,
       pageSize: 10,
@@ -1569,14 +1576,27 @@ export default {
       if (this.isRestByDay || this.isWorkFromHome || this.isBusinessTravel) {
         this.ruleForm.slotId = 1;
       }
-      if(this.isPersonalWork || this.isRestByDay || this.isWorkFromHome || this.isBusinessTravel){
+      if (
+        this.isPersonalWork ||
+        this.isRestByDay ||
+        this.isWorkFromHome ||
+        this.isBusinessTravel
+      ) {
         var subStartTime = this.startFullTime.split(":");
         var startDate = new Date(this.ruleForm.startDate);
-        startDate.setHours( Number(subStartTime[0]), Number(subStartTime[1]),  Number(subStartTime[2]));
+        startDate.setHours(
+          Number(subStartTime[0]),
+          Number(subStartTime[1]),
+          Number(subStartTime[2])
+        );
         this.ruleForm.startTime = startDate;
         var subEndTime = this.endFullTime.split(":");
         var endDate = new Date(this.ruleForm.endDate);
-        endDate.setHours( Number(subEndTime[0]), Number(subEndTime[1]),  Number(subEndTime[2]));
+        endDate.setHours(
+          Number(subEndTime[0]),
+          Number(subEndTime[1]),
+          Number(subEndTime[2])
+        );
         this.ruleForm.endTime = endDate;
       }
       this.$refs[formName].validate((valid) => {
@@ -1587,7 +1607,7 @@ export default {
           this.ruleForm.endTime = moment(String(this.ruleForm.endTime)).format(
             "HH:mm:ss"
           );
-            this.ruleForm.endDate = moment(String(this.ruleForm.endDate)).format(
+          this.ruleForm.endDate = moment(String(this.ruleForm.endDate)).format(
             "yyyy-MM-DD"
           );
           var request = {
@@ -1621,7 +1641,18 @@ export default {
                 this.ruleForm.requestTypeId == 1
               ) {
                 this.$notify.error({
-                  message: "Bạn đã hết xin nghỉ có phép!",
+                  message: "Tạo đề xuất không thành công!",
+                  title: "Failed",
+                  timer: 2000,
+                  timerProgressBar: true,
+                });
+              }
+              if (
+                e.response.data.status == 500 &&
+                this.ruleForm.requestTypeId == 1
+              ) {
+                this.$notify.error({
+                  message: "Tạo đề xuất không thành công! Bạn chỉ còn " + this.dayOff+ " ngày nghỉ có lương!",
                   title: "Failed",
                   timer: 2000,
                   timerProgressBar: true,
@@ -1666,6 +1697,7 @@ export default {
       this.isForgetTimeKeeping = false;
       this.isWarning = false;
       this.errMess = "";
+      this.warningMess = "";
       this.ruleForm.restType = "";
       this.isRestBySlot = false;
       this.isRestByDay = false;
@@ -1679,10 +1711,10 @@ export default {
         setTimeout(() => {
           this.numberDayRemainMess =
             "Số ngày nghỉ có lương còn lại của bạn là: " + this.dayOff;
-        }, 50);
         this.createRequestDialogVisible = true;
         this.createOTRequestDialogVisible = false;
         this.createTimeKeepingRequestDialogVisible = false;
+         }, 70);
       } else if (categotyId == 2) {
         this.createOTRequestDialogVisible = true;
         this.createRequestDialogVisible = false;
@@ -1709,6 +1741,7 @@ export default {
         .find((f) => f.prop == "requestContent")
         .resetField();
       if (id == 1) {
+        this.warningMess = "";
         this.ruleForm.slotId = "";
         this.isRestBySlot = true;
         this.isRestByDay = false;
@@ -1717,13 +1750,22 @@ export default {
           .find((f) => f.prop == "slotId")
           .resetField();
       } else {
-        this.isRestBySlot = false;
-        this.isRestByDay = true;
-        this.resetField();
+        if (this.requestTypeId == 1 && this.dayOff == 0.5) {
+          this.isRestBySlot = false;
+          this.isRestByDay = false;
+          this.warningMess = "Bạn chỉ còn lại một buổi nghỉ phép!";
+        } else {
+          this.warningMess = "";
+          this.isRestBySlot = false;
+          this.isRestByDay = true;
+          this.resetField();
+        }
       }
     },
 
     selectType(typeId) {
+      this.warningMess = "";
+      this.requestTypeId = typeId;
       this.isOTBefore = false;
       this.$refs["ruleForm"].fields
         .find((f) => f.prop == "requestContent")
@@ -1851,8 +1893,8 @@ export default {
     },
 
     getDataByUser(startDate) {
-      console.log(startDate)
-      RequestService.getListRequestByUserAndStartDate(startDate,0,30)
+      console.log(startDate);
+      RequestService.getListRequestByUserAndStartDate(startDate, 0, 30)
         .then((response) => {
           this.listRequest = response.data.content;
           console.log(this.listRequest);
@@ -1881,11 +1923,8 @@ export default {
         this.ruleForm.endDate = date;
         var date1 = new Date(this.ruleForm.endDate);
         if (this.isOTAfter == true) {
-      
-    
           this.getDataByUser(this.ruleForm.startDate);
           setTimeout(() => {
-         
             if (this.listRequest.length > 0) {
               this.isWarning = false;
             } else {
@@ -1972,7 +2011,6 @@ export default {
       var timeString = moment(String(startTime)).format("HH:mm:ss");
       return timeString + " - 23:59:59";
     },
-
 
     logout() {
       this.$store.dispatch("auth/logout");
@@ -2082,12 +2120,12 @@ export default {
 }
 
 .manage-request .tt4 {
-    cursor: default;
-    color: white;
-    background-color: #ed9696;
-    border: none;
-    border-radius: 5px;
-    padding: 3px 20px;
+  cursor: default;
+  color: white;
+  background-color: #ed9696;
+  border: none;
+  border-radius: 5px;
+  padding: 3px 20px;
 }
 
 .manage-request .el-table .btn-action {

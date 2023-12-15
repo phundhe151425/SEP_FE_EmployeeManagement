@@ -220,9 +220,6 @@
         >
             <el-form
                     id="formDelete"
-                    :model="positionDelete"
-                    :rules="rules"
-                    ref="positionDelete"
                     label-width="200px"
                     class="demo-ruleForm"
             >
@@ -487,6 +484,13 @@
                   </el-option>
                 </el-select>
               </el-form-item>
+            </div>
+          </div>
+             <div class="row" style="margin-top: 5px">
+            <div v-if="warningMess != ''" class="row" style="margin-top: 5px">
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <small style="color: red">Cảnh báo: {{ warningMess }}</small>
+              </div>
             </div>
           </div>
 
@@ -1258,6 +1262,7 @@ export default {
       isWorkFromHome: false,
       isBusinessTravel: false,
       isWarning: false,
+      warningMess: "",
       startFullTime: "",
       endFullTime: "",
       numberDayRemainMess: "",
@@ -1293,6 +1298,10 @@ export default {
           id: 3,
           name: "Đã từ chối",
         },
+        {
+          id: 4,
+          name: "Đã hủy",
+        }
       ],
       restTypes: [
         { id: 1, name: "Nghỉ theo buổi" },
@@ -1612,7 +1621,6 @@ export default {
               this.getData();
             })
             .catch((e) => {
-              console.log(e);
               if (e.response.data.status == 401)
                 this.$store.dispatch("auth/logout");
             });
@@ -1692,7 +1700,7 @@ export default {
                 this.ruleForm.requestTypeId == 1
               ) {
                 this.$notify.error({
-                  message: "Bạn đã hết xin nghỉ có phép!",
+                  message: "Tạo đề xuất không thành công!",
                   title: "Failed",
                   timer: 2000,
                   timerProgressBar: true,
@@ -1748,16 +1756,18 @@ export default {
       this.ruleForm.slotId = "";
       this.ruleForm.requestTypeId = "";
       this.errMess = "";
+      this.warningMess = "";
       this.clearField();
       if (categotyId == 1) {
         this.getUser();
         setTimeout(() => {
           this.numberDayRemainMess =
             "Số ngày nghỉ có lương còn lại của bạn là: " + this.dayOff;
-        }, 50);
         this.createRequestDialogVisible = true;
         this.createOTRequestDialogVisible = false;
         this.createTimeKeepingRequestDialogVisible = false;
+        }, 70);
+      
       } else if (categotyId == 2) {
         this.createOTRequestDialogVisible = true;
         this.createRequestDialogVisible = false;
@@ -1811,6 +1821,7 @@ export default {
         .find((f) => f.prop == "requestContent")
         .resetField();
       if (id == 1) {
+        this.warningMess = "";
         this.ruleForm.slotId = "";
         this.isRestBySlot = true;
         this.isRestByDay = false;
@@ -1819,13 +1830,22 @@ export default {
           .find((f) => f.prop == "slotId")
           .resetField();
       } else {
-        this.isRestBySlot = false;
-        this.isRestByDay = true;
-        this.resetField();
+        if (this.requestTypeId == 1 && this.dayOff == 0.5) {
+          this.isRestBySlot = false;
+          this.isRestByDay = false;
+          this.warningMess = "Bạn chỉ còn lại một buổi nghỉ phép!";
+        } else {
+          this.warningMess = "";
+          this.isRestBySlot = false;
+          this.isRestByDay = true;
+          this.resetField();
+        }
       }
     },
 
     selectType(typeId) {
+      this.warningMess = "";
+      this.requestTypeId = typeId;
       this.isOTBefore = false;
       this.$refs["ruleForm"].fields
         .find((f) => f.prop == "requestContent")

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="infor">
-      <h4 style="text-align: center">Thông tin nhân viên</h4>
+      <h4 style="text-align: center;font-weight: bold">Thông tin nhân viên</h4>
     </div>
     <div class="container">
       <div class="profile">

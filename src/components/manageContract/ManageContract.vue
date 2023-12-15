@@ -1,31 +1,28 @@
 <template>
     <div class="manage-contract">
-        <h3>Quản lý hợp đồng</h3>
-        <hr style="margin-bottom: 5%"/>
+        <h3 class="text-start" style="font-weight: bold">Quản lý hợp đồng</h3>
+        <hr style="margin-bottom: 2%"/>
         <div style="padding-bottom: 20px">
             <div className="" style="width: 100%; margin: auto">
                 <el-row :gutter="20">
-                    <!-- <el-col :md="6" :lg="6" :xl="6">
-                      <div class="grid-content" style="margin-bottom: 20px">
-                        <span>Năm</span> &ensp;
+                    <el-col :md="6" :lg="6" :xl="6" >
+                        <span style="">Phòng ban</span> &ensp;
                         <el-select
-                          v-model="year"
-                          @change="getData"
-                          placeholder="Chọn Phòng ban"
+                                v-model="deptIdSelect"
+                                placeholder="Chọn một giá trị"
+                                @change="handleDeptChange"
                         >
-                          <el-option
-                            v-for="item in years"
-                            :key="item"
-                            :label="item"
-                            :value="item"
-                          >
-                          </el-option>
+                            <el-option
+                                    v-for="item in deptList"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id"
+                            ></el-option>
                         </el-select>
-                      </div>
-                    </el-col> -->
+                    </el-col>
 
                     <el-col :md="6" :lg="6" :xl="6" style="margin-bottom: 20px">
-                        <div class="grid-content">
+                        <div class="">
                             <span style="">Tìm kiếm</span> &ensp;
                             <el-input
                                     v-model="search"
@@ -48,21 +45,7 @@
                             </el-button>
                         </div>
                     </el-col>
-                    <el-col :md="6" :lg="6" :xl="6" class="div-buttons">
-                        <!-- chon-dept -->
-                        <el-select
-                                v-model="deptIdSelect"
-                                placeholder="Chọn một giá trị"
-                                @change="handleDeptChange"
-                        >
-                            <el-option
-                                    v-for="item in deptList"
-                                    :key="item.id"
-                                    :label="item.name"
-                                    :value="item.id"
-                            ></el-option>
-                        </el-select>
-                    </el-col>
+                   
                 </el-row>
                 <br/>
                 <div>
@@ -421,7 +404,7 @@ export default {
             deptIdAdd: "", // o dialog add
             contractId: "",
             page: 0,
-            pageSize: 5,
+            pageSize: 10,
             search: "",
             date: "",
             totalItems: 0,

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h3>Chỉnh sửa thông tin</h3>
+        <h3 class="text-start" style="font-weight: bold">Chỉnh sửa thông tin</h3>
         <hr style="margin-bottom: 5%"/>
         <el-form
                 :model="ruleForm"
