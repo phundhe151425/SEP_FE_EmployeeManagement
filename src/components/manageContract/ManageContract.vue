@@ -152,7 +152,7 @@
                             <button
                                     style="margin-right: 10px"
                                     class="btn-action"
-                                    @click="showDeleteContractDialog(data.row.id)"
+                                    @click="deleteContract(data.row.id)"
                             >
                                 <i class="el-icon-delete" style="width: 30px"></i>
                             </button>
@@ -624,12 +624,61 @@ export default {
                 });
         },
 
+        deleteContract(id){
+            this.$swal
+                    .fire({
+                        title: "Xoá hợp đồng " + id + "?",
+                        showDenyButton: true,
+                        confirmButtonColor: "#ED9696",
+                        confirmButtonText: "Xoá",
+                        denyButtonColor: "#75C4C0",
+                        denyButtonText: "Đóng",
+                        customClass: {
+                            actions: "my-actions",
+                            cancelButton: "order-1 right-gap",
+                            confirmButton: "order-2",
+                            denyButton: "order-3",
+                        },
+                    })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            ContractService.deleteContract(id).then((response) => {
+                                this.$swal.fire({
+                                    title: response.data.message,
+                                    icon: "success",
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    toast: true,
+                                    position: "top-end",
+                                    showConfirmButton: false,
+                                    width: "24em",
+                                });
+                                this.getData();
+                            }).catch((e) => {
+                                console.log(e);
+                                if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
+                            });
+                        } else if (result.isDenied) {
+                            this.$swal.fire({
+                                title: "Thay đổi thất bại",
+                                icon: "error",
+                                timer: 2000,
+                                timerProgressBar: true,
+                                toast: true,
+                                position: "top-end",
+                                showConfirmButton: false,
+                                width: "24em",
+                            });
+                        }
+                    });
+        },
+
         showDeleteContractDialog(id) {
             this.editContractDialogVisible = false;
             this.createContractDialogVisible = false;
             this.deleteContractDialogVisible = true;
-            this.departmentId = id;
-            console.log(id);
+            this.contractId = id;
+            console.log(this.contractId);
 
             ContractService.deleteContract(id)
                 .then((response) => {
@@ -706,7 +755,7 @@ export default {
             )
                 .then((response) => {
                     this.contracts = response.data.content;
-                    console.log(this.contracts);
+                    console.log(12, this.contracts);
                     console.log(response.data.content);
                     for (const key in this.contracts) {
                         if (Object.hasOwnProperty.call(this.contracts, key)) {
