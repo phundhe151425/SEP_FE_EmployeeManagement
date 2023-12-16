@@ -1,6 +1,6 @@
 <template>
     <div class="change-pass">
-        <h3>Thay đổi mật khẩu</h3>
+        <h3  class="text-start" style="font-weight: bold">Thay đổi mật khẩu</h3>
         <small style="color: red" v-if="message">{{ message }}</small>
         <hr style="margin-bottom: 5%"/>
 

@@ -17,6 +17,10 @@ class RequestService {
         return axios.post(BASE_URL +`/auth/request/update-status-request/${id}`, data,{headers: authHeader()});
     }
 
+    updateRequest(id, data){
+        return axios.post(BASE_URL +`/auth/request/update-request/${id}`, data,{headers: authHeader()});
+    }
+
     getRequest(id) {
         return httpCommon.get(`/auth/request/get-request-by-id/${id}`,{headers: authHeader()});
     }
@@ -24,6 +28,11 @@ class RequestService {
     getListRequestByUser(page, size, search, status, from, to) {
         return httpCommon.get("/auth/request/get-list-request-by-user-id?page="+page
         +"&size="+size+"&search="+search +"&status="+ status+"&from="+from+"&to="+to,{headers: authHeader()});
+    }
+
+    getListRequestByUserAndStartDate(startDate, page, size) {
+        return httpCommon.get("/auth/request/get-list-request-by-user-id-and-start-date?page="+page
+        +"&size="+size+"&startDate="+startDate,{headers: authHeader()});
     }
 
     getRequestTypes(categoryId) {
@@ -35,18 +44,8 @@ class RequestService {
         return axios.get( BASE_URL+"/auth/request-category/get-list-request-category",{headers: authHeader()});
     }
 
-
-    
-
-    updateHoliday(id, data) {
-        return axios.put(BASE_URL + `/auth/holiday/update-holiday/${id}`,data,{headers: authHeader()});
-    }
-    deleteHoliday(id){
-        return httpCommon.delete(`/auth/holiday/delete-holiday/${id}`,{headers: authHeader()});
-    }
-
-    getYears(){
-        return httpCommon.get( "/auth/holiday/get-holidays/get-years", {headers: authHeader()});
+    processRequest(day, month,year){
+        return httpCommon.get("/scheduled/processRequest?day=" + day +"&month=" + month + "&year=" + year, {headers: authHeader()});
     }
 
 }

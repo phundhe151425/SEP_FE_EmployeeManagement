@@ -1,31 +1,28 @@
 <template>
     <div class="manage-contract">
-        <h3>Quản lý hợp đồng</h3>
-        <hr style="margin-bottom: 5%"/>
+        <h3 class="text-start" style="font-weight: bold">Quản lý hợp đồng</h3>
+        <hr style="margin-bottom: 2%"/>
         <div style="padding-bottom: 20px">
             <div className="" style="width: 100%; margin: auto">
                 <el-row :gutter="20">
-                    <!-- <el-col :md="6" :lg="6" :xl="6">
-                      <div class="grid-content" style="margin-bottom: 20px">
-                        <span>Năm</span> &ensp;
+                    <el-col :md="6" :lg="6" :xl="6" >
+                        <span style="">Phòng ban</span> &ensp;
                         <el-select
-                          v-model="year"
-                          @change="getData"
-                          placeholder="Chọn Phòng ban"
+                                v-model="deptIdSelect"
+                                placeholder="Chọn một giá trị"
+                                @change="handleDeptChange"
                         >
-                          <el-option
-                            v-for="item in years"
-                            :key="item"
-                            :label="item"
-                            :value="item"
-                          >
-                          </el-option>
+                            <el-option
+                                    v-for="item in deptList"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id"
+                            ></el-option>
                         </el-select>
-                      </div>
-                    </el-col> -->
+                    </el-col>
 
                     <el-col :md="6" :lg="6" :xl="6" style="margin-bottom: 20px">
-                        <div class="grid-content">
+                        <div class="">
                             <span style="">Tìm kiếm</span> &ensp;
                             <el-input
                                     v-model="search"
@@ -48,21 +45,7 @@
                             </el-button>
                         </div>
                     </el-col>
-                    <el-col :md="6" :lg="6" :xl="6" class="div-buttons">
-                        <!-- chon-dept -->
-                        <el-select
-                                v-model="deptIdSelect"
-                                placeholder="Chọn một giá trị"
-                                @change="handleDeptChange"
-                        >
-                            <el-option
-                                    v-for="item in deptList"
-                                    :key="item.id"
-                                    :label="item.name"
-                                    :value="item.id"
-                            ></el-option>
-                        </el-select>
-                    </el-col>
+                   
                 </el-row>
                 <br/>
                 <div>
@@ -121,6 +104,21 @@
                         ></el-table-column>
 
                         <el-table-column
+                                label="Hợp đồng"
+                                align="center"
+                                v-slot:="data"
+                        >    
+
+                        <button
+                                    style="margin-right: 10px; background: none;"
+                                    class="btn-action"
+                                    @click="downloadFileContract(data.row.fileName)"                     
+                        >
+                                        {{data.row.fileName}}
+                                  </button>
+                        </el-table-column>
+
+                        <el-table-column
                                 v-slot:="data"
                                 label="Thao tác"
                                 width="150px"
@@ -133,10 +131,11 @@
                             >
                                 <i class="el-icon-edit-outline" style="width: 30px"></i>
                             </button>
+                            
                             <button
                                     style="margin-right: 10px"
                                     class="btn-action"
-                                    @click="showDeleteContractDialog(data.row.id)"
+                                    @click="deleteContract(data.row.id)"
                             >
                                 <i class="el-icon-delete" style="width: 30px"></i>
                             </button>
@@ -149,7 +148,6 @@
                                 <i class="el-icon-unlock" style="width: 30px"></i>
                             </button>
 
-                            <!--          </div>-->
                         </el-table-column>
                     </el-table>
                 </div>
@@ -193,9 +191,15 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <el-form-item label="Chọn file hợp đồng" prop="contractFile">
-                            <input type="file" @change="handleFileChange"/>
-                            <div>{{ ruleForm.fileName }}</div>
+                        <el-form-item label="Chọn file hợp đồng">
+                                <input id="contractFile" type="file" name="contractFile"
+                                       style="width: 90%"
+                                       />
+                                               <span style="display:block"></span>
+                                <el-link :href="this.beUrl+`api/file/contract/`+ contractFile" type="warning"
+                                         target="_blank">
+                                    {{contractFile}}
+                                </el-link>
                         </el-form-item>
                     </div>
                 </div>
@@ -207,7 +211,7 @@
                                 <el-button
                                         class="btn btn-outline-danger"
                                         type="primary"
-                                        style="width: 90%"
+                                         style="width: 100%;background-color: #ed9696; color: white"
                                         @click="cancelEditForm('ruleForm')"
                                 >Hủy
                                 </el-button
@@ -218,10 +222,9 @@
                     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
                         <div style="bottom: 40px">
                             <el-form-item>
-                                <el-button
-                                        class="btn btn-success"
+                                <el-button                                       
                                         type="primary"
-                                        style="width: 90%"
+                                        style="width: 100%;background-color: #75c4c0; color: white"
                                         @click="submitEditForm('ruleForm')"
                                 >Lưu
                                 </el-button
@@ -232,7 +235,6 @@
                 </div>
             </el-form>
         </el-dialog>
-
         <el-dialog
                 :visible.sync="createContractDialogVisible"
                 width="50%"
@@ -263,7 +265,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <el-form-item label="Chọn file hợp đồng" prop="contractFile">
                             <input type="file" @change="handleFileChange"/>
-                            <div>{{ ruleForm.fileName }}</div>
+                            <div>{{ruleForm.fileName}}</div>
                         </el-form-item>
                     </div>
                 </div>
@@ -312,7 +314,7 @@
                                 <el-button
                                         class="btn btn-outline-danger"
                                         type="primary"
-                                        style="width: 90%"
+                                        style="width: 100%;background-color: #ed9696; color: white"
                                         @click="cancelCreateForm('ruleForm')"
                                 >Hủy
                                 </el-button
@@ -326,7 +328,7 @@
                                 <el-button
                                         class="btn btn-success"
                                         type="primary"
-                                        style="width: 90%"
+                                        style="width: 100%;background-color: #75c4c0; color: white"
                                         @click="submitForm()"
                                 >Lưu
                                 </el-button
@@ -389,6 +391,7 @@ import ContractService from "@/services/contract-service";
 import moment from "moment/moment";
 import departmentService from "@/services/department-service";
 
+import { BE_URL } from '@/http-common';
 export default {
     components: {},
     name: "ManageContract",
@@ -401,12 +404,14 @@ export default {
             deptIdAdd: "", // o dialog add
             contractId: "",
             page: 0,
-            pageSize: 5,
+            pageSize: 10,
             search: "",
             date: "",
             totalItems: 0,
             selectedOption: [],
             valueSelect: "",
+            beUrl:BE_URL,
+            contractFile: '',
             ruleForm: {
                 contractName: "",
                 contractFile: null,
@@ -564,6 +569,7 @@ export default {
                 .then((response) => {
                     console.log(response.data.nameContract);
                     this.ruleForm.contractName = response.data.nameContract;
+                    this.contractFile = response.data.fileContract;
                     this.ruleForm.userId = response.data.user.id;
                     this.contractId = response.data.id;
                     console.log(this.ruleForm.userId);
@@ -572,6 +578,17 @@ export default {
                     console.log(e);
                     if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
                 });
+        },
+
+        downloadFileContract(fileName){
+                                var link = document.createElement('a');
+                    link.href = this.beUrl+`api/file/contract/`+ fileName;
+                    // link.download = [[${productFinancial.productTerms}]] // Đặt tên tệp tin tại đây
+                    document.body.appendChild(link);
+                    link.click();
+
+                    // Hủy đường link và phần tử a sau khi đã tải xuống xong
+                    link.remove();
         },
 
         showDeleteDepartmentDialog(id) {
@@ -590,12 +607,61 @@ export default {
                 });
         },
 
+        deleteContract(id){
+            this.$swal
+                    .fire({
+                        title: "Xoá hợp đồng " + id + "?",
+                        showDenyButton: true,
+                        confirmButtonColor: "#ED9696",
+                        confirmButtonText: "Xoá",
+                        denyButtonColor: "#75C4C0",
+                        denyButtonText: "Đóng",
+                        customClass: {
+                            actions: "my-actions",
+                            cancelButton: "order-1 right-gap",
+                            confirmButton: "order-2",
+                            denyButton: "order-3",
+                        },
+                    })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            ContractService.deleteContract(id).then((response) => {
+                                this.$swal.fire({
+                                    title: response.data.message,
+                                    icon: "success",
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    toast: true,
+                                    position: "top-end",
+                                    showConfirmButton: false,
+                                    width: "24em",
+                                });
+                                this.getData();
+                            }).catch((e) => {
+                                console.log(e);
+                                if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
+                            });
+                        } else if (result.isDenied) {
+                            this.$swal.fire({
+                                title: "Thay đổi thất bại",
+                                icon: "error",
+                                timer: 2000,
+                                timerProgressBar: true,
+                                toast: true,
+                                position: "top-end",
+                                showConfirmButton: false,
+                                width: "24em",
+                            });
+                        }
+                    });
+        },
+
         showDeleteContractDialog(id) {
             this.editContractDialogVisible = false;
             this.createContractDialogVisible = false;
             this.deleteContractDialogVisible = true;
-            this.departmentId = id;
-            console.log(id);
+            this.contractId = id;
+            console.log(this.contractId);
 
             ContractService.deleteContract(id)
                 .then((response) => {
@@ -672,6 +738,7 @@ export default {
             )
                 .then((response) => {
                     this.contracts = response.data.content;
+                    console.log(12, this.contracts);
                     console.log(response.data.content);
                     for (const key in this.contracts) {
                         if (Object.hasOwnProperty.call(this.contracts, key)) {
@@ -970,4 +1037,5 @@ input:checked + .slider:before {
         float: right;
     }
 }
+
 </style>

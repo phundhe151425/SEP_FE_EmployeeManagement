@@ -27,6 +27,9 @@ class AttendanceService {
         // return httpCommon.post( "/attendance/edit", logEdit);
         return axios.post(BASE_URL + "/auth/attendance/finishEditing/"+attendanceId, {headers: authHeader()});
     }
+    processAttendance(day, month,year){
+        return httpCommon.get("/scheduled/processAttendance?day=" + day +"&month=" + month + "&year=" + year, {headers: authHeader()});
+    }
 }
 
 export default new AttendanceService();

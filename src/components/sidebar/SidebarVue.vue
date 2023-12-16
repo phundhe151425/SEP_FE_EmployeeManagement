@@ -115,7 +115,7 @@
                         </li>
                         <li class="nav-item mb-1" v-if="currentUser">
                             <button class="nav-link sel btn-drop" aria-current="page"  data-bs-toggle="collapse" data-bs-target="#getting-started-collapse1" aria-expanded="false">
-                                <i class="el-icon-star-on"/> Cá nhân <i class="el-icon-arrow-left"/>
+                                <i class="el-icon-star-on"/> Cá nhân <i class="el-icon-arrow-right"/>
                             </button>
 
                             <div class="collapse" id="getting-started-collapse1">
@@ -137,10 +137,18 @@
                                         </a>
                                     </li>
                                     <li class="nav-item" v-if="currentUser">
+                                        <a class="nav-link">
+                                            <router-link to="/statisticTimeKeepingUser" class="nav-link sel">
+                                                <i class="el-icon-s-data"></i>
+                                                Thống kê chấm công cá nhân
+                                            </router-link>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item" v-if="currentUser">
                                         <a class="nav-link active" aria-current="page">
                                             <router-link to="/myRequest" class="nav-link sel">
                                                 <i class="el-icon-tickets"></i>
-                                                Đề xuất của tôi
+                                                Đề xuất cá nhân
                                             </router-link>
                                         </a>
                                     </li>
@@ -150,7 +158,7 @@
 
                         <li class="nav-item mb-1" v-if="isAdmin || isModerator">
                             <button class="nav-link sel btn-drop" aria-current="page" data-bs-toggle="collapse" data-bs-target="#getting-started-collapse2" aria-expanded="false">
-                                <i class="el-icon-s-fold"/> Thông tin chấm công <i class="el-icon-arrow-left"/>
+                                <i class="el-icon-s-fold"/> Thông tin chấm công <i class="el-icon-arrow-right"/>
                             </button>
 
                             <div class="collapse" id="getting-started-collapse2">
@@ -171,14 +179,7 @@
                                             </router-link>
                                         </a>
                                     </li>
-                                    <li class="nav-item" v-if="currentUser">
-                                        <a class="nav-link">
-                                            <router-link to="/statisticTimeKeeping" class="nav-link sel">
-                                                <i class="el-icon-s-data"></i>
-                                                Thống kê chấm công
-                                            </router-link>
-                                        </a>
-                                    </li>
+                                 
                                     <li class="nav-item" v-if="isModerator">
                                         <a class="nav-link">
                                             <router-link to="/inLateOutEarlyMod" class="nav-link sel">
@@ -192,6 +193,14 @@
                                             <router-link to="/inLateOutEarlyAdmin" class="nav-link sel">
                                                 <i class="el-icon-guide"></i>
                                                 Đến muộn/ Về sớm
+                                            </router-link>
+                                        </a>
+                                    </li>
+                                       <li class="nav-item" v-if="isAdmin || isModerator">
+                                        <a class="nav-link">
+                                            <router-link to="/statisticTimeKeeping" class="nav-link sel">
+                                                <i class="el-icon-s-data"></i>
+                                                Thống kê chấm công
                                             </router-link>
                                         </a>
                                     </li>
@@ -214,7 +223,7 @@
 
                         <li class="nav-item mb-1" v-if="isAdmin || isModerator">
                             <button class="nav-link sel btn-drop" aria-current="page" data-bs-toggle="collapse" data-bs-target="#getting-started-collapse3" aria-expanded="false">
-                                <i class="el-icon-s-tools"/> Quản Lý <i class="el-icon-arrow-left"/>
+                                <i class="el-icon-s-tools"/> Quản Lý <i class="el-icon-arrow-right"/>
                             </button>
 
                             <div class="collapse" id="getting-started-collapse3">
@@ -272,6 +281,14 @@
                                             <router-link to="/manageContract" class="nav-link sel">
                                                 <i class="el-icon-c-scale-to-original"></i>
                                                 Quản lý hợp đồng
+                                            </router-link>
+                                        </a>
+                                    </li>
+                                     <li class="nav-item" v-if="isAdmin">
+                                        <a class="nav-link active" aria-current="page">
+                                            <router-link to="/process" class="nav-link sel">
+                                                <i class="el-icon-tickets"></i>
+                                                Duyệt đề xuất và chấm công
                                             </router-link>
                                         </a>
                                     </li>
