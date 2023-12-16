@@ -7,6 +7,9 @@ class UserService {
         let dataForm = new FormData(data)
         return httpCommon.post("/auth/user/create", dataForm,{headers: authHeaderFormData()});
     }
+    getAll() {
+        return httpCommon.get( "/auth/user/getAll", {headers: authHeader()});
+    }
     getData(page, size, departId, search, status) {
         return httpCommon.get( "/auth/user/data?page="+page+"&size="+size+"&departmentId="+departId+"&search="+search+"&status="+status, {headers: authHeader()});
     }

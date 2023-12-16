@@ -79,7 +79,7 @@
             </div>
 
 
-            <b-modal id="my-modal" centered size="sm">
+            <b-modal id="my-modal" centered size="l">
                 <template #modal-header="{ close }">
                     <!-- Emulate built in modal header close button action -->
                     <h5>Chi tiết ngày {{ cellDate }}</h5>
@@ -88,10 +88,10 @@
                 </template>
                 <div class="text-center" style="font-size: 16px;line-height: 19.5px;letter-spacing: 1px;">
                     <div v-if="cellSign.timeIn!=null">{{ cellSign.timeIn }}</div>
-                    <div v-if="cellSign.timeIn==null">None</div>
+                    <div v-if="cellSign.timeIn==null">Không có dữ liệu</div>
                     <div>...</div>
                     <div v-if="cellSign.timeOut!=null">{{ cellSign.timeOut }}</div>
-                    <div v-if="cellSign.timeOut==null">None</div>
+                    <div v-if="cellSign.timeOut==null">Không có dữ liệu</div>
                 </div>
 
                 <template #modal-footer="{ok}">

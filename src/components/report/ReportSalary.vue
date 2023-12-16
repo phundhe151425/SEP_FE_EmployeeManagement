@@ -265,14 +265,15 @@
                     </td>
                     <td class="text-center" style=" width: 100px">{{ user.dayWork }}</td>
                     <td
-                            class="fix text-center"
-                            @click="infoDayEdit(user.dayEarn, user.code)"
-                            v-b-modal="'my-modal1'"
-                            style=" width: 100px"
+
                     >
+                      <!--                            class="fix text-center"-->
+                      <!--                            @click="infoDayEdit(user.dayEarn, user.code)"-->
+                      <!--                            v-b-modal="'my-modal1'"-->
+                      <!--                            style=" width: 100px"-->
                         {{ user.dayEarn }}
                     </td>
-                    <td class="text-center" style=" width: 100px">{{ user.dayWork }}</td>
+                    <td class="text-center" style=" width: 100px">{{ user.otHour }}</td>
                 </tr>
                 </tbody>
 
@@ -300,7 +301,7 @@
                         <span>Tổng số <br/>ngày hưởng <br/>lương</span>
                     </th>
                     <th rowspan="2" style="white-space: pre">
-                        <span>Tổng số <br/>giờ làm <br/>việc</span>
+                        <span>Tổng số <br/>giờ làm <br/>OT</span>
                     </th>
                 </tr>
                 <tr>
@@ -353,7 +354,7 @@
                     </td>
                     <td class="text-center" style=" width: 100px">{{ user.dayWork }}</td>
                     <td class="fix text-center" style=" width: 100px">{{ user.dayEarn }}</td>
-                    <td class="text-center" style=" width: 100px">{{ user.dayWork }}</td>
+                    <td class="text-center" style=" width: 100px">{{ user.otHour }}</td>
                 </tr>
                 </tbody>
 
@@ -725,7 +726,7 @@ export default {
             AttendanceService.getForReport(param).then((respone) => {
                 let dataCall = [];
                 let data = respone.data;
-
+                console.log(respone.data)
                 for (let users of data) {
                     let signs = [];
                     for (let i = 1; i <= 31; i++) {
@@ -768,6 +769,7 @@ export default {
                         code: users.code,
                         log: signs,
                         name: users.name,
+                        otHour: users.otHour,
                         dayWork: this.caculateDayWork(signs),
                         dayEarn: this.caculateDayEarn(signs),
                     });
