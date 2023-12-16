@@ -113,14 +113,14 @@
                             <button
                                     style="margin-right: 10px"
                                     class="btn-action"
-                                    @click="showEditHolidayDialog(data.row.id)"
+                                    @click="showEditHolidayDialog(data.row)"
                             >
                                 <i class="el-icon-edit-outline" style="width: 30px"></i>
                             </button>
                             <button
                                     style="margin-right: 10px"
                                     class="btn-action"
-                                    @click="showDeleteHolidayDialog(data.row.id)"
+                                    @click="showDeleteHolidayDialog(data.row)"
                             >
                                 <i class="el-icon-delete" style="width: 30px"></i>
                             </button>
@@ -173,6 +173,7 @@
                                         type="date"
                                         v-model="holidayEdit.startDate"
                                         format="dd/MM/yyyy"
+                                        :clearable="false"
                                         value-format="yyyy-MM-dd"
                                         name="startDate"
                                         placeholder="Chọn ngày"
@@ -190,6 +191,7 @@
                                         v-model="holidayEdit.endDate"
                                         name="endDate"
                                         format="dd/MM/yyyy"
+                                        :clearable="false"
                                         value-format="yyyy-MM-dd"
                                         placeholder="Chọn ngày"
                                         style="width: 100%"
@@ -267,6 +269,7 @@
                                         v-model="holidayCreate.startDate"
                                         format="dd/MM/yyyy"
                                         value-format="yyyy-MM-dd"
+                                        :clearable="false"
                                         name="startDate"
                                         placeholder="Chọn ngày"
                                         style="width: 100%"
@@ -284,6 +287,7 @@
                                         name="endDate"
                                         format="dd/MM/yyyy"
                                         value-format="yyyy-MM-dd"
+                                         :clearable="false"
                                         placeholder="Chọn ngày"
                                         style="width: 100%"
                                         :picker-options="pickerOptionEndDate"
@@ -342,10 +346,8 @@
                 <p style="text-align: center">Xác nhận xóa ngày nghỉ</p>
                 <p style="text-align: center">{{ holidayDelete.holidayName }}</p>
 
-                <div class="row" style="margin-top: 20px">
-                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                      </div>
-                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                <div class="row" style="margin-top: 20px; display: flex; justify-content: center">
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
                         <el-form-item>
                             <el-button
                                     class="btn"
@@ -356,7 +358,7 @@
                             >
                         </el-form-item>
                     </div>
-                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
                         <el-form-item>
                             <el-button
                                      style="width: 100%;background-color: #75c4c0; color: white"
@@ -367,8 +369,6 @@
                             >
                         </el-form-item>
                     </div>
-                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                      </div>
                 </div>
             </el-form>
         </el-dialog>
@@ -513,11 +513,9 @@ export default {
                             this.getData();
                         })
                         .catch((e) => {
-                            console.log(e);
                             if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
                         });
                 } else {
-                    console.log("error submit!!");
                     return false;
                 }
             });
@@ -529,7 +527,6 @@ export default {
         },
 
         submitEditForm(formName) {
-            console.log(this.holidayId);
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     HolidayService.updateHoliday(this.holidayId, this.holidayEdit)
@@ -544,11 +541,9 @@ export default {
                             this.getData();
                         })
                         .catch((e) => {
-                            console.log(e);
                             if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
                         });
                 } else {
-                    console.log("error submit!!");
                     return false;
                 }
             });
@@ -566,20 +561,11 @@ export default {
             this.deleteHolidayDialogVisible = false;
         },
 
-        showEditHolidayDialog(id) {
-            HolidayService.getHoliday(id)
-                .then((response) => {
-                    this.startHolidayDate = response.data.startDate;
-                    this.endHolidayDate = response.data.endDate;
-                    this.holidayTemp = response.data;
-                })
-                .catch((e) => {
-                    console.log(e);
-                    if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
-                });
-            setTimeout(() => {
-                this.startHolidayDate = new Date(this.startHolidayDate);
-                this.endHolidayDate = new Date(this.endHolidayDate);
+        showEditHolidayDialog(holiday) {
+                var subStartDate = holiday.startDate.split("/");
+                var subEndDate = holiday.endDate.split("/");
+                this.startHolidayDate = new Date(Number(subStartDate[2]), Number(subStartDate[1]) -1, Number(subStartDate[0]),7,0);
+                this.endHolidayDate = new Date(Number(subEndDate[2]), Number(subEndDate[1]) -1, Number(subEndDate[0]),7,0);
                 this.currentDate.setHours(7, 0, 0, 0);
                 if (
                     this.startHolidayDate <= this.currentDate &&
@@ -600,33 +586,20 @@ export default {
                     });
                 } else {
                      this.editHolidayDialogVisible = true;
-                    setTimeout(() => {
-                        this.$refs["holidayEdit"].resetFields();
-                    }, 5);
                     this.createHolidayDialogVisible = false;
                     this.deleteHolidayDialogVisible = false;
-                    this.holidayId = id;
-                    setTimeout(() => {
-                        this.holidayEdit = this.holidayTemp;
-                    }, 10);
+                    this.holidayId = holiday.id;
+                    this.holidayEdit.holidayName = holiday.holidayName;
+                    this.holidayEdit.startDate = this.startHolidayDate;
+                    this.holidayEdit.endDate = this.endHolidayDate ;
                 }
-            }, 100);
         },
 
-        showDeleteHolidayDialog(id) {
-            HolidayService.getHoliday(id)
-                .then((response) => {
-                    this.startHolidayDate = response.data.startDate;
-                    this.endHolidayDate = response.data.endDate;
-                    this.holidayTemp = response.data;
-                })
-                .catch((e) => {
-                    console.log(e);
-                    if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
-                });
-            setTimeout(() => {
-                this.startHolidayDate = new Date(this.startHolidayDate);
-                this.endHolidayDate = new Date(this.endHolidayDate);
+        showDeleteHolidayDialog(holiday) {
+                var subStartDate = holiday.startDate.split("/");
+                var subEndDate = holiday.endDate.split("/");
+                this.startHolidayDate = new Date(Number(subStartDate[2]), Number(subStartDate[1]) -1, Number(subStartDate[0]),7,0);
+                this.endHolidayDate = new Date(Number(subEndDate[2]), Number(subEndDate[1]) -1, Number(subEndDate[0]),7,0);
                 this.currentDate.setHours(7, 0, 0, 0);
                 if (
                     this.startHolidayDate <= this.currentDate &&
@@ -649,21 +622,16 @@ export default {
                     this.editHolidayDialogVisible = false;
                     this.createHolidayDialogVisible = false;
                     this.deleteHolidayDialogVisible = true;
-                    setTimeout(() => {
-                        this.$refs["holidayDelete"].resetFields();
-                    }, 5);
-                    this.holidayId = id;
-                    setTimeout(() => {
-                        this.holidayDelete = this.holidayTemp;
-                    }, 10);
+                    this.holidayId = holiday.id;
+                    this.holidayDelete.holidayName = holiday.holidayName;
+                    this.holidayDelete.startDate = this.startHolidayDate;
+                    this.holidayDelete.endDate = this.endHolidayDate ;
                 }
-            }, 100);
         },
 
         acceptDelete() {
             HolidayService.deleteHoliday(this.holidayId)
-                .then((response) => {
-                    console.log(response.data);
+                .then(() => {
                     this.deleteHolidayDialogVisible = false;
                     this.$notify.success({
                         message: "Xóa ngày nghỉ thành công!",
@@ -674,7 +642,6 @@ export default {
                     this.getData();
                 })
                 .catch((e) => {
-                    console.log(e);
                     if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
                     else {
                         this.deleteHolidayDialogVisible = false;
@@ -686,16 +653,13 @@ export default {
                         });
                         this.getData();
                     }
-                    console.log(e);
                 });
         },
 
         getData() {
-            console.log(this.page);
             HolidayService.getData(this.page, this.pageSize, this.search, this.year)
                 .then((response) => {
                     this.holidays = response.data.content;
-                    console.log(response.data);
                     for (const key in this.holidays) {
                         if (Object.hasOwnProperty.call(this.holidays, key)) {
                             this.holidays[key].startDate = moment(
@@ -710,7 +674,6 @@ export default {
                     this.totalItems = response.data.totalElements;
                 })
                 .catch((e) => {
-                    console.log(e);
                     if(e.response.data.status == 401) this.$store.dispatch("auth/logout");
                 });
         },
@@ -721,7 +684,6 @@ export default {
                     this.years = response.data;
                 })
                 .catch((e) => {
-                    console.log(e);
                     if(e.response.data.status == 401) this.$store.dispatch("auth/logout");
                 });
         },

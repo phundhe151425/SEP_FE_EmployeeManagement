@@ -79,14 +79,14 @@
                             <button
                                     style="margin-right: 10px"
                                     class="btn-action"
-                                    @click="showEditDepartmentDialog(data.row.id)"
+                                    @click="showEditDepartmentDialog(data.row)"
                             >
                                 <i class="el-icon-edit-outline" style="width: 30px"></i>
                             </button>
                             <button
                                     style="margin-right: 10px"
                                     class="btn-action"
-                                    @click="showDeleteDepartmentDialog(data.row.id)"
+                                    @click="showDeleteDepartmentDialog(data.row)"
                             >
                                 <i class="el-icon-delete" style="width: 30px"></i>
                             </button>
@@ -239,24 +239,22 @@
                 <p style="text-align: center">Xác nhận xóa phòng ban</p>
                 <p style="text-align: center">{{ departmentDelete.name }}</p>
 
-                <div class="row" style="margin-top: 20px">
-                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                      </div>
-                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                <div class="row" style="margin-top: 20px;display: flex; justify-content: center">
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
                         <el-form-item>
                             <el-button
                                     class="btn"
-                                    style="width: 100%;background-color: #ed9696; color: white"
+                                    style="width: 90%;background-color: #ed9696; color: white"
                                     @click="deleteDepartmentDialogVisible = false"
                             >Huỷ
                             </el-button
                             >
                         </el-form-item>
                     </div>
-                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
                         <el-form-item>
                             <el-button
-                                    style="width: 100%;background-color: #75c4c0; color: white"
+                                    style="width: 90%;background-color: #75c4c0; color: white"
                                     class="btn"
                                     @click="acceptDelete()"
                             >Xác nhận
@@ -264,8 +262,6 @@
                             >
                         </el-form-item>
                     </div>
-                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                      </div>
                 </div>
             </el-form>
         </el-dialog>
@@ -342,11 +338,9 @@ export default {
                             this.getData();
                         })
                         .catch((e) => {
-                            console.log(e);
                             if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
                         });
                 } else {
-                    console.log("error submit!!");
                     return false;
                 }
             });
@@ -375,7 +369,6 @@ export default {
                             this.getData();
                         })
                         .catch((e) => {
-                            console.log(e);
                             if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
                         });
                 } else {
@@ -396,50 +389,25 @@ export default {
             this.deleteDepartmentDialogVisible = false;
         },
 
-        showEditDepartmentDialog(id) {
+        showEditDepartmentDialog(department) {
             this.editDepartmentDialogVisible = true;
-            setTimeout(() => {
-                this.$refs["departmentEdit"].resetFields();
-            }, 5);
+            this.departmentEdit.name = department.name;
             this.createDepartmentDialogVisible = false;
             this.deleteDepartmentDialogVisible = false;
-            this.departmentId = id;
-            setTimeout(() => {
-                DepartmentService.getDepartment(id)
-                    .then((response) => {
-                        this.departmentEdit.name = response.data.name;
-                    })
-                    .catch((e) => {
-                        console.log(e);
-                        if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
-                    });
-            }, 10);
+            this.departmentId = department.id;
         },
 
-        showDeleteDepartmentDialog(id) {
+        showDeleteDepartmentDialog(department) {
             this.editDepartmentDialogVisible = false;
             this.createDepartmentDialogVisible = false;
             this.deleteDepartmentDialogVisible = true;
-            setTimeout(() => {
-                this.$refs["departmentDelete"].resetFields();
-            }, 5);
-            this.departmentId = id;
-            setTimeout(() => {
-                DepartmentService.getDepartment(id)
-                    .then((response) => {
-                        this.departmentDelete.name = response.data.name;
-                    })
-                    .catch((e) => {
-                        console.log(e);
-                        if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
-                    });
-            }, 10);
+            this.departmentDelete.name = department.name;
+            this.departmentId = department.id;
         },
 
         acceptDelete() {
             DepartmentService.deleteDepartment(this.departmentId)
-                .then((response) => {
-                    console.log(response.data);
+                .then(() => {
                     this.deleteDepartmentDialogVisible = false;
                     this.$notify.success({
                         message: "Xóa phòng ban thành công!",
@@ -450,7 +418,6 @@ export default {
                     this.getData();
                 })
                 .catch((e) => {
-                    console.log(e);
                     if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
                     else {
                         this.deleteDepartmentDialogVisible = false;
@@ -462,7 +429,6 @@ export default {
                         });
                         this.getData();
                     }
-                    console.log(e);
                 });
         },
 
@@ -481,7 +447,6 @@ export default {
                     this.totalItems = response.data.totalElements;
                 })
                 .catch((e) => {
-                    console.log(e);
                     if(e.response.data.status == 401) this.$store.dispatch("auth/logout");
                 });
         },

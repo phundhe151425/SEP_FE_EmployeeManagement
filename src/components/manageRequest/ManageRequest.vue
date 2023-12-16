@@ -256,6 +256,7 @@
         class="demo-ruleForm"
       >
         <div class="row" style="margin-top: 15px">
+          <h4 style="text-align: center; font-weight: bold">Từ chối đề xuất</h4>
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <el-form-item label="Nhập ghi chú" prop="note">
               <el-input
@@ -746,7 +747,7 @@
             </el-form-item>
           </div>
         </div>
-        <div v-if="isOT">
+        <div v-if="isOTBefore">
           <div class="row" style="margin-top: 15px">
             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
               <el-form-item label="Ngày làm thêm giờ" required>
@@ -784,15 +785,6 @@
               </el-form-item>
             </el-form-item>
           </div>
-          <div v-if="isWarning == true">
-            <div class="row" style="margin-top: 5px">
-              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                <small style="color: Orange"
-                  >Chú ý: Bạn chưa tạo đơn xin trước cho ngày này!</small
-                >
-              </div>
-            </div>
-          </div>
           <div class="row" style="margin-top: 15px">
             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
               <el-form-item label="Thời gian bắt đầu" required>
@@ -818,6 +810,121 @@
                   </el-time-picker>
                 </el-form-item>
               </el-form-item>
+            </div>
+          </div>
+        </div>
+        <div v-if="isOTAfter">
+          <div class="row" style="margin-top: 15px">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+              <el-form-item label="Ngày làm thêm giờ" required>
+                <el-form-item prop="startDate">
+                  <el-date-picker
+                    type="date"
+                    v-model="ruleForm.startDate"
+                    format="dd/MM/yyyy"
+                    value-format="yyyy-MM-dd"
+                    name="startDate"
+                    placeholder="Chọn ngày"
+                    style="width: 100%"
+                    :clearable="false"
+                    @change="setDateTime"
+                    :picker-options="pickerOptionOTBeforeDate"
+                  ></el-date-picker>
+                </el-form-item>
+              </el-form-item>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" hidden>
+            <el-form-item label="Nghỉ đến" required>
+              <el-form-item prop="endDate">
+                <el-date-picker
+                  type="date"
+                  v-model="ruleForm.endDate"
+                  name="endDate"
+                  format="dd/MM/yyyy"
+                  value-format="yyyy-MM-dd"
+                  placeholder="Chọn ngày"
+                  style="width: 100%"
+                  :clearable="false"
+                  :picker-options="pickerOptionEndDate"
+                ></el-date-picker>
+              </el-form-item>
+            </el-form-item>
+          </div>
+          <div v-if="chooseDate">
+            <div v-if="isWarning == true">
+              <div class="row" style="margin-top: 5px">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                  <small style="color: Orange"
+                    >Chú ý: Bạn chưa tạo đơn xin trước cho ngày này!</small
+                  >
+                </div>
+              </div>
+            </div>
+            <div v-if="errOTAfterMess != ''">
+              <div class="row" style="margin-top: 5px">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                  <small style="color: red"
+                    >Cảnh báo: {{ errOTAfterMess }}</small
+                  >
+                </div>
+              </div>
+              <div class="row" style="margin-top: 15px" hidden>
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                  <el-form-item label="Thời gian bắt đầu">
+                    <el-form-item prop="startTime">
+                      <el-time-picker
+                        v-model="ruleForm.startTime"
+                        placeholder="Chọn thời gian"
+                        :clearable="false"
+                      >
+                      </el-time-picker>
+                    </el-form-item>
+                  </el-form-item>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                  <el-form-item label="Thời gian kết thúc">
+                    <el-form-item prop="endTime">
+                      <el-time-picker
+                        v-model="ruleForm.endTime"
+                        placeholder="Chọn thời gian"
+                        :clearable="false"
+                        disabled
+                      >
+                      </el-time-picker>
+                    </el-form-item>
+                  </el-form-item>
+                </div>
+              </div>
+            </div>
+            <div v-else>
+              <div class="row" style="margin-top: 15px">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                  <el-form-item label="Thời gian bắt đầu" required>
+                    <el-form-item prop="startTime">
+                      <el-time-picker
+                        v-model="ruleForm.startTime"
+                        placeholder="Chọn thời gian"
+                        :clearable="false"
+                      >
+                      </el-time-picker>
+                    </el-form-item>
+                  </el-form-item>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                  <el-form-item label="Thời gian kết thúc" required>
+                    <el-form-item prop="endTime">
+                      <el-time-picker
+                        v-model="ruleForm.endTime"
+                        placeholder="Chọn thời gian"
+                        :clearable="false"
+                        disabled
+                      >
+                      </el-time-picker>
+                    </el-form-item>
+                  </el-form-item>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1131,6 +1238,7 @@ import RequestService from "@/services/request-service";
 import DepartmentService from "@/services/department-service";
 import WorkingTimeService from "@/services/workingtime-service";
 import DataService from "../../services/user-service";
+import AttendanceService from "@/services/attendance-service";
 import moment from "moment";
 
 export default {
@@ -1172,35 +1280,46 @@ export default {
     };
 
     var validateEndTime = (rule, value, callback) => {
-      if (
-        this.ruleForm.startDate == "" ||
-        this.ruleForm.endDate == "" ||
-        this.ruleForm.startDate == null ||
-        this.ruleForm.endDate == null
-      ) {
-        this.ruleForm.endTime = "";
-        callback(new Error("Vui lòng nhập ngày bắt đầu và ngày kết thúc!"));
-      } else if (this.ruleForm.startTime == "") {
-        this.ruleForm.endTime = "";
-        callback(new Error("Vui lòng nhập thời gian bắt đầu!"));
+      if (this.isOTAfter == false) {
+        if (
+          this.ruleForm.startDate == "" ||
+          this.ruleForm.endDate == "" ||
+          this.ruleForm.startDate == null ||
+          this.ruleForm.endDate == null
+        ) {
+          this.ruleForm.endTime = "";
+          callback(new Error("Vui lòng nhập ngày bắt đầu và ngày kết thúc!"));
+        } else if (this.ruleForm.startTime == "") {
+          this.ruleForm.endTime = "";
+          callback(new Error("Vui lòng nhập thời gian bắt đầu!"));
+        } else {
+          callback();
+        }
       } else {
         callback();
       }
     };
 
     var validateStartTime = (rule, value, callback) => {
-      if (
-        this.ruleForm.startDate == "" ||
-        this.ruleForm.endDate == "" ||
-        this.ruleForm.startDate == null ||
-        this.ruleForm.endDate == null
-      ) {
-        this.ruleForm.startTime = "";
-        callback(new Error("Vui lòng nhập ngày bắt đầu và ngày kết thúc!"));
-      } else if (this.ruleForm.startTime != "" && this.ruleForm.endTime == "") {
-        this.$refs["ruleForm"].fields
-          .find((f) => f.prop == "endTime")
-          .resetField();
+      if (this.isOTAfter == false) {
+        if (
+          this.ruleForm.startDate == "" ||
+          this.ruleForm.endDate == "" ||
+          this.ruleForm.startDate == null ||
+          this.ruleForm.endDate == null
+        ) {
+          this.ruleForm.startTime = "";
+          callback(new Error("Vui lòng nhập ngày bắt đầu và ngày kết thúc!"));
+        } else if (
+          this.ruleForm.startTime != "" &&
+          this.ruleForm.endTime == ""
+        ) {
+          this.$refs["ruleForm"].fields
+            .find((f) => f.prop == "endTime")
+            .resetField();
+        } else {
+          callback();
+        }
       } else {
         callback();
       }
@@ -1223,6 +1342,8 @@ export default {
       requestTypeId: "",
       status: "",
       departments: [],
+      AttendanceRequest: { dateLog: "" },
+      chooseDate: false,
       departmentId: "",
       startDate: startDate,
       endDate: endDate,
@@ -1237,6 +1358,7 @@ export default {
       isWorkFromHome: false,
       isBusinessTravel: false,
       isWarning: false,
+      attendance: null,
       numberDayRemainMess: "",
       // numberRestDay: 0,
       startFullTime: "",
@@ -1246,6 +1368,7 @@ export default {
       dayOff: "",
       errMess: "",
       warningMess: "",
+      errOTAfterMess: "",
       slots: [
         {
           id: 1,
@@ -1485,6 +1608,19 @@ export default {
         });
     },
 
+    getAttendanceByUserAndDateLog() {
+      AttendanceService.getAttendanceByUserAndDate(this.AttendanceRequest)
+        .then((response) => {
+          console.log(response.data);
+          this.attendance = response.data;
+        })
+        .catch((e) => {
+          console.log(e);
+          if (e.response.data.status == 401)
+            this.$store.dispatch("auth/logout");
+        });
+    },
+
     getUser() {
       DataService.getProfile(this.$store.state.auth.user.id)
         .then((response) => {
@@ -1599,8 +1735,21 @@ export default {
         );
         this.ruleForm.endTime = endDate;
       }
+      if (this.isOTAfter && this.errOTAfterMess != "") {
+        var chooseDate = new Date(this.ruleForm.startDate);
+        this.ruleForm.startTime = chooseDate;
+        this.ruleForm.endTime = chooseDate;
+      }
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          if (this.isOTAfter && this.errOTAfterMess != "") {
+            this.$notify.error({
+              message: "Tạo đề xuất không thành công! Chú ý cảnh báo!",
+              title: "Failed",
+              timer: 2000,
+              timerProgressBar: true,
+            });
+          }else{
           this.ruleForm.startTime = moment(
             String(this.ruleForm.startTime)
           ).format("HH:mm:ss");
@@ -1652,13 +1801,17 @@ export default {
                 this.ruleForm.requestTypeId == 1
               ) {
                 this.$notify.error({
-                  message: "Tạo đề xuất không thành công! Bạn chỉ còn " + this.dayOff+ " ngày nghỉ có lương!",
+                  message:
+                    "Tạo đề xuất không thành công! Bạn chỉ còn " +
+                    this.dayOff +
+                    " ngày nghỉ có lương!",
                   title: "Failed",
                   timer: 2000,
                   timerProgressBar: true,
                 });
               }
             });
+          }
         } else {
           console.log("error submit!!");
           return false;
@@ -1698,6 +1851,7 @@ export default {
       this.isWarning = false;
       this.errMess = "";
       this.warningMess = "";
+      this.errOTAfterMess = "";
       this.ruleForm.restType = "";
       this.isRestBySlot = false;
       this.isRestByDay = false;
@@ -1705,16 +1859,17 @@ export default {
       this.isBusinessTravel = false;
       this.ruleForm.slotId = "";
       this.ruleForm.requestTypeId = "";
+      this.chooseDate = false;
       this.clearField();
       if (categotyId == 1) {
         this.getUser();
         setTimeout(() => {
+          this.createRequestDialogVisible = true;
           this.numberDayRemainMess =
             "Số ngày nghỉ có lương còn lại của bạn là: " + this.dayOff;
-        this.createRequestDialogVisible = true;
-        this.createOTRequestDialogVisible = false;
-        this.createTimeKeepingRequestDialogVisible = false;
-         }, 70);
+          this.createOTRequestDialogVisible = false;
+          this.createTimeKeepingRequestDialogVisible = false;
+        }, 100);
       } else if (categotyId == 2) {
         this.createOTRequestDialogVisible = true;
         this.createRequestDialogVisible = false;
@@ -1821,6 +1976,8 @@ export default {
           this.resetField();
           break;
         case 5:
+          this.chooseDate = false;
+          this.errOTAfterMess = "";
           this.isOTAfter = true;
           this.isWarning = false;
           this.isOTBefore = false;
@@ -1897,14 +2054,6 @@ export default {
       RequestService.getListRequestByUserAndStartDate(startDate, 0, 30)
         .then((response) => {
           this.listRequest = response.data.content;
-          console.log(this.listRequest);
-          for (const key in this.requests) {
-            if (Object.hasOwnProperty.call(this.requests, key)) {
-              this.requests[key].createdDate = moment(
-                String(this.requests[key].createdDate)
-              ).format("DD/MM/yyyy");
-            }
-          }
         })
         .catch((e) => {
           console.log(e);
@@ -1923,12 +2072,38 @@ export default {
         this.ruleForm.endDate = date;
         var date1 = new Date(this.ruleForm.endDate);
         if (this.isOTAfter == true) {
+          this.ruleForm.startTime = "";
+          this.chooseDate = true;
           this.getDataByUser(this.ruleForm.startDate);
           setTimeout(() => {
             if (this.listRequest.length > 0) {
               this.isWarning = false;
             } else {
               this.isWarning = true;
+            }
+          }, 50);
+          this.attendance = null;
+          this.errOTAfterMess = "";
+          this.AttendanceRequest.dateLog = this.ruleForm.startDate;
+          this.getAttendanceByUserAndDateLog();
+          setTimeout(() => {
+            if (this.attendance != null) {
+              console.log(this.attendance);
+              if (this.attendance.timeOut != null) {
+                var subEndTime = this.attendance.timeOut.split(":");
+                date.setHours(
+                  Number(subEndTime[0]),
+                  Number(subEndTime[1]),
+                  Number(subEndTime[2])
+                );
+                this.ruleForm.endTime = date;
+              } else {
+                this.errOTAfterMess =
+                  "Bạn không có dữ liệu chấm công vào ngày này! Vui lòng chọn ngày khác";
+              }
+            } else {
+              this.errOTAfterMess =
+                "Bạn không có dữ liệu chấm công vào ngày này! Vui lòng chọn ngày khác";
             }
           }, 50);
         }

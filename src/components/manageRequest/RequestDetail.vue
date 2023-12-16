@@ -226,7 +226,7 @@
     <el-dialog
       :visible.sync="cancelRequestDialogVisible"
       width="40%"
-      title="Xóa chức vụ"
+      title="Hủy đề xuất"
       left
     >
       <el-form
@@ -277,6 +277,7 @@
         class="demo-ruleForm"
       >
         <div class="row" style="margin-top: 15px">
+           <h4 style="text-align:center; font-weight: bold">Từ chối đề xuất</h4>
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <el-form-item label="Nhập ghi chú" prop="note">
               <el-input

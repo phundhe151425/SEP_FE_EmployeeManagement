@@ -30,6 +30,10 @@ class AttendanceService {
     processAttendance(day, month,year){
         return httpCommon.get("/scheduled/processAttendance?day=" + day +"&month=" + month + "&year=" + year, {headers: authHeader()});
     }
+
+    getAttendanceByUserAndDate(data){
+        return axios.post(BASE_URL + "/auth/attendance/get-attendance-by-user-and-date-log", data, {headers: authHeader()});
+    }
 }
 
 export default new AttendanceService();

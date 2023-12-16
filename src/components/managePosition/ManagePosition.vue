@@ -79,14 +79,14 @@
                             <button
                                     style="margin-right: 10px"
                                     class="btn-action"
-                                    @click="showEditPositionDialog(data.row.id)"
+                                    @click="showEditPositionDialog(data.row)"
                             >
                                 <i class="el-icon-edit-outline" style="width: 30px"></i>
                             </button>
                             <button
                                     style="margin-right: 10px"
                                     class="btn-action"
-                                    @click="showDeletePositionDialog(data.row.id)"
+                                    @click="showDeletePositionDialog(data.row)"
                             >
                                 <i class="el-icon-delete" style="width: 30px"></i>
                             </button>
@@ -278,10 +278,8 @@
                 <p style="text-align: center">Xác nhận xóa chức vụ</p>
                 <p style="text-align: center">{{ positionDelete.positionName }}</p>
 
-                <div class="row" style="margin-top: 20px;">
-                      <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                      </div>
-                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                <div class="row" style="margin-top: 20px;display: flex; justify-content: center">
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
                         <el-form-item>
                             <el-button
                                     class="btn"
@@ -292,7 +290,7 @@
                             >
                         </el-form-item>
                     </div>
-                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
                         <el-form-item>
                             <el-button
                                     class="btn"
@@ -303,8 +301,6 @@
                             >
                         </el-form-item>
                     </div>
-                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                      </div>
                 </div>
             </el-form>
         </el-dialog>
@@ -442,46 +438,21 @@ export default {
             this.deletePositionDialogVisible = false;
         },
 
-        showEditPositionDialog(id) {
+        showEditPositionDialog(position) {
             this.editPositionDialogVisible = true;
-            setTimeout(() => {
-                this.$refs["positionEdit"].resetFields();
-            }, 5);
             this.createPositionDialogVisible = false;
             this.deletePositionDialogVisible = false;
-            this.positionId = id;
-            setTimeout(() => {
-                PositionService.getPosition(id)
-                    .then((response) => {
-                        console.log(response.data);
-                        this.positionEdit.positionName = response.data.name;
-                        this.positionEdit.roleId = response.data.role[0].id;
-                    })
-                    .catch((e) => {
-                        console.log(e);
-                        if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
-                    });
-            }, 10);
+            this.positionId = position.id;
+            this.positionEdit.positionName = position.name;
+            this.positionEdit.roleId = position.role[0].id;
         },
 
-        showDeletePositionDialog(id) {
+        showDeletePositionDialog(position) {
             this.editPositionDialogVisible = false;
             this.createPositionDialogVisible = false;
             this.deletePositionDialogVisible = true;
-            setTimeout(() => {
-                this.$refs["positionDelete"].resetFields();
-            }, 5);
-            this.positionId = id;
-            setTimeout(() => {
-                PositionService.getPosition(id)
-                    .then((response) => {
-                        this.positionDelete.positionName = response.data.name;
-                    })
-                    .catch((e) => {
-                        console.log(e);
-                        if (e.response.data.status == 401) this.$store.dispatch("auth/logout");
-                    });
-            }, 10);
+            this.positionId = position.id;
+            this.positionDelete.positionName = position.name;
         },
 
         acceptDelete() {
