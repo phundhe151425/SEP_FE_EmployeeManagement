@@ -7,8 +7,8 @@
             <el-row :gutter="20">
                 <el-col :md="6" :lg="6" :xl="5">
                     <div class="grid-content" style="margin-bottom: 20px">
-                        <h2 style="color: #00cec9; font-weight: 600">{{ departmentName }}</h2> &ensp;
-
+                        <span>Phòng ban: </span> &ensp;
+                        <span style="">{{ departmentName }}</span> &ensp;
                     </div>
                 </el-col>
 

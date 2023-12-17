@@ -354,7 +354,7 @@
           </div>
         </div>
         <div class="row" style="margin-top: 5px">
-          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <small style="color: Orange"
               >Lưu ý: {{ numberDayRemainMess }} ngày!</small
             >
@@ -1307,7 +1307,7 @@ export default {
           this.ruleForm.endDate == null
         ) {
           this.ruleForm.endTime = "";
-          callback(new Error("Vui lòng nhập ngày bắt đầu và ngày kết thúc!"));
+          callback(new Error("Vui lòng nhập ngày!"));
         } else if (this.ruleForm.startTime == "") {
           this.ruleForm.endTime = "";
           callback(new Error("Vui lòng nhập thời gian bắt đầu!"));
@@ -1328,7 +1328,7 @@ export default {
           this.ruleForm.endDate == null
         ) {
           this.ruleForm.startTime = "";
-          callback(new Error("Vui lòng nhập ngày bắt đầu và ngày kết thúc!"));
+          callback(new Error("Vui lòng nhập ngày!"));
         } else if (
           this.ruleForm.startTime != "" &&
           this.ruleForm.endTime == ""
@@ -1440,7 +1440,7 @@ export default {
         note: [
           {
             required: true,
-            message: "Vui lòng nhập nọi dung ghi chú!",
+            message: "Vui lòng nhập nội dung ghi chú!",
             trigger: "blur",
           },
           {
@@ -1710,7 +1710,7 @@ export default {
       RequestService.changeStatus(id, this.requestStatus)
         .then(() => {
           this.$notify.success({
-            message: "Yêu cầu đã được chấp nhận",
+            message: "Đề xuất đã được chấp nhận",
             title: "Success",
             timer: 2000,
             timerProgressBar: true,
@@ -1732,7 +1732,7 @@ export default {
           RequestService.changeStatus(this.requestId, this.requestStatus)
             .then(() => {
               this.$notify.success({
-                message: "Yêu cầu đã bị từ chối",
+                message: "Đề xuất đã bị từ chối",
                 title: "Success",
                 timer: 2000,
                 timerProgressBar: true,
@@ -1757,7 +1757,7 @@ export default {
           RequestService.updateRequest(this.requestId, this.requestStatus)
             .then(() => {
               this.$notify.success({
-                message: "Yêu cầu đã được hủy",
+                message: "Đề xuất đã được hủy",
                 title: "Success",
                 timer: 2000,
                 timerProgressBar: true,

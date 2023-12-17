@@ -438,7 +438,7 @@ export default {
       RequestService.changeStatus(id, this.requestStatus)
         .then(() => {
           this.$notify.success({
-            message: "Yêu cầu đã được chấp nhận",
+            message: "Đề xuất đã được chấp nhận",
             title: "Success",
             timer: 2000,
             timerProgressBar: true,
@@ -460,7 +460,7 @@ export default {
           RequestService.changeStatus(this.requestId, this.requestStatus)
             .then(() => {
               this.$notify.success({
-                message: "Yêu cầu đã bị từ chối",
+                message: "Đề xuất đã bị từ chối",
                 title: "Success",
                 timer: 2000,
                 timerProgressBar: true,
@@ -491,7 +491,7 @@ export default {
       RequestService.updateRequest(this.requestId, this.requestCancel)
         .then(() => {
           this.$notify.success({
-            message: "Yêu cầu đã được hủy",
+            message: "Đề xuất đã được hủy",
             title: "Success",
             timer: 2000,
             timerProgressBar: true,
