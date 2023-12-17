@@ -810,6 +810,7 @@
                     v-model="ruleForm.startTime"
                     placeholder="Chọn thời gian"
                     :clearable="false"
+                    :picker-options="pickerOptionStartTimeOTBefore"
                   >
                   </el-time-picker>
                 </el-form-item>
@@ -822,7 +823,7 @@
                     v-model="ruleForm.endTime"
                     placeholder="Chọn thời gian"
                     :clearable="false"
-                    :picker-options="pickerOptionOTTime"
+                    :picker-options="pickerOptionEndTimeOT"
                   >
                   </el-time-picker>
                 </el-form-item>
@@ -878,7 +879,7 @@
                 </div>
               </div>
             </div>
-            <div v-if="errOTAfterMess != ''">
+            <div v-if="isErrOTAfter == true">
               <div class="row" style="margin-top: 5px">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                   <small style="color: red"
@@ -914,7 +915,7 @@
                 </div>
               </div>
             </div>
-            <div v-else>
+            <div v-else-if="isErrOTAfter == false">
               <div class="row" style="margin-top: 15px">
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                   <el-form-item label="Thời gian bắt đầu" required>
@@ -923,6 +924,7 @@
                         v-model="ruleForm.startTime"
                         placeholder="Chọn thời gian"
                         :clearable="false"
+                        :picker-options="pickerOptionStartTimeOTAfter"
                       >
                       </el-time-picker>
                     </el-form-item>
@@ -1389,6 +1391,7 @@ export default {
       AttendanceRequest: { dateLog: "" },
       chooseDate: false,
       attendance: null,
+      isErrOTAfter: false,
       // numberRestDay: 0,
       user: {
         name: "",
@@ -1592,14 +1595,19 @@ export default {
         disabledDate: this.disableOneDayAgoDate,
       };
     },
-    pickerOptionStartTime() {
+    pickerOptionStartTimeOTBefore(){
+      return {
+        selectableRange: this.rangeStartTimeOTBefore()
+      }
+    },
+  pickerOptionStartTimeOTAfter() {
       return {
         selectableRange: this.rangeStartTime(),
       };
     },
-    pickerOptionOTTime() {
+    pickerOptionEndTimeOT() {
       return {
-        selectableRange: this.rangeOTTime(),
+        selectableRange: this.rangeEndTime(),
       };
     },
     pickerOptionOtherTime() {
@@ -1923,6 +1931,7 @@ export default {
       this.warningMess = "";
       this.chooseDate = false;
       this.errOTAfterMess = "";
+      this.isErrOTAfter = false;
       this.clearField();
       if (categotyId == 1) {
         this.getUser();
@@ -2067,6 +2076,7 @@ export default {
           this.resetField();
           break;
         case 5:
+          this.isErrOTAfter = false;
           this.chooseDate = false;
           this.errOTAfterMess = "";
           this.isOTAfter = true;
@@ -2171,6 +2181,7 @@ export default {
         if (this.isOTAfter == true) {
           this.ruleForm.startTime = "";
           this.chooseDate = true;
+          console.log(this.ruleForm.startDate)
           this.getDataByUser(this.ruleForm.startDate);
           setTimeout(() => {
             if (this.listRequest.length > 0) {
@@ -2180,13 +2191,14 @@ export default {
             }
           }, 50);
           this.attendance = null;
-          this.errOTAfterMess = "";
+        
           this.AttendanceRequest.dateLog = this.ruleForm.startDate;
           this.getAttendanceByUserAndDateLog();
           setTimeout(() => {
             if (this.attendance != null) {
-              console.log(this.attendance);
               if (this.attendance.timeOut != null) {
+                this.errOTAfterMess = "";
+                this.isErrOTAfter = false;
                 var subEndTime = this.attendance.timeOut.split(":");
                 date.setHours(
                   Number(subEndTime[0]),
@@ -2195,14 +2207,16 @@ export default {
                 );
                 this.ruleForm.endTime = date;
               } else {
+                this.isErrOTAfter = true;
                 this.errOTAfterMess =
                   "Bạn không có dữ liệu chấm công vào ngày này! Vui lòng chọn ngày khác";
               }
             } else {
+              this.isErrOTAfter = true;
               this.errOTAfterMess =
                 "Bạn không có dữ liệu chấm công vào ngày này! Vui lòng chọn ngày khác";
             }
-          }, 50);
+          }, 100);
         }
         if (this.ruleForm.slotId == 1) {
           this.getWoringTimeById(2);
@@ -2264,10 +2278,18 @@ export default {
       return date < startDay;
     },
     rangeStartTime() {
-      return this.startFullTime + " - " + this.endFullTime;
+      if(this.attendance!= null){
+      if(this.attendance.timeOut != null || this.attendance.timeOut != ''){
+      return this.endFullTime + " - " + this.attendance.timeOut;
+    }
+      }
     },
 
-    rangeOTTime() {
+    rangeStartTimeOTBefore(){
+      return this.endFullTime + " - 23:59:59";
+    },
+
+    rangeEndTime() {
       const startTime = new Date(this.ruleForm.startTime);
       var min = startTime.getMinutes();
       startTime.setMinutes(min + 1);
