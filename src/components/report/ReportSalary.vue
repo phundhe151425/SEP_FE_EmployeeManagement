@@ -205,7 +205,7 @@
                         <span>Tổng số <br/>ngày hưởng <br/>lương</span>
                     </th>
                     <th rowspan="2" style="white-space: pre">
-                        <span>Tổng số <br/>giờ làm <br/>việc</span>
+                        <span>Tổng số <br/>giờ làm <br/>OT</span>
                     </th>
                 </tr>
                 <tr>
