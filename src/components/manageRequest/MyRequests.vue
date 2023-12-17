@@ -1,6 +1,6 @@
 <template>
   <div class="manage-request">
-    <h3 class="text-start" style="font-weight: bold">Đề xuất của tôi</h3>
+    <h3 class="text-start" style="font-weight: bold">Đề xuất của bạn</h3>
     <hr style="margin-bottom: 2%" />
     <div style="padding-bottom: 20px">
       <div className="" style="width: 100%; margin: auto">

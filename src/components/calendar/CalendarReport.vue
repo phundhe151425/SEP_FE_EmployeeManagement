@@ -1,8 +1,7 @@
 <template>
     <div>
-<!--        <h3 class="text-start" style="font-weight: bold">Lịch chấm công cá nhân</h3>-->
-<!--        <hr style="margin-bottom: 1%"/>-->
-<!--        <br>-->
+       <h3 class="text-start" style="font-weight: bold">Lịch chấm công cá nhân</h3>
+       <hr style="margin-bottom: 1%"/>
         <div style="padding-bottom: 310px">
 
             <el-tooltip placement="bottom" effect="light" style="display: none" id="button-note">
@@ -68,7 +67,7 @@
                             v-model="month"
                             type="month"
                             placeholder="Chọn tháng"
-                            format="yyyy/MM"
+                            format="MM/yyyy"
                             value-format="yyyy/MM"
                             @change="getAll"
                     >
@@ -264,7 +263,7 @@ export default {
 .mounthSelect {
     position: absolute;
     right: 30%;
-    top: 100px;
+    top: 200px;
 }
 
 .allDay {
@@ -322,7 +321,7 @@ export default {
 
     .mounthSelect {
         right: 0% !important;
-        top: 100px !important;
+        top: 200px !important;
     }
 
     .el-calendar {
