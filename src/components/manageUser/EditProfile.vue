@@ -118,8 +118,8 @@ export default {
                     },
                     {
                         min: 1,
-                        max: 200,
-                        message: "Họ tên từ 1 đến 200 kí tự!",
+                        max: 50,
+                        message: "Họ tên từ 1 đến 50 kí tự!",
                         trigger: "blur",
                     },
                     {
@@ -152,8 +152,8 @@ export default {
                     },
                     {
                         min: 1,
-                        max: 255,
-                        message: "Địa chỉ từ 1 đến 255 kí tự!",
+                        max: 100,
+                        message: "Địa chỉ từ 1 đến 100 kí tự!",
                         trigger: "blur",
                     },
                     {

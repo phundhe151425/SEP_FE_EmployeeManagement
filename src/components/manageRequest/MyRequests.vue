@@ -1307,10 +1307,10 @@ export default {
           this.ruleForm.endDate == null
         ) {
           this.ruleForm.endTime = "";
-          callback(new Error("Vui lòng nhập ngày!"));
+          callback(new Error("Vui lòng nhập ngày trước!"));
         } else if (this.ruleForm.startTime == "") {
           this.ruleForm.endTime = "";
-          callback(new Error("Vui lòng nhập thời gian bắt đầu!"));
+          callback(new Error("Vui lòng nhập thời gian bắt đầu trước!"));
         } else {
           callback();
         }
@@ -1328,7 +1328,7 @@ export default {
           this.ruleForm.endDate == null
         ) {
           this.ruleForm.startTime = "";
-          callback(new Error("Vui lòng nhập ngày!"));
+          callback(new Error("Vui lòng nhập ngày trước!"));
         } else if (
           this.ruleForm.startTime != "" &&
           this.ruleForm.endTime == ""
@@ -1445,8 +1445,8 @@ export default {
           },
           {
             min: 1,
-            max: 255,
-            message: "Nội dung ghi chú từ 1 đến 255 kí tự",
+            max: 200,
+            message: "Nội dung ghi chú từ 1 đến 200 kí tự",
             trigger: "blur",
           },
         ],
@@ -1494,15 +1494,15 @@ export default {
           },
           {
             min: 1,
-            max: 255,
-            message: "Nội dung từ 1 đến 255 kí tự",
+            max: 200,
+            message: "Nội dung từ 1 đến 200 kí tự",
             trigger: "blur",
           },
         ],
         startDate: [
           {
             required: true,
-            message: "Vui lòng nhập ngày bắt đầu!",
+            message: "Vui lòng nhập ngày",
             trigger: "change",
           },
           { validator: validateStartDate, trigger: "blur" },
@@ -1527,7 +1527,7 @@ export default {
         endDate: [
           {
             required: true,
-            message: "Vui lòng nhập ngày kết thúc!",
+            message: "Vui lòng nhập ngày!",
             trigger: "change",
           },
           { validator: validateEndDate, trigger: "blur" },

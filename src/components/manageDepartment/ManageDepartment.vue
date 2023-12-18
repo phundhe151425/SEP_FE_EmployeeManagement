@@ -299,8 +299,8 @@ export default {
                     },
                     {
                         min: 1,
-                        max: 255,
-                        message: "Tên phòng ban từ 1 đến 255 kí tự",
+                        max: 100,
+                        message: "Tên phòng ban từ 1 đến 100 kí tự",
                         trigger: "blur",
                     },
                 ],
