@@ -1360,6 +1360,7 @@ export default {
       year: currentYear,
       month: currentMonth,
       currentDate: date,
+      listRequest:[],
       requests: [],
       requestTypes: [],
       requestCategories: [],
@@ -2154,21 +2155,11 @@ export default {
     },
 
    getDataByUser(startDate) {
-      console.log(startDate)
       RequestService.getListRequestByUserAndStartDate(startDate,0,30)
         .then((response) => {
           this.listRequest = response.data.content;
-          console.log(this.listRequest);
-          for (const key in this.requests) {
-            if (Object.hasOwnProperty.call(this.requests, key)) {
-              this.requests[key].createdDate = moment(
-                String(this.requests[key].createdDate)
-              ).format("DD/MM/yyyy");
-            }
-          }
         })
         .catch((e) => {
-          console.log(e);
           if (e.response.data.status == 401)
             this.$store.dispatch("auth/logout");
         });
@@ -2185,7 +2176,6 @@ export default {
         if (this.isOTAfter == true) {
           this.ruleForm.startTime = "";
           this.chooseDate = true;
-          console.log(this.ruleForm.startDate)
           this.getDataByUser(this.ruleForm.startDate);
           setTimeout(() => {
             if (this.listRequest.length > 0) {
