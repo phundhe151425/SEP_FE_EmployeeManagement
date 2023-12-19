@@ -26,7 +26,7 @@
                             <span style="">Tìm kiếm</span> &ensp;
                             <el-input
                                     v-model="search"
-                                    @input="getData"
+                                    @input="handleDeptChange"
                                     size="medium"
                                     placeholder="Tìm theo tên"
                                     style="width: 200px; padding: 2px 0"
@@ -70,7 +70,13 @@
                                 label="STT"
                                 align="center"
                                 width="100px"
-                                prop="id"
+                                type="index"
+                        ></el-table-column>
+
+                       <el-table-column
+                                label="Mã nhân viên"
+                                prop="user.userCode"
+                                align="center"
                         ></el-table-column>
 
                         <el-table-column
@@ -86,20 +92,8 @@
                         ></el-table-column>
 
                         <el-table-column
-                                label="Loại hợp đồng"
+                                label="Tên hợp đồng"
                                 prop="contractName"
-                                align="center"
-                        ></el-table-column>
-
-                        <el-table-column
-                                label="Ngày bắt đầu"
-                                prop="user.startWork"
-                                align="center"
-                        ></el-table-column>
-
-                        <el-table-column
-                                label="Ngày kết thúc"
-                                prop="user.endWork"
                                 align="center"
                         ></el-table-column>
 
@@ -135,7 +129,7 @@
                             <button
                                     style="margin-right: 10px"
                                     class="btn-action"
-                                    @click="deleteContract(data.row.id)"
+                                    @click="showDeleteDepartmentDialog(data.row.id)"
                             >
                                 <i class="el-icon-delete" style="width: 30px"></i>
                             </button>
@@ -340,7 +334,7 @@
             </el-form>
         </el-dialog>
 
-        <el-dialog
+       <el-dialog
                 :visible.sync="deleteContractDialogVisible"
                 width="30%"
                 title="Xóa hợp đồng"
@@ -355,24 +349,24 @@
                     class="demo-ruleForm"
             >
                 <p style="text-align: center">Xác nhận xóa hợp đồng</p>
-
-                <div class="row" style="margin-top: 70px">
-                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                 <p style="text-align: center">{{ ruleForm.contractName }}</p>
+                <div class="row" style="margin-top: 20px; display: flex; justify-content: center">
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
                         <el-form-item>
                             <el-button
-                                    class="btn btn-success"
-                                    style="width: 100%"
+                                    class="btn"
+                                    style="width: 100%;background-color: #ed9696; color: white"
                                     @click="deleteContractDialogVisible = false"
                             >Huỷ
                             </el-button
                             >
                         </el-form-item>
                     </div>
-                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
                         <el-form-item>
                             <el-button
-                                    style="width: 100%"
-                                    class="btn btn-outline-danger"
+                                    style="width: 100%;background-color: #75c4c0; color: white"
+                                    class="btn"
                                     @click="acceptDelete()"
                             >Xác nhận
                             </el-button
@@ -404,7 +398,7 @@ export default {
             deptIdAdd: "", // o dialog add
             contractId: "",
             page: 0,
-            pageSize: 10,
+            pageSize: 3,
             search: "",
             date: "",
             totalItems: 0,
@@ -595,11 +589,11 @@ export default {
             this.editContractDialogVisible = false;
             this.createContractDialogVisible = false;
             this.deleteContractDialogVisible = true;
-            this.departmentId = id;
+            this.contractId = id;
 
-            ContractService.getContract(id)
+            ContractService.getContractByID(id)
                 .then((response) => {
-                    this.ruleForm.name = response.data.name;
+                    this.ruleForm.contractName = response.data.nameContract;
                 })
                 .catch((e) => {
                     console.log(e);
@@ -715,8 +709,6 @@ export default {
             departmentService
                 .getAllDepartment()
                 .then((response) => {
-                    console.log("tat ca phong ban");
-                    console.log(response);
                     this.deptList = [
                         {
                             id: "",
@@ -726,7 +718,6 @@ export default {
                     ];
                 })
                 .catch((e) => {
-                    console.log(e);
                     if(e.response.data.status == 401) this.$store.dispatch("auth/logout");
                 });
 
@@ -738,8 +729,6 @@ export default {
             )
                 .then((response) => {
                     this.contracts = response.data.content;
-                    console.log(12, this.contracts);
-                    console.log(response.data.content);
                     for (const key in this.contracts) {
                         if (Object.hasOwnProperty.call(this.contracts, key)) {
                             this.contracts[key].createdDate = moment(
@@ -786,17 +775,13 @@ export default {
         }, //handleDeptChange
 
         handleDeptChange() {
-            // Cập nhật giá trị userId trong ruleForm khi có sự thay đổi trong el-select
-            console.log("Selected dept ID:", this.deptIdSelect);
-            //this.ruleForm.userId = this.valueSelect;
+            this.page = 0;
+            this.totalItems = 0;
             this.getData();
         },
 
         handleDeptChangeAdd() {
-            // Cập nhật giá trị userId trong ruleForm khi có sự thay đổi trong el-select
-            console.log("Selected dept ID:", this.deptIdAdd);
-            //this.ruleForm.userId = this.valueSelect;
-            // this.getData();
+
             this.getEmployee();
         },
 

@@ -323,11 +323,6 @@ export default {
     },
 
     methods: {
-    searchDepartment(){
-      this.page = 0;
-      this.totalItems = 0;
-      this.getData();
-    },
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
