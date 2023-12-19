@@ -24,7 +24,7 @@
                 <el-date-picker
                   v-model="value2"
                   type="datetimerange"
-                  @change="getDataAttendanceByUser"
+                  @change="filterData"
                   start-placeholder="Start Date"
                   end-placeholder="End Date"
                   :default-time="['12:00:00']"
@@ -156,6 +156,11 @@ export default {
 
   },
   methods: {
+      filterData(){
+        this.pagePersonalUser = 0;
+        this.totalItemsPersonalUser = 0;
+        this.getDataAttendanceByUser();
+    },
     getDataAttendanceByUser() {
       TimeKeepingService.getListAttendanceByUser(
         this.pagePersonalUser,

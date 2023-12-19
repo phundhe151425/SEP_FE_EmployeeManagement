@@ -24,7 +24,7 @@
                 type="date"
                 :clearable="false"
                 v-model="startDate"
-                @change="getData"
+                @change="filterRequest"
                 name="startDate"
                 format="dd/MM/yyyy"
                 value-format="yyyy-MM-dd"
@@ -41,7 +41,7 @@
               <el-date-picker
                 type="date"
                 v-model="endDate"
-                @change="getData"
+                @change="filterRequest"
                 :clearable="false"
                 name="endDate"
                 format="dd/MM/yyyy"
@@ -57,7 +57,7 @@
               <span>Trạng thái</span> &ensp;
               <el-select
                 v-model="status"
-                @change="getData"
+                @change="filterRequest"
                 placeholder="Chọn trạng thái"
               >
                 <el-option value="" label="Tất cả"></el-option>
@@ -1615,6 +1615,12 @@ export default {
     },
   },
   methods: {
+    filterRequest(){
+      this.page = 0;
+      this.totalItems = 0;
+      this.getData();
+    },
+
     getData() {
       this.startDate = moment(String(this.startDate)).format(
         "yyyy-MM-DD 00:00:00"

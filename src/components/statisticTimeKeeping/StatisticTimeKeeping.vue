@@ -10,7 +10,7 @@
               <span>Phòng ban</span> &ensp;
               <el-select
                 v-model="departmentId"
-                @change="getData"
+                @change="filterData"
                 placeholder="Chọn Phòng ban"
               >
                 <el-option value="" label="Tất cả các phòng ban"></el-option>
@@ -38,7 +38,7 @@
               <el-date-picker
                 v-model="value1"
                 type="datetimerange"
-                @change="getData"
+                @change="filterData"
                 start-placeholder="Start Date"
                 end-placeholder="End Date"
                 :default-time="['12:00:00']"
@@ -55,7 +55,7 @@
               <span style="">Tìm kiếm</span> &ensp;
               <el-input
                 v-model="search"
-                @input="getData"
+                @input="filterData"
                 size="medium"
                 placeholder="Tìm theo tên, mã nhân viên"
                 style="width: 200px; padding: 2px 0"
@@ -200,6 +200,11 @@ export default {
   },
 
   methods: {
+    filterData(){
+        this.page = 0;
+        this.totalItems = 0;
+        this.getData();
+    },
     getData() {
       TimeKeepingService.getData(
         this.page,

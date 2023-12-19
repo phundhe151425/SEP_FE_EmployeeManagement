@@ -14,7 +14,7 @@
                 type="date"
                 :clearable="false"
                 v-model="startDate"
-                @change="getData"
+                @change="filterRequest"
                 name="startDate"
                 format="dd/MM/yyyy"
                 placeholder="Chọn ngày"
@@ -31,7 +31,7 @@
                 type="date"
                 :clearable="false"
                 v-model="endDate"
-                @change="getData"
+                @change="filterRequest"
                 name="endDate"
                 format="dd/MM/yyyy"
                 placeholder="Chọn ngày"
@@ -47,7 +47,7 @@
               <span>Phòng ban</span> &ensp;
               <el-select
                 v-model="departmentId"
-                @change="getData"
+                @change="filterRequest"
                 placeholder="Chọn Phòng ban"
               >
                 <el-option value="" label="Tất cả các phòng ban"></el-option>
@@ -74,7 +74,7 @@
               <span>Trạng thái</span> &ensp;
               <el-select
                 v-model="status"
-                @change="getData"
+                @change="filterRequest"
                 placeholder="Chọn trạng thái"
               >
                 <el-option value="" label="Tất cả"></el-option>
@@ -94,7 +94,7 @@
               <span style="">Tìm kiếm</span> &ensp;
               <el-input
                 v-model="search"
-                @input="getData"
+                @input="filterRequest"
                 size="medium"
                 placeholder="Tìm theo tên, mã nhân viên"
                 style="width: 200px; padding: 2px 0"
@@ -1575,6 +1575,12 @@ export default {
     // },
   },
   methods: {
+    filterRequest(){
+      this.page = 0;
+      this.totalItems = 0;
+      this.getData();
+    },
+
     getData() {
       this.startDate = moment(String(this.startDate)).format(
         "yyyy-MM-DD 00:00:00"
@@ -2211,6 +2217,7 @@ export default {
       window.location.replace("/login");
       localStorage.removeItem("user");
     },
+
     handlePageChange(value) {
       this.page = value - 1;
       this.getData();

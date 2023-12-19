@@ -10,7 +10,7 @@
                             <span style="">Tìm kiếm</span> &ensp;
                             <el-input
                                     v-model="search"
-                                    @input="getData"
+                                    @input="searchDepartment"
                                     size="medium"
                                     placeholder="Tìm theo tên"
                                     style="width: 200px; padding: 2px 0"
@@ -323,6 +323,11 @@ export default {
     },
 
     methods: {
+    searchDepartment(){
+      this.page = 0;
+      this.totalItems = 0;
+      this.getData();
+    },
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
