@@ -1050,7 +1050,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" hidden>
               <el-form-item label="Chọn ca" prop="slotId">
                 <el-select
                   v-model="ruleForm.slotId"
@@ -1091,7 +1091,6 @@
                   <el-time-picker
                     v-model="ruleForm.startTime"
                     placeholder="Chọn thời gian"
-                    readonly=""
                   >
                   </el-time-picker>
                 </el-form-item>
@@ -1103,7 +1102,6 @@
                   <el-time-picker
                     v-model="ruleForm.endTime"
                     placeholder="Chọn thời gian"
-                    readonly=""
                   >
                   </el-time-picker>
                 </el-form-item>
@@ -1717,7 +1715,7 @@ export default {
       if (this.isPersonalWork) {
         this.ruleForm.restType = 1;
       }
-      if (this.isRestByDay || this.isWorkFromHome || this.isBusinessTravel) {
+      if (this.isRestByDay || this.isWorkFromHome || this.isBusinessTravel || this.isForgetTimeKeeping) {
         this.ruleForm.slotId = 1;
       }
       if (
