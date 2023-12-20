@@ -33,6 +33,18 @@
                             />
                         </div>
                     </el-col>
+                     <el-col :md="6" :lg="6" :xl="6" style="margin-bottom: 20px">
+                        <div class="">
+                            <span style="">Tìm kiếm nhân viên</span> &ensp;
+                            <el-input
+                                    v-model="empId"
+                                    @input="handleDeptChange"
+                                    size="medium"
+                                    placeholder="Tìm theo tên"
+                                    style="width: 200px; padding: 2px 0"
+                            />
+                        </div>
+                    </el-col>
                     <el-col :md="6" :lg="6" :xl="6" class="div-buttons">
                         <div class="grid-content div-buttons">
                             <el-button
@@ -400,6 +412,7 @@ export default {
             page: 0,
             pageSize: 3,
             search: "",
+            empId: "",
             date: "",
             totalItems: 0,
             selectedOption: [],
@@ -725,7 +738,8 @@ export default {
                 this.page,
                 this.pageSize,
                 this.search,
-                this.deptIdSelect
+                this.deptIdSelect,
+                this.empId
             )
                 .then((response) => {
                     this.contracts = response.data.content;

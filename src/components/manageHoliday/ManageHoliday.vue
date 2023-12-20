@@ -662,7 +662,7 @@ export default {
                 });
         },
 
-        getData() {
+         getData() {
             HolidayService.getData(this.page, this.pageSize, this.search, this.year)
                 .then((response) => {
                     this.holidays = response.data.content;

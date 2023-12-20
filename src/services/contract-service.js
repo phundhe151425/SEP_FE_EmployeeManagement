@@ -11,7 +11,7 @@ class ContractService {
   getAllContract() {
     return axios.get(BASE_URL + "/auth/contract/get-all", { headers: authHeader(),});
   }
-  getContracts(page, size, search, deptId) {
+  getContracts(page, size, search, deptId, empId) {
     return axios.get(
       BASE_URL +
         "/auth/contract/data1?pageNo=" +
@@ -21,7 +21,9 @@ class ContractService {
         "&search=" +
         search +
         "&deptId=" +
-        deptId,
+        deptId +
+        "&empId=" +
+        empId ,
       { headers: authHeader() }
     );
   }
