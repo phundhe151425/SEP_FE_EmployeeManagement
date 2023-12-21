@@ -109,6 +109,19 @@
                                 align="center"
                         ></el-table-column>
 
+                        
+                        <el-table-column
+                                label="Tên hợp đồng"
+                                prop="startWork"
+                                align="center"
+                        ></el-table-column>
+
+                         <el-table-column
+                                label="Tên hợp đồng"
+                                prop="endWork"
+                                align="center"
+                        ></el-table-column>
+
                         <el-table-column
                                 label="Hợp đồng"
                                 align="center"
@@ -271,7 +284,6 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <el-form-item label="Chọn file hợp đồng" prop="contractFile">
                             <input type="file" @change="handleFileChange"/>
-                            <div>{{ruleForm.fileName}}</div>
                         </el-form-item>
                     </div>
                 </div>
@@ -312,6 +324,42 @@
                             </el-select>
                         </el-form-item>
                     </div>
+                </div>
+
+                <div class="row">
+                     <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                        <!-- mode select -->
+                       <span>Ngày bắt đầu hợp đồng<span style="color: red"> *</span></span><br>
+                <el-date-picker id="startWork" v-model="ruleForm.startWork" name="startWork"
+                                autocomplete="off"
+                             
+                                format='yyyy-MM-dd'
+                                value-format='yyyy-MM-dd'
+                                :editable="false"
+                                placeholder="Chọn ngày" style="width: 90%"></el-date-picker>
+                    </div>
+                     </div>
+                   
+                  
+                </div>
+
+                <div class="row">
+                     <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                        <!-- mode select -->
+                     <span>Ngày kết thúc hợp đồng<span style="color: red"> *</span></span><br>
+                <el-date-picker id="endWork" v-model="ruleForm.endWork" name="endWork" autocomplete="off"
+                                
+                                format='yyyy-MM-dd'
+                                :editable="false"
+                                value-format='yyyy-MM-dd'
+                                :picker-options="pickerOptionsCreate"
+                                placeholder="Chọn ngày" style="width: 90%"></el-date-picker>
+                    </div>
+                     </div>
+                   
+                  
                 </div>
                 <div class="row" style="display: flex; justify-content: flex-end">
                     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
@@ -423,6 +471,8 @@ export default {
                 contractName: "",
                 contractFile: null,
                 userId: "",
+                startWork:"",
+                endWork:"",
                 // Các trường khác của hợp đồng
             },
             rules: {
@@ -468,6 +518,8 @@ export default {
             let dataObject = {};
             dataObject.contractName = this.ruleForm.contractName;
             dataObject.userId = Number(this.ruleForm.userId);
+            dataObject.startWork = this.ruleForm.startWork;
+            dataObject.endWork = this.ruleForm.endWork;
             ContractService.save(dataObject, this.ruleForm.contractFile)
                 .then(() => {
                     this.createContractDialogVisible = false;
@@ -478,6 +530,17 @@ export default {
                         timerProgressBar: true,
                     });
                     this.getData();
+                    this.ruleForm= {
+                                        contractName: "",
+                                        contractFile: null,
+                                        userId: "",
+                                        startWork:"",
+                                        endWork:"",
+               
+                                    };
+                    this.contractFile='';   
+                    this.valueSelect="";
+                    this.deptIdAdd="";
                 })
                 .catch((e) => {
                     console.log(e);
