@@ -8,9 +8,9 @@ class RequestService {
         return axios.post(BASE_URL + "/auth/request/create-request", data,{headers: authHeader()});
     }
 
-    getData(page, size, search, status, departmentId, from, to) {
+    getData(page, size, search, status, departmentId,type, from, to) {
         return axios.get( BASE_URL+"/auth/request/get-list-request?page="+page
-        +"&size="+size+"&search="+search +"&status="+ status +"&departmentId="+departmentId+"&from="+from+"&to="+to,{headers: authHeader()});
+        +"&size="+size+"&search="+search +"&status="+ status +"&departmentId="+departmentId+"&type="+type+"&from="+from+"&to="+to,{headers: authHeader()});
     }
 
     changeStatus(id, data){
@@ -25,9 +25,9 @@ class RequestService {
         return httpCommon.get(`/auth/request/get-request-by-id/${id}`,{headers: authHeader()});
     }
 
-    getListRequestByUser(page, size, search, status, from, to) {
+    getListRequestByUser(page, size, search, status,type,from, to) {
         return httpCommon.get("/auth/request/get-list-request-by-user-id?page="+page
-        +"&size="+size+"&search="+search +"&status="+ status+"&from="+from+"&to="+to,{headers: authHeader()});
+        +"&size="+size+"&search="+search +"&status="+ status+"&type="+type+"&from="+from+"&to="+to,{headers: authHeader()});
     }
 
     getListRequestByUserAndStartDate(startDate, page, size) {
@@ -39,6 +39,12 @@ class RequestService {
         return axios.get( BASE_URL+"/auth/request-type/get-list-request-type-by-category-id?categoryId="+categoryId
         ,{headers: authHeader()});
     }
+
+    getAllRequestType() {
+        return axios.get( BASE_URL+"/auth/request-type/get-list-request-type"
+        ,{headers: authHeader()});
+    }
+
 
     getRequestCategories() {
         return axios.get( BASE_URL+"/auth/request-category/get-list-request-category",{headers: authHeader()});

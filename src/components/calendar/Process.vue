@@ -1,34 +1,49 @@
 <template>
   <div class="manage-department">
     <h3 class="text-start" style="font-weight: bold">
-      Duyêt đề xuất và chấm công
+      Phản ánh đề xuất và chấm công
     </h3>
     <hr style="margin-bottom: 2%" />
     <div style="padding-bottom: 20px">
-      <div className="" style="width: 100%; margin-top: 20%;display: flex; justify-content: center;">
-        <el-row >
-        
-      
-              <el-button
-                class="buttons btn-add"
-                type="danger"
-                style=""
-                round
-                @click="showProcessRequestDialog"
-              >
-                Duyệt đề xuất
-              </el-button>
-            
-              <el-button
-                class="buttons btn-add"
-                type="danger"
-                style=""
-                round
-                @click="showProcessAttendDialog"
-              >
-                Duyệt chấm công
-              </el-button>
-        
+      <div
+        className=""
+        style="
+          width: 100%;
+          margin-top: 20%;
+          display: flex;
+          justify-content: center;
+        "
+      >
+        <el-row>
+          <el-button
+            class="buttons btn-add"
+            type="danger"
+            style=""
+            round
+            @click="showProcessRequestDialog"
+          >
+            Phản ánh đề xuất
+          </el-button>
+
+          <el-button
+            class="buttons btn-add"
+            type="danger"
+            style=""
+            round
+            @click="showProcessAttendDialog"
+          >
+            Phản ánh chấm công
+          </el-button>
+
+          <el-button
+            class="buttons btn-add"
+            type="danger"
+            style=""
+            round
+            @click="showGetCheckInOutDialog"
+          >
+            Tải dữ liệu từ máy chấm công
+          </el-button>
         </el-row>
         <br />
       </div>
@@ -37,7 +52,7 @@
     <el-dialog
       :visible.sync="requestProcessDialogVisible"
       width="50%"
-      title="Duyệt đề xuất"
+      title="Phản ánh đề xuất"
       left
     >
       <el-form
@@ -48,7 +63,10 @@
         label-width="200px"
         class="demo-ruleForm"
       >
-        <div class="row" style="margin-top: 15px;display: flex; justify-content: center">
+        <div
+          class="row"
+          style="margin-top: 15px; display: flex; justify-content: center"
+        >
           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
             <el-form-item label="Chọn ngày" required>
               <el-form-item prop="date">
@@ -100,7 +118,7 @@
     <el-dialog
       :visible.sync="attendProcessDialogVisible"
       width="50%"
-      title="Duyệt chấm công"
+      title="Phản ánh chấm công"
       left
     >
       <el-form
@@ -111,7 +129,10 @@
         label-width="200px"
         class="demo-ruleForm"
       >
-        <div class="row" style="margin-top: 15px;display: flex; justify-content: center">
+        <div
+          class="row"
+          style="margin-top: 15px; display: flex; justify-content: center"
+        >
           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
             <el-form-item label="Chọn ngày" required>
               <el-form-item prop="date">
@@ -159,6 +180,72 @@
         </div>
       </el-form>
     </el-dialog>
+
+    <el-dialog
+      :visible.sync="getCheckInOutDialogVisible"
+      width="50%"
+      title="Tải dữ liệu từ máy chấm công"
+      left
+    >
+      <el-form
+        id="formCreate"
+        :model="dateInOut"
+        :rules="rulesInOut"
+        ref="getCheckInOutProcess"
+        label-width="200px"
+        class="demo-ruleForm"
+      >
+        <div
+          class="row"
+          style="margin-top: 15px; display: flex; justify-content: center"
+        >
+          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <el-form-item label="Chọn ngày" required>
+              <el-form-item prop="date">
+                <el-date-picker
+                  type="date"
+                  v-model="dateInOut.date"
+                  format="dd/MM/yyyy"
+                  value-format="yyyy-MM-dd"
+                  name="startDate"
+                  placeholder="Chọn ngày"
+                  style="width: 100%"
+                  :clearable="false"
+                ></el-date-picker>
+              </el-form-item>
+            </el-form-item>
+          </div>
+        </div>
+        <div class="row" style="display: flex; justify-content: center">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+            <div style="bottom: 40px">
+              <el-form-item>
+                <el-button
+                  class="btn"
+                  type="primary"
+                  style="width: 90%; background-color: #ed9696; color: white"
+                  @click="cancelGetCheckInOutDialog('getCheckInOutProcess')"
+                  >Hủy
+                </el-button>
+              </el-form-item>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+            <div style="bottom: 40px">
+              <el-form-item>
+                <el-button
+                  class="btn"
+                  type="primary"
+                  style="width: 90%; background-color: #75c4c0; color: white"
+                  @click="submitGetCheckInOutForm('getCheckInOutProcess')"
+                  >Lưu
+                </el-button>
+              </el-form-item>
+            </div>
+          </div>
+        </div>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -177,6 +264,7 @@ export default {
       year: "",
       date: { date: "" },
       dateAttend: { date: "" },
+      dateInOut: { date: "" },
       rules: {
         date: [
           {
@@ -195,8 +283,18 @@ export default {
           },
         ],
       },
-       requestProcessDialogVisible: false,
+      rulesInOut: {
+        date: [
+          {
+            required: true,
+            message: "Vui lòng chọn ngày!",
+            trigger: "change",
+          },
+        ],
+      },
+      requestProcessDialogVisible: false,
       attendProcessDialogVisible: false,
+      getCheckInOutDialogVisible: false,
     };
   },
 
@@ -217,7 +315,7 @@ export default {
             .then(() => {
               this.requestProcessDialogVisible = false;
               this.$notify.success({
-                message: "Tiến hành duyệt đề xuất thành công!",
+                message: "Tiến hành phản ánh đề xuất thành công!",
                 title: "Success",
                 timer: 2000,
                 timerProgressBar: true,
@@ -247,7 +345,7 @@ export default {
             .then(() => {
               this.attendProcessDialogVisible = false;
               this.$notify.success({
-                message: "Tiến hành duyệt chấm công thành công!",
+                message: "Tiến hành phản ánh chấm công thành công!",
                 title: "Success",
                 timer: 2000,
                 timerProgressBar: true,
@@ -265,25 +363,67 @@ export default {
       });
     },
 
-    cancelProcessRequest(formName) {
-      this.$refs[formName].resetFields();
-      this.requestProcessDialogVisible = false;
+    submitGetCheckInOutForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          var subDate = this.dateInOut.date.split("-");
+          this.day = Number(subDate[2]);
+          this.month = Number(subDate[1]);
+          this.year = Number(subDate[0]);
+          console.log(this.day + "," + this.month + "," + this.year);
+          AttendanceService.getCheckInOut(this.day, this.month, this.year)
+            .then(() => {
+              this.getCheckInOutDialogVisible = false;
+              this.$notify.success({
+                message: "Tiến hành lấy dữ liệu thành công!",
+                title: "Success",
+                timer: 2000,
+                timerProgressBar: true,
+              });
+            })
+            .catch((e) => {
+              console.log(e);
+              if (e.response.data.status == 401)
+                this.$store.dispatch("auth/logout");
+            });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     },
 
     showProcessRequestDialog() {
       this.requestProcessDialogVisible = true;
+      this.getCheckInOutDialogVisible = false;
+      this.attendProcessDialogVisible = false;
       this.$refs["requestProcess"].resetFields();
     },
 
-    showProcessAttendDialog(){
-        this.attendProcessDialogVisible = true;
-       this.createDepartmentDialogVisible = false;
-        this.$refs["attendProcess"].resetFields();
+    showProcessAttendDialog() {
+      this.attendProcessDialogVisible = true;
+      this.requestProcessDialogVisible = false;
+      this.getCheckInOutDialogVisible = false;
+      this.$refs["attendProcess"].resetFields();
     },
 
+    showGetCheckInOutDialog() {
+      this.attendProcessDialogVisible = false;
+      this.attendProcessDialogVisible = false;
+      this.getCheckInOutDialogVisible = true;
+      this.$refs["attendProcess"].resetFields();
+    },
+    cancelProcessRequest(formName) {
+      this.$refs[formName].resetFields();
+      this.requestProcessDialogVisible = false;
+    },
     cancelProcessAttendDialog(formName) {
       this.$refs[formName].resetFields();
       this.attendProcessDialogVisible = false;
+    },
+    cancelGetCheckInOutDialog(formName) {
+      this.$refs[formName].resetFields();
+      this.getCheckInOutDialogVisible = false;
     },
 
     logout() {

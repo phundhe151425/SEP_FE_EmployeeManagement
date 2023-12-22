@@ -40,6 +40,18 @@
               ></el-date-picker>
             </div>
           </el-col>
+          <el-col :md="6" :lg="6" :xl="6" style="margin-bottom: 20px">
+            <div class="">
+              <span style="">Tìm kiếm</span> &ensp;
+              <el-input
+                v-model="search"
+                @input="filterRequest"
+                size="medium"
+                placeholder="Tìm theo tên, mã nhân viên"
+                style="width: 200px; padding: 2px 0"
+              />
+            </div>
+          </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :md="6" :lg="6" :xl="6" v-if="isModerator == false">
@@ -88,23 +100,32 @@
               </el-select>
             </div>
           </el-col>
-
-          <el-col :md="6" :lg="6" :xl="6" style="margin-bottom: 20px">
-            <div class="">
-              <span style="">Tìm kiếm</span> &ensp;
-              <el-input
-                v-model="search"
-                @input="filterRequest"
-                size="medium"
-                placeholder="Tìm theo tên, mã nhân viên"
-                style="width: 200px; padding: 2px 0"
-              />
+           <el-col :md="6" :lg="6" :xl="6">
+            <div class="" style="margin-bottom: 20px">
+              <span>Loại đề xuất</span> &ensp;
+              <el-select
+                v-model="typeOfRequest"
+                @change="filterRequest"
+                placeholder="Chọn trạng thái"
+              >
+                <el-option value="" label="Tất cả"></el-option>
+                <el-option
+                  v-for="item in listRequestType"
+                  :key="item.id"
+                  :label="item.requestTypeName"
+                  :value="item.id"
+                >
+                </el-option>
+              </el-select>
             </div>
           </el-col>
+
           <el-col :md="6" :lg="6" :xl="6" class="div-buttons">
             <div class="div-buttons">
-              <el-dropdown split-button type="danger">
-                Tạo đề xuất
+              <el-dropdown trigger="click">
+                <el-button type="danger">
+                  Tạo đề xuất<i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item
                     v-for="(item, index) in requestCategories"
@@ -691,7 +712,7 @@
       </el-form>
     </el-dialog>
 
- <el-dialog
+    <el-dialog
       :visible.sync="createOTRequestDialogVisible"
       width="50%"
       title="Tạo đề xuất làm thêm giờ"
@@ -890,7 +911,6 @@
                         v-model="ruleForm.endTime"
                         placeholder="Chọn thời gian"
                         :clearable="false"
-                        disabled
                       >
                       </el-time-picker>
                     </el-form-item>
@@ -920,7 +940,7 @@
                         v-model="ruleForm.endTime"
                         placeholder="Chọn thời gian"
                         :clearable="false"
-                        disabled
+                        :picker-options="pickerOptionEndTimeOT"
                       >
                       </el-time-picker>
                     </el-form-item>
@@ -1370,6 +1390,8 @@ export default {
       warningMess: "",
       errOTAfterMess: "",
       isErrOTAfter: false,
+      listRequestType: [],
+      typeOfRequest:"",
       slots: [
         {
           id: 1,
@@ -1527,6 +1549,7 @@ export default {
     this.getAllDepartment();
     this.getAllRequestCategory();
     this.getWoringTimeFullTime();
+    this.getAllRequestType();
     this.name = this.$store.state.auth.user.fullName;
     this.department = this.$store.state.auth.user.departmentName;
   },
@@ -1553,10 +1576,10 @@ export default {
         disabledDate: this.disableOneDayAgoDate,
       };
     },
-    pickerOptionStartTimeOTBefore(){
+    pickerOptionStartTimeOTBefore() {
       return {
-        selectableRange: this.rangeStartTimeOTBefore()
-      }
+        selectableRange: this.rangeStartTimeOTBefore(),
+      };
     },
     pickerOptionStartTimeOTAfter() {
       return {
@@ -1575,7 +1598,7 @@ export default {
     // },
   },
   methods: {
-    filterRequest(){
+    filterRequest() {
       this.page = 0;
       this.totalItems = 0;
       this.getData();
@@ -1597,6 +1620,7 @@ export default {
         this.search,
         this.status,
         this.departmentId,
+        this.typeOfRequest,
         this.startDate,
         this.endDate
       )
@@ -1654,6 +1678,17 @@ export default {
         })
         .catch((e) => {
           console.log(e);
+          if (e.response.data.status == 401)
+            this.$store.dispatch("auth/logout");
+        });
+    },
+
+    getAllRequestType() {
+      RequestService.getAllRequestType()
+        .then((response) => {
+          this.listRequestType = response.data.content;
+        })
+        .catch((e) => {
           if (e.response.data.status == 401)
             this.$store.dispatch("auth/logout");
         });
@@ -1721,7 +1756,12 @@ export default {
       if (this.isPersonalWork) {
         this.ruleForm.restType = 1;
       }
-      if (this.isRestByDay || this.isWorkFromHome || this.isBusinessTravel || this.isForgetTimeKeeping) {
+      if (
+        this.isRestByDay ||
+        this.isWorkFromHome ||
+        this.isBusinessTravel ||
+        this.isForgetTimeKeeping
+      ) {
         this.ruleForm.slotId = 1;
       }
       if (
@@ -1761,68 +1801,68 @@ export default {
               timer: 2000,
               timerProgressBar: true,
             });
-          }else{
-          this.ruleForm.startTime = moment(
-            String(this.ruleForm.startTime)
-          ).format("HH:mm:ss");
-          this.ruleForm.endTime = moment(String(this.ruleForm.endTime)).format(
-            "HH:mm:ss"
-          );
-          this.ruleForm.endDate = moment(String(this.ruleForm.endDate)).format(
-            "yyyy-MM-DD"
-          );
-          var request = {
-            endDate: this.ruleForm.endDate,
-            requestTitle: "",
-            requestContent: this.ruleForm.requestContent,
-            startDate: this.ruleForm.startDate,
-            requestTypeId: this.ruleForm.requestTypeId,
-            startTime: this.ruleForm.startTime,
-            endTime: this.ruleForm.endTime,
-          };
-          RequestService.save(request)
-            .then(() => {
-              this.createRequestDialogVisible = false;
-              this.createOTRequestDialogVisible = false;
-              this.createTimeKeepingRequestDialogVisible = false;
-              this.$notify.success({
-                message: "Tạo đề xuất thành công",
-                title: "Success",
-                timer: 2000,
-                timerProgressBar: true,
+          } else {
+            this.ruleForm.startTime = moment(
+              String(this.ruleForm.startTime)
+            ).format("HH:mm:ss");
+            this.ruleForm.endTime = moment(
+              String(this.ruleForm.endTime)
+            ).format("HH:mm:ss");
+            this.ruleForm.endDate = moment(
+              String(this.ruleForm.endDate)
+            ).format("yyyy-MM-DD");
+            var request = {
+              endDate: this.ruleForm.endDate,
+              requestTitle: "",
+              requestContent: this.ruleForm.requestContent,
+              startDate: this.ruleForm.startDate,
+              requestTypeId: this.ruleForm.requestTypeId,
+              startTime: this.ruleForm.startTime,
+              endTime: this.ruleForm.endTime,
+            };
+            RequestService.save(request)
+              .then(() => {
+                this.createRequestDialogVisible = false;
+                this.createOTRequestDialogVisible = false;
+                this.createTimeKeepingRequestDialogVisible = false;
+                this.$notify.success({
+                  message: "Tạo đề xuất thành công",
+                  title: "Success",
+                  timer: 2000,
+                  timerProgressBar: true,
+                });
+                this.getData();
+              })
+              .catch((e) => {
+                console.log(e);
+                if (e.response.data.status == 401)
+                  this.$store.dispatch("auth/logout");
+                if (
+                  e.response.data.status == 400 &&
+                  this.ruleForm.requestTypeId == 1
+                ) {
+                  this.$notify.error({
+                    message: "Tạo đề xuất không thành công!",
+                    title: "Failed",
+                    timer: 2000,
+                    timerProgressBar: true,
+                  });
+                }
+                if (
+                  e.response.data.status == 500 &&
+                  this.ruleForm.requestTypeId == 1
+                ) {
+                  this.$notify.error({
+                    message:
+                      "Tạo đề xuất không thành công! Bạn chỉ còn " +
+                      this.dayOff +
+                      " ngày nghỉ có lương!",
+                    title: "Failed",
+                    timer: 2000,
+                    timerProgressBar: true,
+                  });
+                }
               });
-              this.getData();
-            })
-            .catch((e) => {
-              console.log(e);
-              if (e.response.data.status == 401)
-                this.$store.dispatch("auth/logout");
-              if (
-                e.response.data.status == 400 &&
-                this.ruleForm.requestTypeId == 1
-              ) {
-                this.$notify.error({
-                  message: "Tạo đề xuất không thành công!",
-                  title: "Failed",
-                  timer: 2000,
-                  timerProgressBar: true,
-                });
-              }
-              if (
-                e.response.data.status == 500 &&
-                this.ruleForm.requestTypeId == 1
-              ) {
-                this.$notify.error({
-                  message:
-                    "Tạo đề xuất không thành công! Bạn chỉ còn " +
-                    this.dayOff +
-                    " ngày nghỉ có lương!",
-                  title: "Failed",
-                  timer: 2000,
-                  timerProgressBar: true,
-                });
-              }
-            });
           }
         } else {
           console.log("error submit!!");
@@ -1832,8 +1872,6 @@ export default {
     },
 
     cancelCreateForm() {
-      // this.clearField();
-      // this.ruleForm.requestTypeId = "";
       this.createRequestDialogVisible = false;
       this.createOTRequestDialogVisible = false;
       this.createTimeKeepingRequestDialogVisible = false;
@@ -2076,7 +2114,7 @@ export default {
         });
     },
 
-     setDateTime() {
+    setDateTime() {
       if (
         this.isRestBySlot ||
         this.createOTRequestDialogVisible ||
@@ -2088,7 +2126,7 @@ export default {
         if (this.isOTAfter == true) {
           this.ruleForm.startTime = "";
           this.chooseDate = true;
-          console.log(this.ruleForm.startDate)
+          console.log(this.ruleForm.startDate);
           this.getDataByUser(this.ruleForm.startDate);
           setTimeout(() => {
             if (this.listRequest.length > 0) {
@@ -2193,14 +2231,14 @@ export default {
     },
 
     rangeStartTime() {
-          if(this.attendance!= null){
-      if(this.attendance.timeOut != null || this.attendance.timeOut != ''){
-      return this.endFullTime + " - " + this.attendance.timeOut;
-    }
+      if (this.attendance != null) {
+        if (this.attendance.timeOut != null || this.attendance.timeOut != "") {
+          return this.endFullTime + " - " + this.attendance.timeOut;
+        }
       }
     },
 
-    rangeStartTimeOTBefore(){
+    rangeStartTimeOTBefore() {
       return this.endFullTime + " - 23:59:59";
     },
 
