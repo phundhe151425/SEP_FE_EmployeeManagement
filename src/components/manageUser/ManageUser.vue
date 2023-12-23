@@ -675,7 +675,7 @@
                 <el-date-picker id="startWorkEdit" v-model="userEdit.startWork" name="startWork"
                                 autocomplete="off"
                                 :class="{'error-border':errStartWork !== null && errStartWork !== ''}"
-                                @change="clearErrorFullName('startWork'), changeStartWorkEdit"
+                                @change="clearErrorFullName('startWork')"
                                 format='yyyy-MM-dd'
                                 value-format='yyyy-MM-dd'
                                 :editable="false"
@@ -1232,10 +1232,11 @@ export default {
         this.userEdit.userCode = String(this.userEdit.userCode.split("_")[1]);
         this.deparmentEditName = this.userEdit.department.name
         this.positionEditName = this.userEdit.position.positionName
+        console.log("this.deparmentEditName", this.deparmentEditName)
+        console.log("this.positionEditName", this.positionEditName)
         this.userImageEdit = this.userEdit.userImage !== ''
             ? this.beUrl + "api/file/avatar/" + this.userEdit.userImage
             : "https://www.namepros.com/attachments/empty-png.89209/";
-        console.log(this.userEdit.department.name)
       }).catch(e => {
         console.log(e);
         if (e.response.data.status == 401) {
@@ -1288,7 +1289,7 @@ export default {
     getListUser() {
       UserService.getAll().then(res => {
         this.listUser = res.data
-        console.log(this.listUser)
+        // console.log(this.listUser)
 
 
       })
@@ -1395,7 +1396,8 @@ export default {
       return emailRegex.test(email);
     },
     clearErrorFullName(input) {
-      console.log(input)
+      // console.log(input)
+      // console.log(this.deparmentEditName)
       if (input == 'fullName') {
         this.errFullName = '';
       } else if (input == 'userCode') {
@@ -1443,7 +1445,9 @@ export default {
       //   userImage: '',
       //   contractFile: ''
       // }
-
+      this.deparmentEditName=''
+      this.positionEditName=''
+      this.userEdit= {}
       this.errFullName = ''
       this.errUserCode = ''
       this.errGender = ''
