@@ -19,13 +19,6 @@
                     </el-col>
                     <el-col :md="6" :lg="6" :xl="6" class="div-buttons">
                         <div class="grid-content div-buttons">
-                            <import-excel
-                                    class="text-start buttons btn-import"
-                                    header="Thêm phòng ban"
-                                    format="1"
-                                    @getData="getData"
-                                    style="margin-right: 10px"
-                            />
                             <el-button
                                     class="buttons btn-add"
                                     type="danger"
@@ -323,6 +316,11 @@ export default {
     },
 
     methods: {
+        searchDepartment(){
+      this.page = 0;
+      this.totalItems = 0;
+      this.getData();
+    },
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {

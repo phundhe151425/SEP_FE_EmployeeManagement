@@ -19,13 +19,6 @@
                     </el-col>
                     <el-col :md="6" :lg="6" :xl="6" class="div-buttons">
                         <div class="grid-content div-buttons">
-                            <import-excel
-                                    class="text-start buttons btn-import"
-                                    header="Thêm chức vụ"
-                                    format="1"
-                                    @getData="getData"
-                                    style="margin-right: 10px"
-                            />
                             <el-button
                                     class="buttons btn-add"
                                     type="danger"
