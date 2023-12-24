@@ -234,7 +234,7 @@
         width="50%"
         title="Tạo mới nhân viên"
         left>
-      <form id="formCreate" style="height: 600px">
+      <form id="formCreate" :style="{ height: user.userImage== '' || user.userImage== null ? '600px' : 'auto'   }">
         <div class="row">
           <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
             <span>Nhập họ tên nhân viên<span style="color: red"> *</span></span><br>
@@ -474,7 +474,7 @@
         width="50%"
         title="Sửa thông tin nhân viên"
         left>
-      <form id="formEdit" style="height: 600px">
+      <form id="formEdit" :style="{ height: userImageEdit== '' || userImageEdit== null ? '600px' : 'auto'   }">
         <div class="row">
           <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
             <span>Nhập họ tên nhân viên<span style="color: red"> *</span></span><br>
@@ -662,7 +662,7 @@
                           maxlength="50"
                           :class="{'error-border':errUserName !== null && errUserName !== ''}"
                           @change="clearErrorFullName('username')"
-                          style="width: 90%"></el-input>
+                          style="width: 90%;" disabled></el-input>
                 <div>
                   <small v-if="errUserName !== null" style="color: red">
                     {{ errUserName }}
@@ -675,7 +675,7 @@
                 <el-date-picker id="startWorkEdit" v-model="userEdit.startWork" name="startWork"
                                 autocomplete="off"
                                 :class="{'error-border':errStartWork !== null && errStartWork !== ''}"
-                                @change="clearErrorFullName('startWork'), changeStartWorkEdit"
+                                @change="clearErrorFullName('startWork')"
                                 format='yyyy-MM-dd'
                                 value-format='yyyy-MM-dd'
                                 :editable="false"
@@ -787,6 +787,8 @@ export default {
       errUserName: '',
       errStartWork: '',
       errEndWork: '',
+
+      isAuto: false,
     };
   },
   created() {
@@ -1230,10 +1232,11 @@ export default {
         this.userEdit.userCode = String(this.userEdit.userCode.split("_")[1]);
         this.deparmentEditName = this.userEdit.department.name
         this.positionEditName = this.userEdit.position.positionName
+        console.log("this.deparmentEditName", this.deparmentEditName)
+        console.log("this.positionEditName", this.positionEditName)
         this.userImageEdit = this.userEdit.userImage !== ''
             ? this.beUrl + "api/file/avatar/" + this.userEdit.userImage
             : "https://www.namepros.com/attachments/empty-png.89209/";
-        console.log(this.userEdit.department.name)
       }).catch(e => {
         console.log(e);
         if (e.response.data.status == 401) {
@@ -1286,7 +1289,7 @@ export default {
     getListUser() {
       UserService.getAll().then(res => {
         this.listUser = res.data
-        console.log(this.listUser)
+        // console.log(this.listUser)
 
 
       })
@@ -1303,13 +1306,71 @@ export default {
     },
     previewFilesEdit(event) {
       const file = event.target.files[0];
-
+      this.isAuto = true;
       const theReader = new FileReader();
       theReader.onloadend = async () => {
         this.userImageEdit = await theReader.result;
       };
       theReader.readAsDataURL(file);
-      // this.clearErrorFullName('userImage')
+
+
+      // const file = event.target.files[0];
+      //
+      // // Tạo một FileReader instance
+      // const theReader = new FileReader();
+      //
+      // // Define the onload event handler for the FileReader
+      // theReader.onload = async () => {
+      //   // Tạo một HTMLImageElement để tải hình ảnh
+      //   const img = new Image();
+      //   img.src = theReader.result;
+      //
+      //   // Đợi cho hình ảnh được tải hoàn tất
+      //   img.onload = async () => {
+      //     // Định dạng và chỉnh kích thước hình ảnh
+      //     const resizedImageDataUrl = await this.resizeImage(img, 200, 200);
+      //
+      //     // Set the result to the userImageEdit property
+      //     this.userImageEdit = resizedImageDataUrl;
+      //   };
+      // };
+      //
+      // // Đọc file đã chọn dưới dạng data URL
+      // theReader.readAsDataURL(file);
+    },
+
+    async resizeImage(img, maxWidth, maxHeight) {
+      // Tính toán kích thước mới dựa trên maxWidth và maxHeight
+      let width = img.width;
+      let height = img.height;
+
+      if (width > height) {
+        if (width > maxWidth) {
+          height *= maxWidth / width;
+          width = maxWidth;
+        }
+      } else {
+        if (height > maxHeight) {
+          width *= maxHeight / height;
+          height = maxHeight;
+        }
+      }
+
+      // Tạo một canvas
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      // Đặt kích thước của canvas
+      canvas.width = width;
+      canvas.height = height;
+
+      // Vẽ hình ảnh trên canvas với kích thước mới
+      ctx.drawImage(img, 0, 0, width, height);
+
+      // Chuyển đổi nội dung của canvas thành base64 data URL
+      const resizedImageDataUrl = canvas.toDataURL();
+
+      return resizedImageDataUrl;
     },
     disableOneDayAgoCreate(date) {
       const startWork = new Date(this.user.startWork)
@@ -1335,7 +1396,8 @@ export default {
       return emailRegex.test(email);
     },
     clearErrorFullName(input) {
-      console.log(input)
+      // console.log(input)
+      // console.log(this.deparmentEditName)
       if (input == 'fullName') {
         this.errFullName = '';
       } else if (input == 'userCode') {
@@ -1383,7 +1445,9 @@ export default {
       //   userImage: '',
       //   contractFile: ''
       // }
-
+      this.deparmentEditName=''
+      this.positionEditName=''
+      this.userEdit= {}
       this.errFullName = ''
       this.errUserCode = ''
       this.errGender = ''

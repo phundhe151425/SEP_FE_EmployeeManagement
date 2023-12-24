@@ -109,13 +109,13 @@
             ></el-table-column>
 
             <el-table-column
-              label="Tên hợp đồng"
+              label="Ngày bắt đầu"
               prop="startWork"
               align="center"
             ></el-table-column>
 
             <el-table-column
-              label="Tên hợp đồng"
+              label="Ngày kết thúc"
               prop="endWork"
               align="center"
             ></el-table-column>
