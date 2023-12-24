@@ -370,7 +370,7 @@
     </div>
     <!--   MODAL Chỉnh sửa chấm công-->
 
-    <b-modal id="my-modal" centered size="sm">
+    <b-modal id="my-modal" centered size="md">
       <template #modal-header="{ close }">
         <!-- Emulate built in modal header close button action -->
         <h5>Chỉnh sửa chấm công</h5>
@@ -381,9 +381,9 @@
           v-model="selected"
           v-for="(sign, index) in signs"
           :key="index"
-          :name="sign"
-          :value="sign"
-      >{{ sign }}
+          :name="sign.sign"
+          :value="sign.sign"
+      >{{ sign.sign }}:     ({{sign.noteSign}})
       </b-form-radio
       >
       <div class="mt-2 my-2">Nhập lý do :</div>
@@ -476,7 +476,18 @@ export default {
       year: new Date().getFullYear().toString(),
       department: null,
       departments: [],
-      signs: ["H", "P", "KL", "NT", "H_KL", "KL_H", "H_P", "P_H", "_"],
+      signs: [
+        {sign: "H", noteSign: 'Ngày: Làm hành chính'},
+        {sign: "P", noteSign: 'Ngày: Nghỉ phép'},
+        {sign: "KL", noteSign: 'Ngày: Nghỉ không lương'},
+        {sign: "NT", noteSign: 'Ngày: Nghỉ tuần'},
+        {sign: "H_KL", noteSign: 'Sáng: Đi làm, Chiều: Nghỉ không lương'},
+        {sign: "KL_H", noteSign: 'Sáng: Nghỉ không lương, Chiều: Đi làm'},
+        {sign: "H_P", noteSign: 'Sáng: Đi làm, Chiều: Nghỉ phép'},
+        {sign: "P_H", noteSign: 'Sáng: Nghỉ phép, Chiều: Đi làm'},
+        {sign: "_", noteSign: '_'},
+        // "H","P", "KL", "NT", "H_KL", "KL_H", "H_P", "P_H", "_"
+      ],
       selected: "",
       dateEdit: "",
       codeEdit: "",

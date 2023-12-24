@@ -10,7 +10,7 @@
               <span>Phòng ban</span> &ensp;
               <el-select
                   v-model="departmentId"
-                  @change="getData"
+                  @change="filter"
                   placeholder="Chọn Phòng ban"
               >
                 <el-option value="" label="Tất cả các phòng ban"></el-option>
@@ -30,7 +30,7 @@
               <span style="">Tìm kiếm</span> &ensp;
               <el-input
                   v-model="search"
-                  @input="getData"
+                  @input="filter"
                   size="medium"
                   placeholder="Tìm theo tên, email"
                   style="width: 200px; padding: 2px 0"
@@ -42,7 +42,7 @@
               <span style="">Trạng thái</span> &ensp;
               <el-select
                   v-model="status"
-                  @change="getData"
+                  @change="filter"
                   placeholder="Trạng thái"
               >
                 <el-option value="" label="Tất cả"></el-option>
@@ -54,13 +54,13 @@
 
           <el-col :md="6" :lg="6" :xl="6" class="div-buttons">
             <div class="grid-content div-buttons">
-              <import-excel
-                  class="text-start buttons btn-import"
-                  header="Thêm nhân viên"
-                  format="1"
-                  @getData="getData"
-                  style="margin-right: 10px"
-              />
+<!--              <import-excel-->
+<!--                  class="text-start buttons btn-import"-->
+<!--                  header="Thêm nhân viên"-->
+<!--                  format="1"-->
+<!--                  @getData="getData"-->
+<!--                  style="margin-right: 10px"-->
+<!--              />-->
               <el-button
                   class="buttons btn-add"
                   type="danger"
@@ -1245,6 +1245,11 @@ export default {
       })
       this.getCurrentContractByUserId(userId)
       this.editEmployeeDialogVisible = true;
+    },
+    filter() {
+      this.page = 0;
+      this.totalItems = 0;
+      this.getData();
     },
     getData() {
       UserService.getData(this.page, this.pageSize, this.departmentId, this.search, this.status).then((response) => {
