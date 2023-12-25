@@ -361,8 +361,8 @@ export default {
           },
           {
             min: 1,
-            max: 255,
-            message: "Nội dung ghi chú từ 1 đến 255 kí tự",
+            max: 200,
+            message: "Nội dung ghi chú từ 1 đến 200 kí tự",
             trigger: "blur",
           },
         ],
@@ -439,7 +439,7 @@ export default {
         .then(() => {
           this.$notify.success({
             message: "Đề xuất đã được chấp nhận",
-            title: "Success",
+            title: "Thành công",
             timer: 2000,
             timerProgressBar: true,
           });
@@ -461,7 +461,7 @@ export default {
             .then(() => {
               this.$notify.success({
                 message: "Đề xuất đã bị từ chối",
-                title: "Success",
+                title: "Thành công",
                 timer: 2000,
                 timerProgressBar: true,
               });
@@ -492,7 +492,7 @@ export default {
         .then(() => {
           this.$notify.success({
             message: "Đề xuất đã được hủy",
-            title: "Success",
+            title: "Thành công",
             timer: 2000,
             timerProgressBar: true,
           });
@@ -524,14 +524,10 @@ export default {
     },
   },
   computed: {},
-  beforeMount() {
-    this.id = this.$store.state.auth.user.id;
-  },
-  mounted() {
+
+  created() {
     this.getRequest(this.$route.params.id);
     this.type = this.$route.params.type;
-    // this.retrieveTutorials();
-    // this.message = '';
   },
 };
 </script>

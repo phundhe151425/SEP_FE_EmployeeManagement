@@ -568,7 +568,7 @@ export default {
               this.createHolidayDialogVisible = false;
               this.$notify.success({
                 message: "Tạo ngày nghỉ thành công!",
-                title: "Success",
+                title: "Thành công",
                 timer: 2000,
 
                 timerProgressBar: true,
@@ -604,7 +604,7 @@ export default {
               this.editHolidayDialogVisible = false;
               this.$notify.success({
                 message: "Sửa ngày nghỉ thành công!",
-                title: "Success",
+                title: "Thành công",
                 timer: 2000,
                 timerProgressBar: true,
               });
@@ -656,14 +656,14 @@ export default {
       ) {
         this.$notify.error({
           message: "Không thể sửa vì đang trong kỳ nghỉ!.",
-          title: "Failed",
+          title: "Thất bại",
           timer: 2000,
           timerProgressBar: true,
         });
       } else if (this.currentDate > this.endHolidayDate) {
         this.$notify.error({
           message: "Không thể sửa vì kỳ nghỉ đã qua!.",
-          title: "Failed",
+          title: "Thất bại",
           timer: 2000,
           timerProgressBar: true,
         });
@@ -702,14 +702,14 @@ export default {
       ) {
         this.$notify.error({
           message: "Không thể xóa vì đang trong kỳ nghỉ!.",
-          title: "Failed",
+          title: "Thất bại",
           timer: 2000,
           timerProgressBar: true,
         });
       } else if (this.currentDate > this.endHolidayDate) {
         this.$notify.error({
           message: "Không thể xóa vì kỳ nghỉ đã qua!.",
-          title: "Failed",
+          title: "Thất bại",
           timer: 2000,
           timerProgressBar: true,
         });
@@ -730,7 +730,7 @@ export default {
           this.deleteHolidayDialogVisible = false;
           this.$notify.success({
             message: "Xóa ngày nghỉ thành công!",
-            title: "Success",
+            title: "Thành công",
             timer: 2000,
             timerProgressBar: true,
           });
@@ -743,7 +743,7 @@ export default {
             this.deleteHolidayDialogVisible = false;
             this.$notify.error({
               message: "Không thể xóa ngày nghỉ này vì đã được sử dụng!",
-              title: "Failed",
+              title: "Thất bại",
               timer: 2000,
               timerProgressBar: true,
             });

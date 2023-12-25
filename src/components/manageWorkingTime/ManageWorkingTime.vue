@@ -87,7 +87,7 @@
       >
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <el-form-item label="Nhập tên ngày nghỉ" prop="workingTimeName">
+            <el-form-item label="Tên" prop="workingTimeName">
               <el-input
                 v-model="ruleForm.workingTimeName"
                 name="workingTimeName"
@@ -132,7 +132,7 @@
                 <el-button
                   class="btn"
                   type="primary"
-                  style="width: 90%;background-color: #ed9696; color: white"
+                  style="width: 90%; background-color: #ed9696; color: white"
                   @click="cancelEditForm('ruleForm')"
                   >Hủy</el-button
                 >
@@ -145,7 +145,7 @@
                 <el-button
                   class="btn"
                   type="primary"
-                  style="width: 90%;background-color: #75c4c0; color: white"
+                  style="width: 90%; background-color: #75c4c0; color: white"
                   @click="submitEditForm('ruleForm')"
                   >Lưu</el-button
                 >
@@ -237,16 +237,17 @@ export default {
               this.editWorkingTimeDialogVisible = false;
               this.$notify.success({
                 message: "Sửa thời gian thành công!",
-                title: "Success",
+                title: "Thành công",
                 timer: 2000,
                 timerProgressBar: true,
               });
               this.getData();
             })
-              .catch((e) => {
-                  console.log(e);
-                  if(e.response.data.status == 401) this.$store.dispatch("auth/logout");
-              });
+            .catch((e) => {
+              console.log(e);
+              if (e.response.data.status == 401)
+                this.$store.dispatch("auth/logout");
+            });
         } else {
           console.log("error submit!!");
           return false;
@@ -263,6 +264,15 @@ export default {
       WorkingTimeService.getWorkingTimeById(id)
         .then((response) => {
           this.ruleForm = response.data;
+          if (this.ruleForm.workingTimeName == "FULLTIME") {
+            this.ruleForm.workingTimeName = "Hành chính";
+          }
+          if (this.ruleForm.workingTimeName == "MORNING_SHIFT") {
+            this.ruleForm.workingTimeName = "Ca sáng";
+          }
+          if (this.ruleForm.workingTimeName == "AFTERNOON_SHIFT") {
+            this.ruleForm.workingTimeName = "Ca chiều";
+          }
           var date = new Date();
           var date1 = new Date();
           var startTime = response.data.startTime;
@@ -282,10 +292,11 @@ export default {
           );
           this.ruleForm.endTime = date1;
         })
-          .catch((e) => {
-              console.log(e);
-              if(e.response.data.status == 401) this.$store.dispatch("auth/logout");
-          });
+        .catch((e) => {
+          console.log(e);
+          if (e.response.data.status == 401)
+            this.$store.dispatch("auth/logout");
+        });
 
       this.editWorkingTimeDialogVisible = true;
       this.workingTimeId = id;
@@ -295,14 +306,28 @@ export default {
       WorkingTimeService.getData(this.page, this.pageSize, this.search)
         .then((response) => {
           this.workingTimes = response.data;
-
+          console.log(this.workingTimes);
+          for (const key in this.workingTimes) {
+            if (Object.hasOwnProperty.call(this.workingTimes, key)) {
+              if (this.workingTimes[key].workingTimeName == "FULLTIME") {
+                this.workingTimes[key].workingTimeName = "Hành chính";
+              }
+              if (this.workingTimes[key].workingTimeName == "MORNING_SHIFT") {
+                this.workingTimes[key].workingTimeName = "Ca sáng";
+              }
+              if (this.workingTimes[key].workingTimeName == "AFTERNOON_SHIFT") {
+                this.workingTimes[key].workingTimeName = "Ca chiều";
+              }
+            }
+          }
           //   this.page = response.data.pageable.pageNumber;
           //   this.totalItems = response.data.totalElements;
         })
-          .catch((e) => {
-              console.log(e);
-              if(e.response.data.status == 401) this.$store.dispatch("auth/logout");
-          });
+        .catch((e) => {
+          console.log(e);
+          if (e.response.data.status == 401)
+            this.$store.dispatch("auth/logout");
+        });
     },
 
     rangeEndTime() {
