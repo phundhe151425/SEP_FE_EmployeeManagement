@@ -1278,10 +1278,26 @@ export default {
     var endDate = new Date(currentYear, date.getMonth(), lastDateOfMonth);
 
     var validateEndDate = (rule, value, callback) => {
+      if(this.isRestByDay || this.isPersonalWork || this.isBusinessTravel || this.isWorkFromHome){
       if (this.ruleForm.startDate == "" || this.ruleForm.startDate == null) {
         this.ruleForm.endDate = "";
         callback(new Error("Vui lòng nhập ngày bắt đầu!"));
-      } else {
+      } else if( (this.ruleForm.startDate != "" || this.ruleForm.startDate != null) &&
+        (this.ruleForm.endDate != "" || this.ruleForm.endDate != null)){
+              var subStartDate = this.ruleForm.startDate.split("-");
+              var subEndDate = this.ruleForm.endDate.split("-");
+              var start = new Date(Number(subStartDate[0]), Number(subStartDate[1]) -1, Number(subStartDate[2]),7,0);
+              var end = new Date(Number(subEndDate[0]), Number(subEndDate[1]) -1, Number(subEndDate[2]),7,0);
+              if(start > end){
+                   callback(new Error("Ngày kết thúc nhỏ hơn ngày bắt đầu! Vui lòng nhập lại!"));
+              }else{
+                callback();
+              }
+      }
+      else {
+        callback();
+      }
+      }else{
         callback();
       }
     };
@@ -1294,7 +1310,8 @@ export default {
         this.$refs["ruleForm"].fields
           .find((f) => f.prop == "endDate")
           .resetField();
-      } else {
+      } 
+      else {
         callback();
       }
     };
