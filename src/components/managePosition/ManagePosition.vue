@@ -206,7 +206,6 @@
                         <el-form-item label="Phân quyền" prop="roleId">
                             <el-select
                                     v-model="positionCreate.roleId"
-                                    @change="getData"
                                     placeholder="Chọn quyền"
                             >
                                 <el-option
@@ -377,7 +376,7 @@ export default {
                             this.createPositionDialogVisible = false;
                             this.$notify.success({
                                 message: "Tạo chức vụ thành công!",
-                                title: "Success",
+                                title: "Thành công",
                                 timer: 2000,
                                 timerProgressBar: true,
                             });
@@ -407,7 +406,7 @@ export default {
                             this.editPositionDialogVisible = false;
                             this.$notify.success({
                                 message: "Sửa chức vụ thành công!",
-                                title: "Success",
+                                title: "Thành công",
                                 timer: 2000,
                                 timerProgressBar: true,
                             });
@@ -460,7 +459,7 @@ export default {
                     this.deletePositionDialogVisible = false;
                     this.$notify.success({
                         message: "Xóa chức vụ thành công!",
-                        title: "Success",
+                        title: "Thành công",
                         timer: 2000,
                         timerProgressBar: true,
                     });
@@ -472,7 +471,7 @@ export default {
                         this.deletePositionDialogVisible = false;
                         this.$notify.error({
                             message: "Không thể xóa chức vụ này vì đã được sử dụng!",
-                            title: "Failed",
+                            title: "Thất bại",
                             timer: 2000,
                             timerProgressBar: true,
                         });
@@ -486,6 +485,7 @@ export default {
             PositionService.getPositions(this.page, this.pageSize, this.search)
                 .then((response) => {
                     this.positions = response.data.content;
+                    console.log(this.positions);
                     for (const key in this.positions) {
                         if (Object.hasOwnProperty.call(this.positions, key)) {
                             this.positions[key].createdDate = moment(

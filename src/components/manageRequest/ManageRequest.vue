@@ -120,7 +120,7 @@
             </div>
           </el-col>
 
-          <el-col :md="6" :lg="6" :xl="6" class="div-buttons">
+          <!-- <el-col :md="6" :lg="6" :xl="6" class="div-buttons">
             <div class="div-buttons">
               <el-dropdown trigger="click">
                 <el-button type="danger">
@@ -137,7 +137,7 @@
                 </el-dropdown-menu>
               </el-dropdown>
             </div>
-          </el-col>
+          </el-col> -->
         </el-row>
 
         <br />
@@ -177,6 +177,7 @@
               label="Mã Nhân viên"
               prop="user.userCode"
               align="center"
+              
             >
             </el-table-column>
             <el-table-column

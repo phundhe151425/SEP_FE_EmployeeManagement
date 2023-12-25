@@ -316,7 +316,7 @@ export default {
     },
 
     methods: {
-        searchDepartment(){
+    searchDepartment(){
       this.page = 0;
       this.totalItems = 0;
       this.getData();
@@ -329,7 +329,7 @@ export default {
                             this.createDepartmentDialogVisible = false;
                             this.$notify.success({
                                 message: "Tạo phòng ban thành công!",
-                                title: "Success",
+                                title: "Thành công",
                                 timer: 2000,
                                 timerProgressBar: true,
                             });
@@ -360,7 +360,7 @@ export default {
                             this.editDepartmentDialogVisible = false;
                             this.$notify.success({
                                 message: "Sửa phòng ban thành công!",
-                                title: "Success",
+                                title: "Thành công",
                                 timer: 2000,
                                 timerProgressBar: true,
                             });
@@ -409,7 +409,7 @@ export default {
                     this.deleteDepartmentDialogVisible = false;
                     this.$notify.success({
                         message: "Xóa phòng ban thành công!",
-                        title: "Success",
+                        title: "Thành công",
                         timer: 2000,
                         timerProgressBar: true,
                     });
@@ -421,7 +421,7 @@ export default {
                         this.deleteDepartmentDialogVisible = false;
                         this.$notify.error({
                             message: "Không thể xóa phòng này vì đã được sử dụng!",
-                            title: "Failed",
+                            title: "Thất bại",
                             timer: 2000,
                             timerProgressBar: true,
                         });

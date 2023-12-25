@@ -1757,7 +1757,7 @@ export default {
         .then(() => {
           this.$notify.success({
             message: "Đề xuất đã được chấp nhận",
-            title: "Success",
+            title: "Thành công",
             timer: 2000,
             timerProgressBar: true,
           });
@@ -1779,7 +1779,7 @@ export default {
             .then(() => {
               this.$notify.success({
                 message: "Đề xuất đã bị từ chối",
-                title: "Success",
+                title: "Thành công",
                 timer: 2000,
                 timerProgressBar: true,
               });
@@ -1804,7 +1804,7 @@ export default {
         .then(() => {
           this.$notify.success({
             message: "Đề xuất đã được hủy",
-            title: "Success",
+            title: "Thành công",
             timer: 2000,
             timerProgressBar: true,
           });
@@ -1861,7 +1861,7 @@ export default {
           if (this.isOTAfter && this.errOTAfterMess != "") {
             this.$notify.error({
               message: "Tạo đề xuất không thành công! Chú ý cảnh báo!",
-              title: "Failed",
+              title: "Thất bại",
               timer: 2000,
               timerProgressBar: true,
             });
@@ -1891,7 +1891,7 @@ export default {
                 this.createTimeKeepingRequestDialogVisible = false;
                 this.$notify.success({
                   message: "Tạo đề xuất thành công",
-                  title: "Success",
+                  title: "Thành công",
                   timer: 2000,
                   timerProgressBar: true,
                 });
@@ -1907,7 +1907,7 @@ export default {
                 ) {
                   this.$notify.error({
                     message: "Tạo đề xuất không thành công!",
-                    title: "Failed",
+                    title: "Thất bại",
                     timer: 2000,
                     timerProgressBar: true,
                   });
@@ -1921,7 +1921,7 @@ export default {
                       "Tạo đề xuất không thành công! Bạn chỉ còn " +
                       this.dayOff +
                       " ngày nghỉ có lương!",
-                    title: "Failed",
+                    title: "Thất bại",
                     timer: 2000,
                     timerProgressBar: true,
                   });
