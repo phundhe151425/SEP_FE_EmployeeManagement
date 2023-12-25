@@ -109,13 +109,13 @@
             ></el-table-column>
 
             <el-table-column
-              label="Tên hợp đồng"
+              label="Ngày bắt đầu"
               prop="startWork"
               align="center"
             ></el-table-column>
 
             <el-table-column
-              label="Tên hợp đồng"
+              label="Ngày kết thúc"
               prop="endWork"
               align="center"
             ></el-table-column>
@@ -752,7 +752,7 @@ export default {
           console(response);
           this.$notify.success({
             message: "Xóa thành công",
-            title: "Success",
+            title: "Thành công",
             timer: 2000,
             timerProgressBar: true,
           });
@@ -774,7 +774,7 @@ export default {
           this.deleteContractDialogVisible = false;
           this.$notify.success({
             message: "Xóa thành công",
-            title: "Success",
+            title: "Thành công",
             timer: 2000,
             timerProgressBar: true,
           });
@@ -789,7 +789,7 @@ export default {
           this.deleteContractDialogVisible = false;
           this.$notify.success({
             message: "Xóa thành công!",
-            title: "Success",
+            title: "Thành công",
             timer: 2000,
             timerProgressBar: true,
           });
