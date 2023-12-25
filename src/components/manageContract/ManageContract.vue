@@ -202,7 +202,7 @@
         </div>
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <el-form-item label="Chọn file hợp đồng">
+            <el-form-item label="Chọn file hợp đồng" prop="contractFile">
               <input
                 id="contractFile"
                 type="file"
@@ -286,7 +286,7 @@
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <!-- modal select -->
-            <el-form-item label="Chọn phòng ban" prop="deptList">
+            <el-form-item label="Chọn phòng ban">
               <el-select
                 v-model="deptIdAdd"
                 placeholder="Chọn"
@@ -305,7 +305,7 @@
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <!-- mode select -->
-            <el-form-item label="Chọn nhân viên" prop="selectedOption">
+            <el-form-item label="Chọn nhân viên" prop="userId">
               <el-select
                 v-model="valueSelect"
                 placeholder="Chọn"
@@ -329,7 +329,7 @@
               <!-- <span
                 >Ngày bắt đầu hợp đồng<span style="color: red">*</span></span
               ><br /> -->
-              <el-form-item label="Chọn ngày bắt đầu">
+              <el-form-item label="Chọn ngày bắt đầu" prop="startWork">
                 <el-date-picker
                   id="startWork"
                   v-model="ruleForm.startWork"
@@ -353,7 +353,7 @@
               <!-- <span
                 >Ngày kết thúc hợp đồng<span style="color: red"> *</span></span
               ><br /> -->
-              <el-form-item label="Chọn ngày kết thúc">
+              <el-form-item label="Chọn ngày kết thúc" prop="endWork">
                 <el-date-picker
                   id="endWork"
                   v-model="ruleForm.endWork"
@@ -362,7 +362,7 @@
                   format="yyyy-MM-dd"
                   :editable="false"
                   value-format="yyyy-MM-dd"
-                  :picker-options="pickerOptionsCreate"
+                  :picker-options="pickerOptionEndDate"
                   placeholder="Chọn ngày"
                   style="width: 90%"
                 ></el-date-picker>
@@ -491,18 +491,33 @@ export default {
             trigger: "blur",
           },
         ],
-        fileName: [
-          {
-            required: true,
-            message: "Vui lòng nhập tên file",
-            trigger: "blur",
-          },
-        ],
+        // contractFile: [
+        //   {
+        //     required: true,
+        //     message: "Vui lòng nhập tên file",
+        //     trigger: "change",
+        //   },
+        // ],
         userId: [
           {
             required: true,
             message: "Vui lòng chọn nhân viên",
-            trigger: "change",
+            trigger: "blur",
+          },
+        ],
+
+        startWork: [
+          {
+            required: true,
+            message: "Vui lòng chọn ngày",
+            trigger: "blur",
+          },
+        ],
+        endWork: [
+          {
+            required: true,
+            message: "Vui lòng chọn ngày",
+            trigger: "blur",
           },
         ],
       },
@@ -511,54 +526,61 @@ export default {
       deleteContractDialogVisible: false,
     };
   },
+  computed: {
+    pickerOptionEndDate() {
+      return {
+        disabledDate: this.disableOneDayAgoEndDate,
+      };
+    },
+  },
   created() {
     this.getData();
   },
   methods: {
     submitForm() {
-      //   // this.$refs[formName].validate((valid) => {
-      //   //   if (valid) {
-      // api create
-      console.log("123456");
-      console.log(this.ruleForm.contractName);
-      console.log(this.ruleForm.contractFile);
-      console.log(this.ruleForm.userId);
-      let dataObject = {};
-      dataObject.contractName = this.ruleForm.contractName;
-      dataObject.userId = Number(this.ruleForm.userId);
-      dataObject.startWork = this.ruleForm.startWork;
-      dataObject.endWork = this.ruleForm.endWork;
-      ContractService.save(dataObject, this.ruleForm.contractFile)
-        .then(() => {
-          this.createContractDialogVisible = false;
-          this.$notify.success({
-            message: "Tạo hợp đồng thành công",
-            title: "Thành công",
-            timer: 2000,
-            timerProgressBar: true,
-          });
-          this.getData();
-          this.ruleForm = {
-            contractName: "",
-            contractFile: null,
-            userId: "",
-            startWork: "",
-            endWork: "",
-          };
-          this.contractFile = "";
-          this.valueSelect = "";
-          this.deptIdAdd = "";
-        })
-        .catch((e) => {
-          console.log(e);
-          if (e.response.data.status == 401)
-            this.$store.dispatch("auth/logout");
-        });
-      //   } else {
-      //     console.log("error submit!!");
-      //     return false;
-      //   }
-      // });
+      this.$refs["ruleForm"].validate((valid) => {
+        if (valid) {
+          // api create
+          console.log("123456");
+          console.log(this.ruleForm.contractName);
+          console.log(this.ruleForm.contractFile);
+          console.log(this.ruleForm.userId);
+          let dataObject = {};
+          dataObject.contractName = this.ruleForm.contractName;
+          dataObject.userId = Number(this.ruleForm.userId);
+          dataObject.startWork = this.ruleForm.startWork;
+          dataObject.endWork = this.ruleForm.endWork;
+          ContractService.save(dataObject, this.ruleForm.contractFile)
+            .then(() => {
+              this.createContractDialogVisible = false;
+              this.$notify.success({
+                message: "Tạo hợp đồng thành công",
+                title: "Thành công",
+                timer: 2000,
+                timerProgressBar: true,
+              });
+              this.getData();
+              this.ruleForm = {
+                contractName: "",
+                contractFile: null,
+                userId: "",
+                startWork: "",
+                endWork: "",
+              };
+              this.contractFile = "";
+              this.valueSelect = "";
+              this.deptIdAdd = "";
+            })
+            .catch((e) => {
+              console.log(e);
+              if (e.response.data.status == 401)
+                this.$store.dispatch("auth/logout");
+            });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     },
 
     // submitForm(formName) {
@@ -856,6 +878,12 @@ export default {
         // Lấy tên của file và cập nhật vào ruleForm
         this.ruleForm.contractFile = fileInput.files[0];
       }
+    },
+
+    disableOneDayAgoEndDate(date) {
+      const endWork = new Date(this.ruleForm.startWork);
+      endWork.setDate(endWork.getDate());
+      return date < endWork;
     },
     logout() {
       this.$store.dispatch("auth/logout");
