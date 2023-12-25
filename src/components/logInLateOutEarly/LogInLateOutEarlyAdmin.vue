@@ -46,7 +46,7 @@
                     <div class="grid-content">
                         <span style="">Tìm kiếm</span> &ensp;
                         <el-input v-model="search" @input="getData" size="medium"
-                                  placeholder="Tìm theo tên, email, phòng ban"
+                                  placeholder="Tìm theo tên"
                                   style="width: 240px;margin-bottom: 10px"/>
                     </div>
                 </el-col>

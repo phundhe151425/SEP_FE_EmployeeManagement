@@ -32,7 +32,7 @@
                   v-model="search"
                   @input="getData"
                   size="medium"
-                  placeholder="Tìm theo tên, email"
+                  placeholder="Tìm theo tên, mã nhân viên"
                   style="width: 200px; padding: 2px 0"
               />
             </div>
